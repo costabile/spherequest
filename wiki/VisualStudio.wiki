@@ -1,0 +1,1 @@
+How are you guys making this work alongside Subversion?  Just wondering what steps we're taking to make sure that everything works properly.  I've got my subversion set up, but should I be making a new project?
