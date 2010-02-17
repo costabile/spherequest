@@ -1,18 +1,18 @@
 #include <glut.h>
 #include <math.h>
+//#include <gl.h>
+#include <glu.h>
 
-static float angle=0.0,ratio;
-static float x=0.0f,y=1.75f,z=5.0f;
-static float lx=0.0f,ly=0.0f,lz=-1.0f;
+static float angle=0.0, ratio;
+static float x=0.0f, y=1.75f, z=5.0f;
+static float lx=0.0f,ly=0.0f, lz=-1.0f;
 static GLint snowman_display_list;
-
-
 
 void changeSize(int w, int h)
 	{
 
 	// Prevent a divide by zero, when window is too short
-	// (you cant make a window of zero width).
+	// (you can't make a window of zero width).
 	if(h == 0)
 		h = 1;
 
@@ -31,10 +31,7 @@ void changeSize(int w, int h)
 	gluLookAt(x, y, z, 
 		      x + lx,y + ly,z + lz,
 			  0.0f,1.0f,0.0f);
-
-
-	}
-
+}
 
 void drawSnowMan() {
 
@@ -70,8 +67,6 @@ void drawSnowMan() {
 	glutSolidSphere(100.00f,10,10);
 }
 
-
-
 GLuint createDL() {
 	GLuint snowManDL;
 
@@ -96,10 +91,6 @@ void initScene() {
 	snowman_display_list = createDL();
 
 }
-
-
-
-
 
 void renderScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -164,6 +155,15 @@ void inputKey(int key, int x, int y) {
 	}
 }
 
+void drawTicker(void) {
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_POLYGON);
+		glVertex3f(0.0, 0.0, 0.0);
+		glVertex3f(100., 0.0, 0.0);
+		glVertex3f(100.0, 100.0, 0.0);
+		glVertex3f(0.0, 100.0, 0.0);
+	glEnd();
+}
 
 int main(int argc, char **argv)
 {
@@ -180,6 +180,8 @@ int main(int argc, char **argv)
 
 	glutDisplayFunc(renderScene);
 	glutIdleFunc(renderScene);
+
+	glutDisplayFunc(drawTicker);
 
 	glutReshapeFunc(changeSize);
 
