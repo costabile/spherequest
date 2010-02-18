@@ -1,7 +1,7 @@
-#include <glut.h>
+#include <GL/glut.h>
 #include <math.h>
 //#include <gl.h>
-#include <glu.h>
+#include <GL/glu.h>
 
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;
@@ -9,7 +9,7 @@ static float lx=0.0f,ly=0.0f, lz=-1.0f;
 static GLint snowman_display_list;
 
 void changeSize(int w, int h)
-	{
+{
 
 	// Prevent a divide by zero, when window is too short
 	// (you can't make a window of zero width).
@@ -20,34 +20,34 @@ void changeSize(int w, int h)
 	// Reset the coordinate system before modifying
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	
+
 	// Set the viewport to be the entire window
-    glViewport(0, 0, w, h);
+	glViewport(0, 0, w, h);
 
 	// Set the clipping volume
 	gluPerspective(45,ratio,1,1000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(x, y, z, 
-		      x + lx,y + ly,z + lz,
-			  0.0f,1.0f,0.0f);
+		x + lx,y + ly,z + lz,
+		0.0f,1.0f,0.0f);
 }
 
 void drawSnowMan() {
 
 
-// Draw Body	
+	// Draw Body	
 	glColor3f(0.0f, 0.0f, 0.6f);
 	glTranslatef(0.0f ,0.75f, 0.0f);
 	glutSolidSphere(0.75f,20,20);
 
 
-// Draw Head
+	// Draw Head
 	glColor3f(1.0f, 0.65f, 0.65f);
 	glTranslatef(0.0f, 1.0f, 0.0f);
 	glutSolidSphere(0.25f,20,20);
 
-// Draw Eyes
+	// Draw Eyes
 	glPushMatrix();
 	glColor3f(0.0f,0.0f,0.0f);
 	glTranslatef(0.15f, 0.0f, 0.2f);
@@ -56,13 +56,13 @@ void drawSnowMan() {
 	glutSolidSphere(0.05f,10,10);
 	glPopMatrix();
 
-// Draw Hat
+	// Draw Hat
 	glTranslatef(0.0f, 0.15f, 0.0f);
 	glColor3f(0.7f, 0.0f , 0.0f);
 	glRotatef(-90.0f ,1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.25f,0.7f,10,2);
 
-//Draw Skybox
+	//Draw Skybox
 	glColor3f(0.8f, 0.8f , 1.0f);
 	glutSolidSphere(100.00f,10,10);
 }
@@ -77,7 +77,7 @@ GLuint createDL() {
 	glNewList(snowManDL,GL_COMPILE);
 
 	// call the function that contains the rendering commands
-		drawSnowMan();
+	drawSnowMan();
 
 	// endList
 	glEndList();
@@ -95,17 +95,17 @@ void initScene() {
 void renderScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-// Draw ground
+	// Draw ground
 
 	glColor3f(0.0f, 0.6f, 0.0f);
 	glBegin(GL_QUADS);
-		glVertex3f(-100.0f, 0.0f, -100.0f);
-		glVertex3f(-100.0f, 0.0f,  100.0f);
-		glVertex3f( 100.0f, 0.0f,  100.0f);
-		glVertex3f( 100.0f, 0.0f, -100.0f);
+	glVertex3f(-100.0f, 0.0f, -100.0f);
+	glVertex3f(-100.0f, 0.0f,  100.0f);
+	glVertex3f( 100.0f, 0.0f,  100.0f);
+	glVertex3f( 100.0f, 0.0f, -100.0f);
 	glEnd();
 
-// Draw 36 SnowMen
+	// Draw 36 SnowMen
 
 	for(int i = -3; i < 3; i++)
 		for(int j=-3; j < 3; j++) {
@@ -114,7 +114,7 @@ void renderScene(void) {
 			glCallList(snowman_display_list);;
 			glPopMatrix();
 		}
-	glutSwapBuffers();
+		glutSwapBuffers();
 }
 
 void orientMe(float ang) {
@@ -124,8 +124,8 @@ void orientMe(float ang) {
 	lz = -cos(ang);
 	glLoadIdentity();
 	gluLookAt(x, y, z, 
-		      x + lx,y + ly,z + lz,
-			  0.0f,1.0f,0.0f);
+		x + lx,y + ly,z + lz,
+		0.0f,1.0f,0.0f);
 }
 
 
@@ -134,8 +134,8 @@ void moveMeFlat(int i) {
 	z = z + i*(lz)*0.1;
 	glLoadIdentity();
 	gluLookAt(x, y, z, 
-		      x + lx,y + ly,z + lz,
-			  0.0f,1.0f,0.0f);
+		x + lx,y + ly,z + lz,
+		0.0f,1.0f,0.0f);
 }
 
 void processNormalKeys(unsigned char key, int x, int y) {
@@ -158,10 +158,10 @@ void inputKey(int key, int x, int y) {
 void drawTicker(void) {
 	glColor3f(1.0, 1.0, 1.0);
 	glBegin(GL_POLYGON);
-		glVertex3f(0.0, 0.0, 0.0);
-		glVertex3f(100., 0.0, 0.0);
-		glVertex3f(100.0, 100.0, 0.0);
-		glVertex3f(0.0, 100.0, 0.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(100., 0.0, 0.0);
+	glVertex3f(100.0, 100.0, 0.0);
+	glVertex3f(0.0, 100.0, 0.0);
 	glEnd();
 }
 
