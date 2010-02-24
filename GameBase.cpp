@@ -35,8 +35,11 @@ void changeSize(int w, int h)
 
 void drawSphere() 
 {
+	glPushMatrix();
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glutSolidSphere(20.0f, 20, 20);
+	glTranslatef(0,5,0);
+	glutSolidSphere(2.0f, 20, 20);
+	glPopMatrix();
 }
 
 void drawWiseMen() {
@@ -125,7 +128,7 @@ void initScene() {
 
 void drawGround(){
 	// Draw ground
-	glColor3f(0.0f, 0.6f, 0.0f);
+	glColor3f(0.2f, 0.7f, 0.2f);
 	glBegin(GL_QUADS);
 	glVertex3f(-100.0f, 0.0f, -100.0f);
 	glVertex3f(-100.0f, 0.0f,  100.0f);
@@ -133,10 +136,23 @@ void drawGround(){
 	glVertex3f( 100.0f, 0.0f, -100.0f);
 	glEnd();
 }
+
+void drawHUD() {
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_QUADS);
+	glVertex3f(-1, -0.4f, z-4);
+	glVertex3f(-1, 0.4f, z-4);
+	glVertex3f( 1, 0.4f, z-4);
+	glVertex3f( 1, -0.4f, z-4);
+	glEnd();
+}
+
 void renderScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	drawGround();
+	drawHUD();
+	drawSphere();
 	// Draw 36 Gnomes
 
 	for(int i = -3; i < 3; i++)
@@ -148,8 +164,6 @@ void renderScene(void) {
 		}
 		glutSwapBuffers();
 
-	// Draw Sphere
-	drawSphere();
 }
 
 void orientMe(float ang) {
@@ -190,16 +204,6 @@ void inputKey(int key, int x, int y) {
 	}
 }
 
-void drawTicker(void) {
-	glColor3f(1.0, 1.0, 1.0);
-	glBegin(GL_POLYGON);
-	glVertex3f(0.0, 0.0, 0.0);
-	glVertex3f(100., 0.0, 0.0);
-	glVertex3f(100.0, 100.0, 0.0);
-	glVertex3f(0.0, 100.0, 0.0);
-	glEnd();
-}
-
 int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
@@ -216,7 +220,7 @@ int main(int argc, char **argv)
 	glutDisplayFunc(renderScene);
 	glutIdleFunc(renderScene);
 
-	glutDisplayFunc(drawTicker);
+	//glutDisplayFunc(drawHUD);
 
 	glutReshapeFunc(changeSize);
 
