@@ -1,7 +1,7 @@
-#include <GL/glut.h>
+#include <glut.h>
 #include <math.h>
 //#include <gl.h>
-#include <GL/glu.h>
+//#include <GL/glu.h>
 
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;
@@ -33,38 +33,69 @@ void changeSize(int w, int h)
 		0.0f,1.0f,0.0f);
 }
 
-void drawSnowMan() {
+void drawSphere() 
+{
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glutSolidSphere(20.0f, 20, 20);
+}
+
+void drawWiseMen() {
 
 
 	// Draw Body	
-	glColor3f(0.0f, 0.0f, 0.6f);
-	glTranslatef(0.0f ,0.75f, 0.0f);
-	glutSolidSphere(0.75f,20,20);
+	glPushMatrix();
+	glColor3f(1.0f, 1.0f, 0.5f);
+	glTranslatef(0.0f ,0.0f, 0.0f);
+	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+	glutSolidCone(0.6f,2.0f,20,20);
+	glPopMatrix();
 
+	//Draw Belt
+	glPushMatrix();
+	glColor3f(0.5f, 0.25f, 0.0f);
+	glTranslatef(0.0f ,0.7f, 0.0f);
+	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+	glutSolidTorus(0.19f, 0.3f,10,10);
+	glPopMatrix();
 
 	// Draw Head
-	glColor3f(1.0f, 0.65f, 0.65f);
-	glTranslatef(0.0f, 1.0f, 0.0f);
-	glutSolidSphere(0.25f,20,20);
+	glColor3f(1.0f, 0.75f, 0.6f);
+	glTranslatef(0.0f, 1.8f, 0.0f);
+	glutSolidSphere(0.35f,20,20);
+	
+	//Draw Beard
+	glPushMatrix();
+	glColor3f(0.5f,0.5f,0.5f);
+	glTranslatef(0.0f, -0.25f, 0.05f);
+	glRotatef(50.0f, 1.0f, 0.0f, 0.0f);
+	glutSolidCone(0.2f,0.8f,20,20);
+	glPopMatrix();
 
 	// Draw Eyes
 	glPushMatrix();
 	glColor3f(0.0f,0.0f,0.0f);
-	glTranslatef(0.15f, 0.0f, 0.2f);
+	glTranslatef(0.13f, 0.0f, 0.30f);
 	glutSolidSphere(0.05f,10,10);
-	glTranslatef(-0.3f, 0.0f, 0.0f);
+	glTranslatef(-0.26f, 0.0f, 0.0f);
 	glutSolidSphere(0.05f,10,10);
 	glPopMatrix();
 
-	// Draw Hat
-	glTranslatef(0.0f, 0.15f, 0.0f);
-	glColor3f(0.7f, 0.0f , 0.0f);
-	glRotatef(-90.0f ,1.0f, 0.0f, 0.0f);
-	glutSolidCone(0.25f,0.7f,10,2);
+	//Draw Eyebrows
+	glPushMatrix();
+	glColor3f(0.5,0.5,0.5);
+	glTranslatef(-0.26f, 0.1f, 0.35f);
+	glRotatef(90.0, 0.0f, 1.0f, -0.2f);
+	glutSolidCone(0.04,0.2,5,5);
+	glTranslatef(0.0f, 0.1f, 0.52f);
+	glRotatef(-180.0, 0.0f, 1.0f, -0.2f);
+	glutSolidCone(0.04,0.2,5,5);
+	glPopMatrix();
 
-	//Draw Skybox
-	glColor3f(0.8f, 0.8f , 1.0f);
-	glutSolidSphere(100.00f,10,10);
+	// Draw Hat
+	glTranslatef(0.0f, 0.1f, 0.0f);
+	glColor3f(1.0f, 0.8f , 0.2f);
+	glRotatef(-90.0f ,1.0f, 0.0f, 0.0f);
+	glutSolidCone(0.9f,0.35f,10,2);
 }
 
 GLuint createDL() {
@@ -77,7 +108,7 @@ GLuint createDL() {
 	glNewList(snowManDL,GL_COMPILE);
 
 	// call the function that contains the rendering commands
-	drawSnowMan();
+	drawWiseMen();
 
 	// endList
 	glEndList();
@@ -92,11 +123,8 @@ void initScene() {
 
 }
 
-void renderScene(void) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+void drawGround(){
 	// Draw ground
-
 	glColor3f(0.0f, 0.6f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex3f(-100.0f, 0.0f, -100.0f);
@@ -104,7 +132,11 @@ void renderScene(void) {
 	glVertex3f( 100.0f, 0.0f,  100.0f);
 	glVertex3f( 100.0f, 0.0f, -100.0f);
 	glEnd();
+}
+void renderScene(void) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	drawGround();
 	// Draw 36 Gnomes
 
 	for(int i = -3; i < 3; i++)
@@ -115,6 +147,9 @@ void renderScene(void) {
 			glPopMatrix();
 		}
 		glutSwapBuffers();
+
+	// Draw Sphere
+	drawSphere();
 }
 
 void orientMe(float ang) {
@@ -171,7 +206,7 @@ int main(int argc, char **argv)
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(640,360);
-	glutCreateWindow("GARDEN GNOME FLIGHT SIMULATOR!!!!!");
+	glutCreateWindow("SPHEREQUEST");
 
 	initScene();
 
