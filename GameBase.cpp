@@ -1,12 +1,22 @@
-#include <glut.h>
+//#include <glut.h>
 #include <math.h>
-//#include <gl.h>
+//#include <GL/gl.h>
 //#include <GL/glu.h>
+#include <GL/glut.h>
 
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;
 static float lx=0.0f,ly=0.0f, lz=-1.0f;
 static GLint snowman_display_list;
+
+GLfloat spherePosX = 0.0;
+GLfloat spherePosY = 0.0;
+GLfloat spherePosZ = 0.0;
+
+int sphereRotX = 0.0;
+int sphereRotY = 0.0;
+int sphereRotZ = 0.0;
+float sphereRotAng = 0.0;
 
 void changeSize(int w, int h)
 {
@@ -37,7 +47,8 @@ void drawSphere()
 {
 	glPushMatrix();
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glTranslatef(0,5,0);
+	glTranslatef(spherePosX,spherePosY,spherePosZ);
+	glRotatef(sphereRotAng, sphereRotX, sphereRotY, sphereRotZ);
 	glutSolidSphere(2.0f, 20, 20);
 	glPopMatrix();
 }
@@ -99,6 +110,7 @@ void drawWiseMen() {
 	glColor3f(1.0f, 0.8f , 0.2f);
 	glRotatef(-90.0f ,1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.9f,0.35f,10,2);
+
 }
 
 GLuint createDL() {
@@ -123,6 +135,19 @@ void initScene() {
 
 	glEnable(GL_DEPTH_TEST);
 	snowman_display_list = createDL();
+	
+	//Scene Lighting:
+	//glEnable(GL_LIGHTING);		//comment out this line to turn off lighting effects
+	GLfloat light1PosType [] = {2.0, 0.0, 3.0, 1.0};
+	GLfloat whiteColor[] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat blackColor[] = {0.0, 0.0, 0.0, 0.0};
+	//glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 30.0);
+	//glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 2.5);
+	glEnable(GL_LIGHT0);
+	//glEnable(GL_LIGHT1);
+	glLightfv (GL_LIGHT1, GL_AMBIENT, whiteColor);
+	glLightfv (GL_LIGHT1, GL_DIFFUSE, whiteColor);
+	glLightfv (GL_LIGHT1, GL_SPECULAR, whiteColor);
 
 }
 
@@ -197,10 +222,26 @@ void processNormalKeys(unsigned char key, int x, int y) {
 void inputKey(int key, int x, int y) {
 
 	switch (key) {
-		case GLUT_KEY_LEFT : angle -= 0.1f;orientMe(angle);break;
-		case GLUT_KEY_RIGHT : angle +=0.1f;orientMe(angle);break;
-		case GLUT_KEY_UP : moveMeFlat(7);break;
-		case GLUT_KEY_DOWN : moveMeFlat(-7);break;
+		case GLUT_KEY_LEFT :
+			angle -= 0.1f;
+			orientMe(angle);
+			sphereRotX = (sphereRotX - 5) % 360;
+			break;
+		case GLUT_KEY_RIGHT : 
+			angle +=0.1f;
+			orientMe(angle);
+			sphereRotX = (sphereRotX + 5) % 360;
+			break;
+		case GLUT_KEY_UP :
+			moveMeFlat(7);
+			spherePosX += 1;
+			sphereRotX = (sphereRotY + 5) % 360;
+			break;
+		case GLUT_KEY_DOWN : 
+			moveMeFlat(-7);
+			spherePosX -= 1;
+			sphereRotX = (sphereRotY - 5) % 360;
+			break;
 	}
 }
 
