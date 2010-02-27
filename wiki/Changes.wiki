@@ -1,4 +1,3 @@
-
 = Introduction =
 I'll summarize my changes here so you guys know what's been done.
 
@@ -6,7 +5,7 @@ I'll summarize my changes here so you guys know what's been done.
 
 = Details =
 
-*As of: Saturday Feb. 27th*
--Main thing is I changed keyboard control from moving the camera to moving the sphere.  The camera follows the sphere around.  This took me a while to figure out cause I was using the wrong crap for calculations. Blah.
--A couple of constants are defined at the top of the file for the distance the sphere moves and the angle it turns with each keypress.  If movement needs to be smoother, fiddle around with these.
+*As of: Saturday Feb. 27th*\n
+-Main thing is I changed keyboard control from moving the camera to moving the sphere.  The camera follows the sphere around.  This took me a while to figure out cause I was using the wrong crap for calculations. Blah.\n
+-A couple of constants are defined at the top of the file for the distance the sphere moves and the angle it turns with each keypress.  If movement needs to be smoother, fiddle around with these.\n
 -I'm working on adding lighting so that everything doesn't look so 2D.  Problem is, when I enable lighting, all objects lose their colour.  I'll look into this later, unless you guys know why that happens.
