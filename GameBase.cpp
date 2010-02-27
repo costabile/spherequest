@@ -187,10 +187,29 @@ void drawGround(){
 void drawHUD() {
 	glColor3f(1.0, 1.0, 1.0);
 	glBegin(GL_QUADS);
-	glVertex3f(-1, -0.4f, z-4);
-	glVertex3f(-1, 0.4f, z-4);
-	glVertex3f( 1, 0.4f, z-4);
-	glVertex3f( 1, -0.4f, z-4);
+	//glVertex3f(x-3, -0.4f, z-4);
+	//glVertex3f(x-3, 0.4f, z-4);
+	//glVertex3f(x+3, 0.4f, z-4);
+	//glVertex3f(x+3, -0.4f, z-4);
+	const float dist_to_hud = 4.0;
+	const float half_hud_width = 3.0;
+
+	float H = half_hud_width / sin(angle);
+	float hudz = dist_to_hud * sin(angle);		//stick HUD to camera
+	glVertex3f(x+H, 0.0f, z - hudz);
+	glVertex3f(x+H, y/4.0f, z - hudz);
+	glVertex3f(x-H, y/4.0f, z - hudz);
+	glVertex3f(x-H, 0.0f, z - hudz);
+
+/*
+	float hudx = dist_to_hud * cos(angle);
+	float hudz = dist_to_hud * sin(angle);
+
+	glVertex3f(x+hudx-half_hud_width, 0.0f, z - hudz);
+	glVertex3f(x+hudx-half_hud_width, y/4.0f, z - hudz);
+	glVertex3f(x+hudx+half_hud_width, y/4.0f, z - hudz);
+	glVertex3f(x+hudx+half_hud_width, 0.0f, z - hudz);
+*/
 	glEnd();
 }
 
