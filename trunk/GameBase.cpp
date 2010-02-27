@@ -219,7 +219,7 @@ void renderScene(void) {
 	drawGround();
 	drawHUD();
 	drawSphere();
-	// Draw 36 Gnomes
+	// Draw 36 Wise Men
 
 	for(int i = -3; i < 3; i++)
 		for(int j=-3; j < 3; j++) {
