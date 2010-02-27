@@ -6,6 +6,9 @@
 
 #define CAM_DIST 20.0		//distance camera keeps from sphere
 #define PI 3.14159265358979323846
+#define TURN_ANGLE PI/32.0f		//angle to turn camera on keypress
+#define MOVE_SIZE 5				//distance to move sphere with each keypress
+#define SPHERE_RAD 2.0f			//sphere radius
 
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;
@@ -14,7 +17,7 @@ static GLint snowman_display_list;
 
 //sphere position:
 GLfloat spherePosX = 0.0;
-GLfloat spherePosY = 2.0;
+GLfloat spherePosY = 0.0 + SPHERE_RAD;
 GLfloat spherePosZ = -15.0;
 //sphere rotation:
 int sphereRotX = 0.0;
@@ -63,15 +66,7 @@ void drawSphere()
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glTranslatef(spherePosX,spherePosY,spherePosZ);
 	glRotatef(sphereRotAng, sphereRotX, sphereRotY, sphereRotZ);
-	glutSolidSphere(2.0f, 20, 20);
-	glPopMatrix();
-
-	//draw cone...for testing purposes, to know how the sphere is oriented.
-	glPushMatrix();
-	glTranslatef(spherePosX,spherePosY + 2.0,spherePosZ);
-	glRotatef(sphereRotAng, sphereRotX, sphereRotY, sphereRotZ+180);
-	glColor3f(1.0f, 1.0f , 1.0f);
-	glutSolidCone(0.9f,0.35f,10,2);
+	glutSolidSphere(SPHERE_RAD, 20, 20);
 	glPopMatrix();
 }
 
@@ -161,7 +156,6 @@ void initScene() {
 	snowman_display_list = createDL();
 	
 	//Scene Lighting:
-	glPushMatrix();
 	//glEnable(GL_LIGHTING);		//comment out this line to turn off lighting effects
 	GLfloat light1PosType [] = {2.0, 0.0, 3.0, 1.0};
 	GLfloat whiteColor[] = {1.0, 1.0, 1.0, 1.0};
@@ -173,7 +167,9 @@ void initScene() {
 	glLightfv (GL_LIGHT1, GL_AMBIENT, whiteColor);
 	glLightfv (GL_LIGHT1, GL_DIFFUSE, whiteColor);
 	glLightfv (GL_LIGHT1, GL_SPECULAR, whiteColor);
-	glPopMatrix();
+	glEnable(GL_LIGHT_MODEL_AMBIENT);
+	GLfloat globalAmbient[] = {1.0, 1.0, 1.0, 1.0};
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
 }
 
@@ -270,19 +266,19 @@ void inputKey(int key, int x, int y) {
 
 	switch (key) {
 		case GLUT_KEY_LEFT :
-			orientMe(-PI/16.0f);
+			orientMe(-TURN_ANGLE);
 			//sphereRotX = (sphereRotX - 5) % 360;
 			break;
 		case GLUT_KEY_RIGHT : 
-			orientMe(PI/16.0f);
+			orientMe(TURN_ANGLE);
 			//sphereRotX = (sphereRotX + 5) % 360;
 			break;
 		case GLUT_KEY_UP :
-			moveMeFlat(-7);
+			moveMeFlat(-MOVE_SIZE);
 			//sphereRotY = (sphereRotY + 5) % 360;
 			break;
 		case GLUT_KEY_DOWN : 
-			moveMeFlat(7);
+			moveMeFlat(MOVE_SIZE);
 			//sphereRotY = (sphereRotY - 5) % 360;
 			break;
 	}
