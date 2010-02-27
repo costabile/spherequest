@@ -243,12 +243,12 @@ void moveMeFlat(int i) {
 	//x = x + i*(lx)*0.1;
 	//z = z + i*(lz)*0.1;
 
-	x = x + i * sin(angle);
-	z = z + i * cos(angle);
-
-	//sphere movement:
-	spherePosX = x;
-	spherePosZ = z - CAM_DIST;
+	//new camera coords:
+	z = z + i * sin(angle);
+	x = x + i * cos(angle);
+	//new sphere coords:
+	spherePosX = spherePosX + i * cos(angle);	//sphere moves in a straight line in the direction of the camera angle
+	spherePosZ = spherePosZ + i * sin(angle);
 
 	moveCamera(x, y, z);
 	/*
@@ -270,19 +270,19 @@ void inputKey(int key, int x, int y) {
 
 	switch (key) {
 		case GLUT_KEY_LEFT :
-			orientMe(-PI/8.0f);
+			orientMe(-PI/16.0f);
 			//sphereRotX = (sphereRotX - 5) % 360;
 			break;
 		case GLUT_KEY_RIGHT : 
-			orientMe(PI/8.0f);
+			orientMe(PI/16.0f);
 			//sphereRotX = (sphereRotX + 5) % 360;
 			break;
 		case GLUT_KEY_UP :
-			moveMeFlat(7);
+			moveMeFlat(-7);
 			//sphereRotY = (sphereRotY + 5) % 360;
 			break;
 		case GLUT_KEY_DOWN : 
-			moveMeFlat(-7);
+			moveMeFlat(7);
 			//sphereRotY = (sphereRotY - 5) % 360;
 			break;
 	}
