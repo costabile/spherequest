@@ -4,6 +4,9 @@
 //#include <GL/glu.h>
 #include <GL/glut.h>
 
+#define CAM_DIST 20.0		//distance camera keeps from sphere
+#define PI 3.14159265358979323846
+
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;
 static float lx=0.0f,ly=0.0f, lz=-1.0f;
@@ -18,6 +21,15 @@ int sphereRotX = 0.0;
 int sphereRotY = 0.0;
 int sphereRotZ = 0.0;
 float sphereRotAng = 0.0;
+
+void moveCamera(float xDif, float yDif, float zDif) {		//moves the camera to xDif, yDif, zDif (always looking at sphere)
+	
+	glLoadIdentity();
+	gluLookAt(xDif, yDif, zDif, 
+		//x + lx,y + ly,z + lz,		//original
+		spherePosX, spherePosY, spherePosZ,		//always look at sphere
+		0.0f,1.0f,0.0f);
+}
 
 void changeSize(int w, int h)
 {
@@ -38,10 +50,11 @@ void changeSize(int w, int h)
 	// Set the clipping volume
 	gluPerspective(45,ratio,1,1000);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	moveCamera(x, y, z);
+	/*glLoadIdentity();
 	gluLookAt(x, y, z, 
 		x + lx,y + ly,z + lz,
-		0.0f,1.0f,0.0f);
+		0.0f,1.0f,0.0f);*/
 }
 
 void drawSphere() 
@@ -201,25 +214,22 @@ void renderScene(void) {
 			glPopMatrix();
 		}
 		glutSwapBuffers();
-
-}
-
-void moveCamera(float xDif, float yDif, float zDif) {		//moves the camera to current position + xDif, yDif, zDif (always looking at sphere)
-	
-	glLoadIdentity();
-	gluLookAt(x + xDif, y+ yDif, z + zDif, 
-		//x + lx,y + ly,z + lz,		//original
-		spherePosX, spherePosY, spherePosZ,		//always look at sphere
-		0.0f,1.0f,0.0f);
 }
 
 void orientMe(float ang) {
 
 
-	lx = sin(ang);
-	lz = -cos(ang);
+	//lx = sin(ang);
+	//lz = -cos(ang);
+	angle -= ang;
 
-	moveCamera(lx, ly, lz);
+	x = spherePosX + CAM_DIST * cos(angle);
+	z = spherePosZ + CAM_DIST * sin(angle);
+
+	//lx = x - oldx;
+	//lz = z - oldz;
+
+	moveCamera(x, y, z);
 	/*
 	glLoadIdentity();
 	gluLookAt(x, y, z, 
@@ -229,16 +239,18 @@ void orientMe(float ang) {
 	*/
 }
 
-
 void moveMeFlat(int i) {
-	x = x + i*(lx)*0.1;
-	z = z + i*(lz)*0.1;
+	//x = x + i*(lx)*0.1;
+	//z = z + i*(lz)*0.1;
+
+	x = x + i * sin(angle);
+	z = z + i * cos(angle);
 
 	//sphere movement:
 	spherePosX = x;
-	spherePosZ = z - 20;
+	spherePosZ = z - CAM_DIST;
 
-	moveCamera(lx, ly, lz);
+	moveCamera(x, y, z);
 	/*
 	glLoadIdentity();
 	gluLookAt(x, y, z, 
@@ -249,7 +261,7 @@ void moveMeFlat(int i) {
 
 void processNormalKeys(unsigned char key, int x, int y) {
 
-	if (key == 27) 
+	if ((key == 27) || (key = 'q') || (key = 'Q'))
 		exit(0);
 }
 
@@ -258,22 +270,20 @@ void inputKey(int key, int x, int y) {
 
 	switch (key) {
 		case GLUT_KEY_LEFT :
-			angle -= 0.1f;
-			orientMe(angle);
-			sphereRotX = (sphereRotX - 5) % 360;
+			orientMe(-PI/8.0f);
+			//sphereRotX = (sphereRotX - 5) % 360;
 			break;
 		case GLUT_KEY_RIGHT : 
-			angle +=0.1f;
-			orientMe(angle);
-			sphereRotX = (sphereRotX + 5) % 360;
+			orientMe(PI/8.0f);
+			//sphereRotX = (sphereRotX + 5) % 360;
 			break;
 		case GLUT_KEY_UP :
 			moveMeFlat(7);
-			sphereRotY = (sphereRotY + 5) % 360;
+			//sphereRotY = (sphereRotY + 5) % 360;
 			break;
 		case GLUT_KEY_DOWN : 
 			moveMeFlat(-7);
-			sphereRotY = (sphereRotY - 5) % 360;
+			//sphereRotY = (sphereRotY - 5) % 360;
 			break;
 	}
 }
@@ -297,6 +307,9 @@ int main(int argc, char **argv)
 	//glutDisplayFunc(drawHUD);
 
 	glutReshapeFunc(changeSize);
+
+	orientMe(-PI/2.0);
+	moveCamera(x, y, z);
 
 	glutMainLoop();
 
