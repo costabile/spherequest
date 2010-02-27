@@ -9,10 +9,11 @@ static float x=0.0f, y=1.75f, z=5.0f;
 static float lx=0.0f,ly=0.0f, lz=-1.0f;
 static GLint snowman_display_list;
 
+//sphere position:
 GLfloat spherePosX = 0.0;
-GLfloat spherePosY = 0.0;
-GLfloat spherePosZ = 0.0;
-
+GLfloat spherePosY = 2.0;
+GLfloat spherePosZ = -15.0;
+//sphere rotation:
 int sphereRotX = 0.0;
 int sphereRotY = 0.0;
 int sphereRotZ = 0.0;
@@ -50,6 +51,14 @@ void drawSphere()
 	glTranslatef(spherePosX,spherePosY,spherePosZ);
 	glRotatef(sphereRotAng, sphereRotX, sphereRotY, sphereRotZ);
 	glutSolidSphere(2.0f, 20, 20);
+	glPopMatrix();
+
+	//draw cone...for testing purposes, to know how the sphere is oriented.
+	glPushMatrix();
+	glTranslatef(spherePosX,spherePosY + 2.0,spherePosZ);
+	glRotatef(sphereRotAng, sphereRotX, sphereRotY, sphereRotZ+180);
+	glColor3f(1.0f, 1.0f , 1.0f);
+	glutSolidCone(0.9f,0.35f,10,2);
 	glPopMatrix();
 }
 
@@ -106,10 +115,12 @@ void drawWiseMen() {
 	glPopMatrix();
 
 	// Draw Hat
+	glPushMatrix();
 	glTranslatef(0.0f, 0.1f, 0.0f);
 	glColor3f(1.0f, 0.8f , 0.2f);
 	glRotatef(-90.0f ,1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.9f,0.35f,10,2);
+	glPopMatrix();
 
 }
 
@@ -137,6 +148,7 @@ void initScene() {
 	snowman_display_list = createDL();
 	
 	//Scene Lighting:
+	glPushMatrix();
 	//glEnable(GL_LIGHTING);		//comment out this line to turn off lighting effects
 	GLfloat light1PosType [] = {2.0, 0.0, 3.0, 1.0};
 	GLfloat whiteColor[] = {1.0, 1.0, 1.0, 1.0};
@@ -148,6 +160,7 @@ void initScene() {
 	glLightfv (GL_LIGHT1, GL_AMBIENT, whiteColor);
 	glLightfv (GL_LIGHT1, GL_DIFFUSE, whiteColor);
 	glLightfv (GL_LIGHT1, GL_SPECULAR, whiteColor);
+	glPopMatrix();
 
 }
 
@@ -191,25 +204,47 @@ void renderScene(void) {
 
 }
 
+void moveCamera(float xDif, float yDif, float zDif) {		//moves the camera to current position + xDif, yDif, zDif (always looking at sphere)
+	
+	glLoadIdentity();
+	gluLookAt(x + xDif, y+ yDif, z + zDif, 
+		//x + lx,y + ly,z + lz,		//original
+		spherePosX, spherePosY, spherePosZ,		//always look at sphere
+		0.0f,1.0f,0.0f);
+}
+
 void orientMe(float ang) {
 
 
 	lx = sin(ang);
 	lz = -cos(ang);
+
+	moveCamera(lx, ly, lz);
+	/*
 	glLoadIdentity();
 	gluLookAt(x, y, z, 
-		x + lx,y + ly,z + lz,
+		//x + lx,y + ly,z + lz,		//original
+		spherePosX, spherePosY, spherePosZ,		//always look at sphere
 		0.0f,1.0f,0.0f);
+	*/
 }
 
 
 void moveMeFlat(int i) {
 	x = x + i*(lx)*0.1;
 	z = z + i*(lz)*0.1;
+
+	//sphere movement:
+	spherePosX = x;
+	spherePosZ = z - 20;
+
+	moveCamera(lx, ly, lz);
+	/*
 	glLoadIdentity();
 	gluLookAt(x, y, z, 
 		x + lx,y + ly,z + lz,
 		0.0f,1.0f,0.0f);
+	*/
 }
 
 void processNormalKeys(unsigned char key, int x, int y) {
@@ -234,13 +269,11 @@ void inputKey(int key, int x, int y) {
 			break;
 		case GLUT_KEY_UP :
 			moveMeFlat(7);
-			spherePosX += 1;
-			sphereRotX = (sphereRotY + 5) % 360;
+			sphereRotY = (sphereRotY + 5) % 360;
 			break;
 		case GLUT_KEY_DOWN : 
 			moveMeFlat(-7);
-			spherePosX -= 1;
-			sphereRotX = (sphereRotY - 5) % 360;
+			sphereRotY = (sphereRotY - 5) % 360;
 			break;
 	}
 }
