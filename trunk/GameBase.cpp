@@ -126,7 +126,7 @@ void drawHorizontalWall() {
 
 	glPushMatrix();
 	glColor3f(0.4, 0.4, 0.4);
-	glutSolidCube(19);
+	glutSolidCube(39);
 	glPopMatrix();
 }
 
@@ -240,10 +240,10 @@ void drawGround(){
 	// Draw ground
 	glColor3f(0.2f, 0.7f, 0.2f);
 	glBegin(GL_QUADS);
-	glVertex3f(-100.0f, 0.0f, -100.0f);
-	glVertex3f(-100.0f, 0.0f,  100.0f);
-	glVertex3f( 100.0f, 0.0f,  100.0f);
-	glVertex3f( 100.0f, 0.0f, -100.0f);
+	glVertex3f(-200.0f, 0.0f, -200.0f);
+	glVertex3f(-200.0f, 0.0f,  200.0f);
+	glVertex3f( 200.0f, 0.0f,  200.0f);
+	glVertex3f( 200.0f, 0.0f, -200.0f);
 	glEnd();
 }
 
@@ -287,7 +287,7 @@ void renderScene(void) {
 	for(int i = -3; i < 3; i++)
 		for(int j=-3; j < 3; j++) {
 			glPushMatrix();
-			glTranslatef(i*20.0,0,j * 20.0);
+			glTranslatef(i*40.0,0,j * 40.0);
 			if (checkMaze((i + 3), (j + 3)) == 1)
 			{
 				drawHorizontalWall();
