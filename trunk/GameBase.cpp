@@ -247,6 +247,21 @@ void drawGround(){
 	glEnd();
 }
 
+//Sky is pretty
+void drawSkybox(){
+	glColor3f(0.8, 0.8, 1.0);
+	glutSolidSphere(400, 10, 10);
+}
+
+//Couldn't resist. May put this in skybox texture later
+void drawMtFuji(){
+	glPushMatrix();
+	glColor3f(0.6, 0.6, 0.6);
+	glRotatef(-90, 1, 0, 0);
+	glTranslatef(0, 400, 0);
+	glutSolidCone(200, 200, 20, 20);
+	glPopMatrix();
+}
 void drawHUD() {
 	glColor3f(1.0, 1.0, 1.0);
 	glBegin(GL_QUADS);
@@ -282,6 +297,8 @@ void renderScene(void) {
 	drawGround();
 	drawHUD();
 	drawSphere();
+	drawSkybox();
+	drawMtFuji();
 	// Draw 36 Wise Men
 
 	for(int i = -3; i < 3; i++)
