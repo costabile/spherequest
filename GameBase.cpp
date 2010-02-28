@@ -290,6 +290,26 @@ void drawHUD() {
 	glVertex3f(x+hudx+half_hud_width, 0.0f, z - hudz);
 */
 	glEnd();
+
+	//glMatrixMode(GL_PROJECTION);
+	//glPushMatrix();
+	//glLoadIdentity(); // Clear the matrix of previous information
+	//gluOrtho2D(0,640,0,360); // Window size
+	//glScalef(1,-1,1); // Flip the scene upside-down
+	//glTranslatef(0,-360,0); // Translate to display correctly
+	//glMatrixMode(GL_MODELVIEW);
+
+	//glColor3f(1.0, 1.0, 1.0);
+	//glBegin(GL_QUADS);
+	//glVertex2f(125, 125);
+	//glVertex2f(125, 375);
+	//glVertex2f(375, 375);
+	//glVertex2f(375, 125);
+	//glEnd();
+
+	//glMatrixMode(GL_PROJECTION);
+	//glPopMatrix();
+	//glMatrixMode(GL_MODELVIEW);
 }
 
 void renderScene(void) {
