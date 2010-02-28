@@ -219,7 +219,8 @@ void initScene() {
 	snowman_display_list = createDL();
 	
 	//Scene Lighting:
-	//glEnable(GL_LIGHTING);		//comment out this line to turn off lighting effects
+	glEnable(GL_LIGHTING);		//comment out this line to turn off lighting effects
+	glEnable(GL_COLOR_MATERIAL); // Keep original colours of objects
 	GLfloat light1PosType [] = {2.0, 0.0, 3.0, 1.0};
 	GLfloat whiteColor[] = {1.0, 1.0, 1.0, 1.0};
 	GLfloat blackColor[] = {0.0, 0.0, 0.0, 0.0};
