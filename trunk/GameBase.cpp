@@ -2,7 +2,7 @@
 #include <math.h>
 //#include <GL/gl.h>
 //#include <GL/glu.h>
-#include <GL/glut.h>
+#include <glut.h>
 
 #define CAM_DIST 20.0		//distance camera keeps from sphere
 #define PI 3.14159265358979323846
@@ -23,6 +23,7 @@ GLfloat spherePosZ = -15.0;
 int sphereRotX = 0.0;
 int sphereRotY = 0.0;
 int sphereRotZ = 0.0;
+int maze[6][6];
 float sphereRotAng = 0.0;
 
 void moveCamera(float xDif, float yDif, float zDif) {		//moves the camera to xDif, yDif, zDif (always looking at sphere)
@@ -60,6 +61,53 @@ void changeSize(int w, int h)
 		0.0f,1.0f,0.0f);*/
 }
 
+void generateMaze()
+{
+	//Empty Maze Matrix
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			maze[i][j] = 0;
+		}
+	}
+	//Define the following maze (1 = wall, 2 = Wise Man!)
+	// 1 1 0 1 1 1
+	// 1 0 0 1 0 1
+	// 1 0 1 0 0 1
+	// 1 0 0 0 1 1
+	// 1 0 1 0 0 1
+	// 1 1 1 1 2 1
+
+	//The following is an EXTREMELY brute force way of defining a map.
+	//The maps will later be read from a file!
+	for (int i = 0; i < 6; i++)
+	{
+		maze[i][0] = 1;
+		maze[i][5] = 1;
+	}
+
+	for (int j = 0; j < 6; j++)
+	{
+		maze[0][j] = 1;
+		maze[5][j] = 1;
+	}
+
+	maze[0][2] = 0;
+	maze[5][4] = 2;
+	maze[1][3] = 1;
+	maze[2][2] = 1;
+	maze[3][4] = 1;
+	maze[4][2] = 1;
+}
+
+//A quick call to see what the value of maze is
+int checkMaze(int row, int column)
+{
+	return maze[row][column];
+
+}
+
 void drawSphere() 
 {
 	glPushMatrix();
@@ -70,6 +118,21 @@ void drawSphere()
 	glPopMatrix();
 }
 
+void drawTemples() {
+
+}
+
+void drawHorizontalWall() {
+
+	glPushMatrix();
+	glColor3f(0.4, 0.4, 0.4);
+	glutSolidCube(19);
+	glPopMatrix();
+}
+
+void drawVerticalWall() {
+
+}
 void drawWiseMen() {
 
 
@@ -224,8 +287,16 @@ void renderScene(void) {
 	for(int i = -3; i < 3; i++)
 		for(int j=-3; j < 3; j++) {
 			glPushMatrix();
-			glTranslatef(i*10.0,0,j * 10.0);
-			glCallList(snowman_display_list);;
+			glTranslatef(i*20.0,0,j * 20.0);
+			if (checkMaze((i + 3), (j + 3)) == 1)
+			{
+				drawHorizontalWall();
+			}
+			if (checkMaze((i + 3), (j + 3)) == 2)
+			{
+				drawWiseMen();
+			}
+			//glCallList(snowman_display_list);;
 			glPopMatrix();
 		}
 		glutSwapBuffers();
@@ -310,7 +381,9 @@ int main(int argc, char **argv)
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(640,360);
 	glutCreateWindow("SPHEREQUEST");
-
+	
+	//Get the maze set for the level
+	generateMaze();
 	initScene();
 
 	glutKeyboardFunc(processNormalKeys);
