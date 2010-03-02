@@ -1,8 +1,9 @@
-//#include <glut.h>
+#include <stdlib.h>
 #include <math.h>
 //#include <GL/gl.h>
 //#include <GL/glu.h>
 #include <glut.h>
+#include <string.h>
 
 #define CAM_DIST 20.0		//distance camera keeps from sphere
 #define PI 3.14159265358979323846
@@ -14,6 +15,8 @@ static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;
 static float lx=0.0f,ly=0.0f, lz=-1.0f;
 static GLint snowman_display_list;
+static int zen = 100;
+static int level = 1;
 
 //sphere position:
 GLfloat spherePosX = 0.0;
@@ -263,60 +266,62 @@ void drawMtFuji(){
 	glutSolidCone(200, 200, 20, 20);
 	glPopMatrix();
 }
-void drawHUD() {
-	glColor3f(1.0, 1.0, 1.0);
-	glBegin(GL_QUADS);
-	//glVertex3f(x-3, -0.4f, z-4);
-	//glVertex3f(x-3, 0.4f, z-4);
-	//glVertex3f(x+3, 0.4f, z-4);
-	//glVertex3f(x+3, -0.4f, z-4);
-	const float dist_to_hud = 4.0;
-	const float half_hud_width = 3.0;
 
-	float H = half_hud_width / sin(angle);
-	float hudz = dist_to_hud * sin(angle);		//stick HUD to camera
-	glVertex3f(x+H, 0.0f, z - hudz);
-	glVertex3f(x+H, y/4.0f, z - hudz);
-	glVertex3f(x-H, y/4.0f, z - hudz);
-	glVertex3f(x-H, 0.0f, z - hudz);
+void printText(float x, float y, char *string, float r, float g, float b)		//renders string on the screen at coords (x, y) in color (r, g, b)
+{
+  int len, i;
+  glColor3f(r, g, b);
+  glRasterPos2f(x, y);
+  len = (int) strlen(string);
+  for (i = 0; i < len; i++)
+  {
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]);			//if you don't like this font, here's a list of options: http://pyopengl.sourceforge.net/documentation/manual/glutBitmapCharacter.3GLUT.html
+  }
+}
 
-/*
-	float hudx = dist_to_hud * cos(angle);
-	float hudz = dist_to_hud * sin(angle);
+void drawHUD() {		//draws a 2D overlay
 
-	glVertex3f(x+hudx-half_hud_width, 0.0f, z - hudz);
-	glVertex3f(x+hudx-half_hud_width, y/4.0f, z - hudz);
-	glVertex3f(x+hudx+half_hud_width, y/4.0f, z - hudz);
-	glVertex3f(x+hudx+half_hud_width, 0.0f, z - hudz);
-*/
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();							//push projection matrix
+	glLoadIdentity();
+	glOrtho(0.0, 3.0, 3.0, 0.0, -1, 1);		//set ortho mode
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();							//push modelview matrix
+	glLoadIdentity();
+
+	//print text on HUD here--------
+	const float hudTextY = 0.15;
+	printText(0.05, hudTextY, "Zen: %", 0.1, 0.1, 0.1);	//print Zen label
+	char zenStr[4];
+	itoa(zen, zenStr, 10);
+	printText(0.31, hudTextY, zenStr, 0.6, 0.2, 0.2);	//print amount of Zen
+	printText(0.94, hudTextY, "SphereQuest(TM)", 0.8, 0.3, 0.3);	//print Title
+	printText(1.95, hudTextY, "Plane of Conciousness:", 0.3, 0.3, 0.3);		//print level label
+	char planeStr[3];
+	itoa(level, planeStr, 10);
+	printText(2.9, hudTextY, planeStr, 0.6, 0.2, 0.2);		//print level/plane #
+	//end text
+        
+	glBegin(GL_QUADS);						//draw HUD bar
+	glColor4f(0.95, 0.95, 0.95, 1.0);
+    glVertex2f(0.0, 0.0);
+    glVertex2f(6.0, 0.0);
+    glVertex2f(6.0, 0.2);
+    glVertex2f(0.0, 0.2);
 	glEnd();
 
-	//glMatrixMode(GL_PROJECTION);
-	//glPushMatrix();
-	//glLoadIdentity(); // Clear the matrix of previous information
-	//gluOrtho2D(0,640,0,360); // Window size
-	//glScalef(1,-1,1); // Flip the scene upside-down
-	//glTranslatef(0,-360,0); // Translate to display correctly
-	//glMatrixMode(GL_MODELVIEW);
 
-	//glColor3f(1.0, 1.0, 1.0);
-	//glBegin(GL_QUADS);
-	//glVertex2f(125, 125);
-	//glVertex2f(125, 375);
-	//glVertex2f(375, 375);
-	//glVertex2f(375, 125);
-	//glEnd();
+	glMatrixMode( GL_PROJECTION );
+	glPopMatrix();									//pop projection matrix
+	glMatrixMode( GL_MODELVIEW );
+	glPopMatrix();									//pop modelview matrix
 
-	//glMatrixMode(GL_PROJECTION);
-	//glPopMatrix();
-	//glMatrixMode(GL_MODELVIEW);
 }
 
 void renderScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	drawGround();
-	drawHUD();
 	drawSphere();
 	drawSkybox();
 	drawMtFuji();
@@ -337,7 +342,10 @@ void renderScene(void) {
 			//glCallList(snowman_display_list);;
 			glPopMatrix();
 		}
-		glutSwapBuffers();
+	
+	drawHUD();		//HUD must be last
+
+	glutSwapBuffers();
 }
 
 void orientMe(float ang) {
@@ -394,11 +402,11 @@ void inputKey(int key, int x, int y) {
 
 	switch (key) {
 		case GLUT_KEY_LEFT :
-			orientMe(-TURN_ANGLE);
+			orientMe(TURN_ANGLE);
 			//sphereRotX = (sphereRotX - 5) % 360;
 			break;
 		case GLUT_KEY_RIGHT : 
-			orientMe(TURN_ANGLE);
+			orientMe(-TURN_ANGLE);
 			//sphereRotX = (sphereRotX + 5) % 360;
 			break;
 		case GLUT_KEY_UP :
