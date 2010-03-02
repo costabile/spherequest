@@ -14,3 +14,5 @@ In no particular order:
   * Something with the Zen counter.  Zen goes down when you hit an obstacle, or fail a puzzle?  Ben suggested that the sphere should glow, and grows dimmer as Zen goes down.
   * Other levels. Duh.
   * Make level 1 somewhat more complex/add puzzles or some kind of challenges.
+  * Ticker tape thingy along the bottom?
+  * Audio
