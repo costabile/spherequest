@@ -1,3 +1,7 @@
+//SphereQuest
+//Game Project for SW Eng 3GC3
+//Written by Jason Costabile, Ben Kybartas, Kaitlin Smith
+
 #include <stdlib.h>
 #include <math.h>
 //#include <GL/gl.h>
