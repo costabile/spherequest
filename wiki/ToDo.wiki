@@ -1,0 +1,16 @@
+#summary A list of tasks that need to be done.
+#labels todo,tasks
+
+= Introduction =
+I thought it would be useful to keep a list of incomplete tasks so that if you don't know what to do next, you can check here.  Also, this way we won't forget any ideas.  So if you think of anything, add it to the list.  If you complete anything, take it off the list.
+
+
+= Details =
+In no particular order:
+  * Collision detection (primarily with walls, but possibly with wise men, map boundaries, and end-of-level items)
+  * Organize file structure!  Make classes.  Separate some stuff into different cpp files.
+  * Make smoother sphere motion.  i.e. Tapping a key should give the sphere a bit of momentum rather than translating it a static distance forward.
+  * Camera collisions.  Don't let the camera go into walls.
+  * Something with the Zen counter.  Zen goes down when you hit an obstacle, or fail a puzzle?  Ben suggested that the sphere should glow, and grows dimmer as Zen goes down.
+  * Other levels. Duh.
+  * Make level 1 somewhat more complex/add puzzles or some kind of challenges.
