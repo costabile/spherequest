@@ -16,3 +16,4 @@ In no particular order:
   * Make level 1 somewhat more complex/add puzzles or some kind of challenges.
   * Ticker tape thingy along the bottom?
   * Audio
+  * Beautification.  Make scenery look more interesting?  Maybe add textures to ground/walls/sphere/whatever else.
