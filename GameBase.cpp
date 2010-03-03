@@ -8,6 +8,8 @@
 //#include <GL/glu.h>
 #include <glut.h>
 #include <string.h>
+#include <windows.h>
+#include <stdio.h>
 
 #define CAM_DIST 20.0		//distance camera keeps from sphere
 #define PI 3.14159265358979323846
@@ -32,6 +34,41 @@ int sphereRotY = 0.0;
 int sphereRotZ = 0.0;
 int maze[6][6];
 float sphereRotAng = 0.0;
+
+GLuint grassTexture;
+
+//load texture. Based on tutorial found at http://www.swiftless.com/tutorials/opengl/texture_under_windows.html
+GLuint LoadTexture(const char * filename, int width, int height)
+{
+	GLuint texture;
+	unsigned char * data;
+	FILE * file;
+
+	file = fopen( filename, "rb" );
+    if ( file == NULL ) return 0;
+    data = (unsigned char *)malloc( width * height * 3 );
+    fread( data, width * height * 3, 1, file );
+    fclose( file );
+
+	glGenTextures( 1, &texture );
+    glBindTexture( GL_TEXTURE_2D, texture );
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+		
+	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+
+	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+
+	gluBuild2DMipmaps( GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data );
+    free( data );
+    return texture;
+}
+
+void FreeTexture( GLuint texture )
+{
+  glDeleteTextures( 1, &texture );
+}
 
 void moveCamera(float xDif, float yDif, float zDif) {		//moves the camera to xDif, yDif, zDif (always looking at sphere)
 	
@@ -132,8 +169,16 @@ void drawTemples() {
 void drawHorizontalWall() {
 
 	glPushMatrix();
-	glColor3f(0.4, 0.4, 0.4);
+	
+	grassTexture = LoadTexture( "textures/test.raw", 256, 256 );
+    glEnable( GL_TEXTURE_2D );
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
+	
+	glBindTexture( GL_TEXTURE_2D, grassTexture);
+	//glColor3f(0.4, 0.4, 0.4);
 	glutSolidCube(39);
+	FreeTexture( grassTexture );
 	glPopMatrix();
 }
 
