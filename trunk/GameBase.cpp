@@ -462,10 +462,9 @@ void drawMaze(void) {		//draw walls, obstacles, other level features
 }
 
 void renderScene(void) {
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	grassTexture = LoadTexture( "textures/grass.raw", 1024, 1024 );
+	grassTexture = LoadTexture( "textures/grass.raw", 1024, 1024);
 	skyboxTexture = LoadTexture( "textures/skybox.raw", 800, 600);
     
 	glEnable( GL_TEXTURE_2D );
@@ -486,8 +485,8 @@ void renderScene(void) {
 
 	//drawMtFuji();	
 
-
-	for(int i = -3; i < 3; i++)
+	//the drawing now occurs in drawMaze:
+	/*for(int i = -3; i < 3; i++)
 		for(int j=-3; j < 3; j++) {
 			glPushMatrix();
 			glTranslatef(i*40.0,0,j * 40.0);
@@ -512,7 +511,7 @@ void renderScene(void) {
 				drawTree();
 			}
 			glPopMatrix();
-		}
+		}*/
 
 	drawHUD();		//HUD must be last
 	glutSwapBuffers();
