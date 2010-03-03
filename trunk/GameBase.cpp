@@ -223,11 +223,12 @@ GLuint createDL() {
 void initScene() {
 
 	glEnable(GL_DEPTH_TEST);
-	snowman_display_list = createDL();
+	//snowman_display_list = createDL();
 	
 	//Scene Lighting:
 	glEnable(GL_LIGHTING);		//comment out this line to turn off lighting effects
 	glEnable(GL_COLOR_MATERIAL); // Keep original colours of objects
+	//glShadeModel(GL_SMOOTH);
 	GLfloat light1PosType [] = {2.0, 0.0, 3.0, 1.0};
 	GLfloat whiteColor[] = {1.0, 1.0, 1.0, 1.0};
 	GLfloat blackColor[] = {0.0, 0.0, 0.0, 0.0};
@@ -246,11 +247,15 @@ void initScene() {
 
 void drawGround(){
 	// Draw ground
-	glColor3f(0.2f, 0.7f, 0.2f);
 	glBegin(GL_QUADS);
+	//glColor3f(0.2f, 0.7f, 0.2f);
+	glColor3f(1, 0, 0);
 	glVertex3f(-200.0f, 0.0f, -200.0f);
+	glColor3f(0, 1, 0);
 	glVertex3f(-200.0f, 0.0f,  200.0f);
+	glColor3f(0, 0, 1);
 	glVertex3f( 200.0f, 0.0f,  200.0f);
+	glColor3f(1, 1, 1);
 	glVertex3f( 200.0f, 0.0f, -200.0f);
 	glEnd();
 }
@@ -270,6 +275,7 @@ void drawMtFuji(){
 	glutSolidCone(200, 200, 20, 20);
 	glPopMatrix();
 }
+	
 
 void printText(float x, float y, char *string, float r, float g, float b)		//renders string on the screen at coords (x, y) in color (r, g, b)
 {
@@ -307,10 +313,14 @@ void drawHUD() {		//draws a 2D overlay
 	//end text
         
 	glBegin(GL_QUADS);						//draw HUD bar
-	glColor4f(0.95, 0.95, 0.95, 1.0);
-    glVertex2f(0.0, 0.0);
+	//glColor4f(0.95, 0.95, 0.95, 1.0);
+    glColor3f(0.8, 0.8, 1);
+	glVertex2f(0.0, 0.0);
+	glColor3f(0.8, 0.8, 1);
     glVertex2f(6.0, 0.0);
+	glColor3f(1, 1, 1);
     glVertex2f(6.0, 0.2);
+	glColor3f(1, 1, 1);
     glVertex2f(0.0, 0.2);
 	glEnd();
 
