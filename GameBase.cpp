@@ -343,12 +343,16 @@ void drawGround(){
 	glBegin(GL_QUADS);
 	//glColor3f(0.2f, 0.7f, 0.2f);
 	//glColor3f(1, 0, 0);
+	glTexCoord2f(0, 0);
 	glVertex3f(-200.0f, 0.0f, -200.0f);
 	//glColor3f(0, 1, 0);
+	glTexCoord2f(50, 0);
 	glVertex3f(-200.0f, 0.0f,  200.0f);
 	//glColor3f(0, 0, 1);
+	glTexCoord2f(50, 50);
 	glVertex3f( 200.0f, 0.0f,  200.0f);
 	//glColor3f(1, 1, 1);
+	glTexCoord2f(0, 50);
 	glVertex3f( 200.0f, 0.0f, -200.0f);
 	glEnd();
 }
@@ -356,7 +360,13 @@ void drawGround(){
 //Sky is pretty
 void drawSkybox(){
 	glColor3f(0.8, 0.9, 1.0);
-	glutSolidSphere(400, 10, 10);
+	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+	glEnable(GL_TEXTURE_GEN_S);
+	glEnable(GL_TEXTURE_GEN_T);
+	glutSolidSphere(300, 10, 10);
+	glDisable(GL_TEXTURE_GEN_S);
+	glDisable(GL_TEXTURE_GEN_T);
 }
 
 //Couldn't resist. May put this in skybox texture later
@@ -455,23 +465,56 @@ void renderScene(void) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	grassTexture = LoadTexture( "textures/test.raw", 256, 256 );
+	grassTexture = LoadTexture( "textures/grass.raw", 1024, 1024 );
+	skyboxTexture = LoadTexture( "textures/skybox.raw", 800, 600);
+	//skyboxTexture
     glEnable( GL_TEXTURE_2D );
-    glEnable(GL_TEXTURE_GEN_S);
-    glEnable(GL_TEXTURE_GEN_T);
-	
+
 	glBindTexture( GL_TEXTURE_2D, grassTexture);
-
 	drawGround();
-
 	FreeTexture( grassTexture );
 
 	drawSphere();
+	
+	glBindTexture( GL_TEXTURE_2D, skyboxTexture );
+
 	drawSkybox();
-	drawMtFuji();	
+	
+	FreeTexture( skyboxTexture );
 	drawMaze();
 	drawHUD();		//HUD must be drawn last
 
+	//drawMtFuji();	
+
+
+	for(int i = -3; i < 3; i++)
+		for(int j=-3; j < 3; j++) {
+			glPushMatrix();
+			glTranslatef(i*40.0,0,j * 40.0);
+			if (checkMaze((i + 3), (j + 3)) == 1)
+			{
+				drawXWall();
+			}
+			if (checkMaze((i + 3), (j + 3)) == 2)
+			{
+				drawZWall();
+			}
+			if (checkMaze((i + 3), (j + 3)) == 3)
+			{
+				drawTemples();
+			}
+			if (checkMaze((i + 3), (j + 3)) == 4)
+			{
+				drawWiseMen();
+			}
+			if (checkMaze((i + 3), (j + 3)) == 5)
+			{
+				drawTree();
+			}
+			glPopMatrix();
+		}
+
+	drawHUD();		//HUD must be last
 	glutSwapBuffers();
 }
 
@@ -534,12 +577,13 @@ void inputKey(int key, int x, int y) {
 
 int main(int argc, char **argv)
 {
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
 	glutCreateWindow("SPHEREQUEST");
-
+	
 	//Get the maze set for the level
 //	generateMaze();
 	initScene();
