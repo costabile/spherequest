@@ -467,8 +467,8 @@ void renderScene(void) {
 	
 	grassTexture = LoadTexture( "textures/grass.raw", 1024, 1024 );
 	skyboxTexture = LoadTexture( "textures/skybox.raw", 800, 600);
-	//skyboxTexture
-    glEnable( GL_TEXTURE_2D );
+    
+	glEnable( GL_TEXTURE_2D );
 
 	glBindTexture( GL_TEXTURE_2D, grassTexture);
 	drawGround();
@@ -577,6 +577,7 @@ void inputKey(int key, int x, int y) {
 
 int main(int argc, char **argv)
 {
+
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
