@@ -31,7 +31,14 @@ GLfloat spherePosZ = -15.0;
 int sphereRotX = 0.0;
 int sphereRotY = 0.0;
 int sphereRotZ = 0.0;
-int maze[6][6];
+int maze[6][6]= {
+	{3, 2, 0, 3, 2, 3},
+	{1, 0, 0, 1, 5, 1},
+	{1, 0, 2, 3, 0, 1},
+	{1, 0, 0, 0, 0, 3},
+	{1, 5, 4, 1, 0, 1},
+	{3, 2, 2, 3, 4, 3}
+	};
 float sphereRotAng = 0.0;
 
 GLuint grassTexture;
@@ -114,7 +121,7 @@ void generateMaze()
 		{
 			maze[i][j] = 0;
 		}
-	}
+	} 
 	//Define the following maze (1 = wall, 2 = Wise Man!)
 	// 1 1 0 1 1 1
 	// 1 0 0 1 0 1
@@ -163,21 +170,79 @@ void drawSphere()
 }
 
 void drawTemples() {
-
-}
-
-void drawHorizontalWall() {
-
 	glPushMatrix();
-	glColor3f(0.4, 0.4, 0.4);
-	glutSolidCube(39);
 	
+	//Draw Roof
+	glPushMatrix();
+	glRotatef(-90, 1, 0, 0);
+	glTranslatef(0,0,32);
+	glColor3f(0, 0, 0);
+	glutSolidCone(40, 30, 20, 20);
+	glPopMatrix();
+
+	glTranslatef(0, 20, 0);
+	glColor3f(0.5, 0, 0);
+	glutSolidCube(40);
+
+		//Draw Roof
+	glPushMatrix();
+	glRotatef(-90, 1, 0, 0);
+	glTranslatef(0,0,45);
+	glColor3f(0, 0, 0);
+	glutSolidCone(30, 20, 20, 20);
+	glPopMatrix();
+
+	glTranslatef(0, 35, 0);
+	glColor3f(0.5, 0, 0);
+	glutSolidCube(30);
+
+			//Draw Roof
+	glPushMatrix();
+	glRotatef(-90, 1, 0, 0);
+	glTranslatef(0,0,35);
+	glColor3f(0, 0, 0);
+	glutSolidCone(20, 10, 20, 20);
+	glPopMatrix();
+
+	glTranslatef(0, 25, 0);
+	glColor3f(0.5, 0, 0);
+	glutSolidCube(20);
 	glPopMatrix();
 }
 
-void drawVerticalWall() {
+void drawXWall() {
 
+	glPushMatrix();
+	glColor3f(0.3, 0.3, 0.3);
+	glTranslatef(-10, 10, 0);
+	glutSolidCube(20);
+	glTranslatef(20, 0, 0);
+	glutSolidCube(20);
+	glPopMatrix();
 }
+
+void drawZWall() {
+	glPushMatrix();
+	glColor3f(0.3, 0.3, 0.3);
+	glTranslatef(0, 10, -10);
+	glutSolidCube(20);
+	glTranslatef(0, 0, 20);
+	glutSolidCube(20);
+	glPopMatrix();
+}
+void drawTree() {
+	glPushMatrix();
+	glRotatef(-90, 1, 0, 0);
+	glColor3f(0, 0.4, 0);
+	glTranslatef(0, 0, 0);
+	glutSolidCone(3, 5, 10, 10);
+	glTranslatef(0, 0, 2.5);
+	glutSolidCone(3, 5, 10, 10);
+	glTranslatef(0, 0, 2.5);
+	glutSolidCone(3, 5, 10, 10);
+	glPopMatrix();
+}
+
 void drawWiseMen() {
 
 
@@ -269,13 +334,13 @@ void drawGround(){
 	// Draw ground
 	glBegin(GL_QUADS);
 	//glColor3f(0.2f, 0.7f, 0.2f);
-	glColor3f(1, 0, 0);
+	//glColor3f(1, 0, 0);
 	glVertex3f(-200.0f, 0.0f, -200.0f);
-	glColor3f(0, 1, 0);
+	//glColor3f(0, 1, 0);
 	glVertex3f(-200.0f, 0.0f,  200.0f);
-	glColor3f(0, 0, 1);
+	//glColor3f(0, 0, 1);
 	glVertex3f( 200.0f, 0.0f,  200.0f);
-	glColor3f(1, 1, 1);
+	//glColor3f(1, 1, 1);
 	glVertex3f( 200.0f, 0.0f, -200.0f);
 	glEnd();
 }
@@ -308,7 +373,7 @@ void printText(float x, float y, char *string, float r, float g, float b)		//ren
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]);			//if you don't like this font, here's a list of options: http://pyopengl.sourceforge.net/documentation/manual/glutBitmapCharacter.3GLUT.html
   }
 }
-
+//hi
 void drawHUD() {		//draws a 2D overlay
 
 	glMatrixMode(GL_PROJECTION);
@@ -323,12 +388,12 @@ void drawHUD() {		//draws a 2D overlay
 	const float hudTextY = 0.15;
 	printText(0.05, hudTextY, "Zen: %", 0.1, 0.1, 0.1);	//print Zen label
 	char zenStr[4];
-	itoa(zen, zenStr, 10);
+	_itoa(zen, zenStr, 10);
 	printText(0.31, hudTextY, zenStr, 0.6, 0.2, 0.2);	//print amount of Zen
 	printText(0.94, hudTextY, "SphereQuest(TM)", 0.8, 0.3, 0.3);	//print Title
 	printText(1.95, hudTextY, "Plane of Conciousness:", 0.3, 0.3, 0.3);		//print level label
 	char planeStr[3];
-	itoa(level, planeStr, 10);
+	_itoa(level, planeStr, 10);
 	printText(2.9, hudTextY, planeStr, 0.6, 0.2, 0.2);		//print level/plane #
 	//end text
         
@@ -378,11 +443,23 @@ void renderScene(void) {
 			glTranslatef(i*40.0,0,j * 40.0);
 			if (checkMaze((i + 3), (j + 3)) == 1)
 			{
-				drawHorizontalWall();
+				drawXWall();
 			}
 			if (checkMaze((i + 3), (j + 3)) == 2)
 			{
+				drawZWall();
+			}
+			if (checkMaze((i + 3), (j + 3)) == 3)
+			{
+				drawTemples();
+			}
+			if (checkMaze((i + 3), (j + 3)) == 4)
+			{
 				drawWiseMen();
+			}
+			if (checkMaze((i + 3), (j + 3)) == 5)
+			{
+				drawTree();
 			}
 			glPopMatrix();
 		}
@@ -472,7 +549,7 @@ int main(int argc, char **argv)
 	glutCreateWindow("SPHEREQUEST");
 
 	//Get the maze set for the level
-	generateMaze();
+//	generateMaze();
 	initScene();
 
 	glutKeyboardFunc(processNormalKeys);
