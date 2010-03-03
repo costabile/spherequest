@@ -16,10 +16,13 @@
 #define TURN_ANGLE PI/32.0f		//angle to turn camera on keypress
 #define MOVE_SIZE 5				//distance to move sphere with each keypress
 #define SPHERE_RAD 2.0f			//sphere radius
+//window dimensions:
+#define WIN_WIDTH 640
+#define WIN_HEIGHT 360
 
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;
-static float lx=0.0f,ly=0.0f, lz=-1.0f;
+//static float lx=0.0f,ly=0.0f, lz=-1.0f;
 static int zen = 100;
 static int level = 1;
 
@@ -81,13 +84,17 @@ void moveCamera(float xDif, float yDif, float zDif) {		//moves the camera to xDi
 	
 	glLoadIdentity();
 	gluLookAt(xDif, yDif, zDif, 
-		//x + lx,y + ly,z + lz,		//original
 		spherePosX, spherePosY, spherePosZ,		//always look at sphere
 		0.0f,1.0f,0.0f);
 }
 
 void changeSize(int w, int h)
 {
+	//prevent change in window dimensions:
+	w = WIN_WIDTH;		
+	h = WIN_HEIGHT;
+
+	//-------normal window resize code-----------
 
 	// Prevent a divide by zero, when window is too short
 	// (you can't make a window of zero width).
@@ -106,10 +113,11 @@ void changeSize(int w, int h)
 	gluPerspective(45,ratio,1,1000);
 	glMatrixMode(GL_MODELVIEW);
 	moveCamera(x, y, z);
-	/*glLoadIdentity();
-	gluLookAt(x, y, z, 
-		x + lx,y + ly,z + lz,
-		0.0f,1.0f,0.0f);*/
+
+	//------end of normal window resize
+
+	glutReshapeWindow(WIN_WIDTH, WIN_HEIGHT);	//when the window is resized, snap back to original size.  Effectively disables resize.
+	//will implement a more elegant way to disable resize if I find one.
 }
 
 void generateMaze()
@@ -360,7 +368,6 @@ void drawMtFuji(){
 	glutSolidCone(200, 200, 20, 20);
 	glPopMatrix();
 }
-	
 
 void printText(float x, float y, char *string, float r, float g, float b)		//renders string on the screen at coords (x, y) in color (r, g, b)
 {
@@ -373,7 +380,7 @@ void printText(float x, float y, char *string, float r, float g, float b)		//ren
     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]);			//if you don't like this font, here's a list of options: http://pyopengl.sourceforge.net/documentation/manual/glutBitmapCharacter.3GLUT.html
   }
 }
-//hi
+
 void drawHUD() {		//draws a 2D overlay
 
 	glMatrixMode(GL_PROJECTION);
@@ -417,6 +424,33 @@ void drawHUD() {		//draws a 2D overlay
 
 }
 
+void drawMaze(void) {		//draw walls, obstacles, other level features
+	for(int i = -3; i < 3; i++) {
+			for(int j=-3; j < 3; j++) {
+				glPushMatrix();
+				glTranslatef(i * 40.0, 0, j * 40.0);
+				switch (checkMaze((i + 3), (j + 3))) {
+					case 1:
+						drawXWall();
+						break;
+					case 2:
+						drawZWall();
+						break;
+					case 3:
+						drawTemples();
+						break;
+					case 4:
+						drawWiseMen();
+						break;
+					case 5:
+						drawTree();
+						break;
+				}
+				glPopMatrix();
+			}
+	}
+}
+
 void renderScene(void) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -435,66 +469,30 @@ void renderScene(void) {
 	drawSphere();
 	drawSkybox();
 	drawMtFuji();	
+	drawMaze();
+	drawHUD();		//HUD must be drawn last
 
-
-	for(int i = -3; i < 3; i++)
-		for(int j=-3; j < 3; j++) {
-			glPushMatrix();
-			glTranslatef(i*40.0,0,j * 40.0);
-			if (checkMaze((i + 3), (j + 3)) == 1)
-			{
-				drawXWall();
-			}
-			if (checkMaze((i + 3), (j + 3)) == 2)
-			{
-				drawZWall();
-			}
-			if (checkMaze((i + 3), (j + 3)) == 3)
-			{
-				drawTemples();
-			}
-			if (checkMaze((i + 3), (j + 3)) == 4)
-			{
-				drawWiseMen();
-			}
-			if (checkMaze((i + 3), (j + 3)) == 5)
-			{
-				drawTree();
-			}
-			glPopMatrix();
-		}
-
-	drawHUD();		//HUD must be last
 	glutSwapBuffers();
 }
 
-void orientMe(float ang) {
+bool checkCollision(int movX, int movY, int movZ) {		//checks whether moving to movX, movY, movZ would be a collision
+	bool isCollision = false;
 
+	//todo
 
-	//lx = sin(ang);
-	//lz = -cos(ang);
+	return isCollision;	
+}
+
+void orientMe(float ang) {		//turning
 	angle -= ang;
 
 	x = spherePosX + CAM_DIST * cos(angle);
 	z = spherePosZ + CAM_DIST * sin(angle);
 
-	//lx = x - oldx;
-	//lz = z - oldz;
-
 	moveCamera(x, y, z);
-	/*
-	glLoadIdentity();
-	gluLookAt(x, y, z, 
-		//x + lx,y + ly,z + lz,		//original
-		spherePosX, spherePosY, spherePosZ,		//always look at sphere
-		0.0f,1.0f,0.0f);
-	*/
 }
 
-void moveMeFlat(int i) {
-	//x = x + i*(lx)*0.1;
-	//z = z + i*(lz)*0.1;
-
+void moveMeFlat(int i) {		//moving forward/back
 	//new camera coords:
 	z = z + i * sin(angle);
 	x = x + i * cos(angle);
@@ -503,12 +501,6 @@ void moveMeFlat(int i) {
 	spherePosZ = spherePosZ + i * sin(angle);
 
 	moveCamera(x, y, z);
-	/*
-	glLoadIdentity();
-	gluLookAt(x, y, z, 
-		x + lx,y + ly,z + lz,
-		0.0f,1.0f,0.0f);
-	*/
 }
 
 void processNormalKeys(unsigned char key, int x, int y) {
@@ -545,7 +537,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
-	glutInitWindowSize(640,360);
+	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
 	glutCreateWindow("SPHEREQUEST");
 
 	//Get the maze set for the level
