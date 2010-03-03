@@ -391,10 +391,10 @@ void drawHUD() {		//draws a 2D overlay
 	_itoa(zen, zenStr, 10);
 	printText(0.31, hudTextY, zenStr, 0.6, 0.2, 0.2);	//print amount of Zen
 	printText(0.94, hudTextY, "SphereQuest(TM)", 0.8, 0.3, 0.3);	//print Title
-	printText(1.95, hudTextY, "Plane of Conciousness:", 0.3, 0.3, 0.3);		//print level label
+	printText(1.95, hudTextY, "Plane of Consciousness:", 0.3, 0.3, 0.3);		//print level label
 	char planeStr[3];
 	_itoa(level, planeStr, 10);
-	printText(2.9, hudTextY, planeStr, 0.6, 0.2, 0.2);		//print level/plane #
+	printText(2.91, hudTextY, planeStr, 0.6, 0.2, 0.2);		//print level/plane #
 	//end text
         
 	glBegin(GL_QUADS);						//draw HUD bar
