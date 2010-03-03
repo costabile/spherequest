@@ -20,7 +20,6 @@
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;
 static float lx=0.0f,ly=0.0f, lz=-1.0f;
-static GLint snowman_display_list;
 static int zen = 100;
 static int level = 1;
 
@@ -36,6 +35,7 @@ int maze[6][6];
 float sphereRotAng = 0.0;
 
 GLuint grassTexture;
+GLuint skyboxTexture;
 
 //load texture. Based on tutorial found at http://www.swiftless.com/tutorials/opengl/texture_under_windows.html
 GLuint LoadTexture(const char * filename, int width, int height)
@@ -169,7 +169,7 @@ void drawTemples() {
 void drawHorizontalWall() {
 
 	glPushMatrix();
-	//glColor3f(0.4, 0.4, 0.4);
+	glColor3f(0.4, 0.4, 0.4);
 	glutSolidCube(39);
 	
 	glPopMatrix();
@@ -240,24 +240,6 @@ void drawWiseMen() {
 
 }
 
-GLuint createDL() {
-	GLuint snowManDL;
-
-	// Create the id for the list
-	snowManDL = glGenLists(1);
-
-	// start list
-	glNewList(snowManDL,GL_COMPILE);
-
-	// call the function that contains the rendering commands
-	drawWiseMen();
-
-	// endList
-	glEndList();
-
-	return(snowManDL);
-}
-
 void initScene() {
 
 	glEnable(GL_DEPTH_TEST);
@@ -300,14 +282,14 @@ void drawGround(){
 
 //Sky is pretty
 void drawSkybox(){
-	glColor3f(0.8, 0.8, 1.0);
+	glColor3f(0.8, 0.9, 1.0);
 	glutSolidSphere(400, 10, 10);
 }
 
 //Couldn't resist. May put this in skybox texture later
 void drawMtFuji(){
 	glPushMatrix();
-	glColor3f(0.6, 0.6, 0.6);
+	glColor3f(0.2, 0.2, 0.2);
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(0, 400, 0);
 	glutSolidCone(200, 200, 20, 20);
@@ -371,13 +353,8 @@ void drawHUD() {		//draws a 2D overlay
 }
 
 void renderScene(void) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	drawGround();
-	drawSphere();
-	drawSkybox();
-	drawMtFuji();
-	// Draw 36 Wise Men
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	grassTexture = LoadTexture( "textures/test.raw", 256, 256 );
     glEnable( GL_TEXTURE_2D );
@@ -385,6 +362,16 @@ void renderScene(void) {
     glEnable(GL_TEXTURE_GEN_T);
 	
 	glBindTexture( GL_TEXTURE_2D, grassTexture);
+
+	drawGround();
+
+	FreeTexture( grassTexture );
+
+	drawSphere();
+	drawSkybox();
+	drawMtFuji();	
+
+
 	for(int i = -3; i < 3; i++)
 		for(int j=-3; j < 3; j++) {
 			glPushMatrix();
@@ -397,12 +384,10 @@ void renderScene(void) {
 			{
 				drawWiseMen();
 			}
-			//glCallList(snowman_display_list);;
 			glPopMatrix();
 		}
-	FreeTexture( grassTexture );
-	drawHUD();		//HUD must be last
 
+	drawHUD();		//HUD must be last
 	glutSwapBuffers();
 }
 
@@ -485,7 +470,7 @@ int main(int argc, char **argv)
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(640,360);
 	glutCreateWindow("SPHEREQUEST");
-	
+
 	//Get the maze set for the level
 	generateMaze();
 	initScene();
