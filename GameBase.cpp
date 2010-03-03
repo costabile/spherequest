@@ -169,16 +169,9 @@ void drawTemples() {
 void drawHorizontalWall() {
 
 	glPushMatrix();
-	
-	grassTexture = LoadTexture( "textures/test.raw", 256, 256 );
-    glEnable( GL_TEXTURE_2D );
-    glEnable(GL_TEXTURE_GEN_S);
-    glEnable(GL_TEXTURE_GEN_T);
-	
-	glBindTexture( GL_TEXTURE_2D, grassTexture);
 	//glColor3f(0.4, 0.4, 0.4);
 	glutSolidCube(39);
-	FreeTexture( grassTexture );
+	
 	glPopMatrix();
 }
 
@@ -385,7 +378,13 @@ void renderScene(void) {
 	drawSkybox();
 	drawMtFuji();
 	// Draw 36 Wise Men
-
+	
+	grassTexture = LoadTexture( "textures/test.raw", 256, 256 );
+    glEnable( GL_TEXTURE_2D );
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
+	
+	glBindTexture( GL_TEXTURE_2D, grassTexture);
 	for(int i = -3; i < 3; i++)
 		for(int j=-3; j < 3; j++) {
 			glPushMatrix();
@@ -401,7 +400,7 @@ void renderScene(void) {
 			//glCallList(snowman_display_list);;
 			glPopMatrix();
 		}
-	
+	FreeTexture( grassTexture );
 	drawHUD();		//HUD must be last
 
 	glutSwapBuffers();
