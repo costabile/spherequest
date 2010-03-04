@@ -316,8 +316,15 @@ void drawWiseMen() {
 void initScene() {
 
 	glEnable(GL_DEPTH_TEST);
-	//snowman_display_list = createDL();
+
+	glEnable( GL_TEXTURE_2D );
+
+	skyboxTexture = LoadTexture( "textures/skybox.raw", 800, 600);
+	glBindTexture( GL_TEXTURE_2D, skyboxTexture);
+	grassTexture = LoadTexture( "textures/grass.raw", 1024, 1024 );
+	glBindTexture( GL_TEXTURE_2D, grassTexture);
 	
+	glDisable( GL_TEXTURE_2D );
 	//Scene Lighting:
 	glEnable(GL_LIGHTING);		//comment out this line to turn off lighting effects
 	glEnable(GL_COLOR_MATERIAL); // Keep original colours of objects
@@ -463,23 +470,22 @@ void drawMaze(void) {		//draw walls, obstacles, other level features
 
 void renderScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	grassTexture = LoadTexture( "textures/grass.raw", 1024, 1024);
-	skyboxTexture = LoadTexture( "textures/skybox.raw", 800, 600);
-    
+
 	glEnable( GL_TEXTURE_2D );
 
 	glBindTexture( GL_TEXTURE_2D, grassTexture);
 	drawGround();
-	FreeTexture( grassTexture );
-
-	drawSphere();
+	//FreeTexture( grassTexture );
 	
 	glBindTexture( GL_TEXTURE_2D, skyboxTexture );
 
 	drawSkybox();
 	
-	FreeTexture( skyboxTexture );
+	//FreeTexture( skyboxTexture );
+	glDisable( GL_TEXTURE_2D );
+	
+	drawSphere();
+
 	drawMaze();
 	drawHUD();		//HUD must be drawn last
 
