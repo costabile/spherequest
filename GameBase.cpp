@@ -11,6 +11,8 @@
 #include <windows.h>
 #include <stdio.h>
 
+#include "hud.h"
+
 #define CAM_DIST 20.0		//distance camera keeps from sphere
 #define PI 3.14159265358979323846
 #define TURN_ANGLE PI/32.0f		//angle to turn camera on keypress
@@ -46,6 +48,8 @@ float sphereRotAng = 0.0;
 
 GLuint grassTexture;
 GLuint skyboxTexture;
+
+static HUD *hud = new HUD();  // Create a HUD object
 
 //load texture. Based on tutorial found at http://www.swiftless.com/tutorials/opengl/texture_under_windows.html
 GLuint LoadTexture(const char * filename, int width, int height)
@@ -386,61 +390,6 @@ void drawMtFuji(){
 	glPopMatrix();
 }
 
-void printText(float x, float y, char *string, float r, float g, float b)		//renders string on the screen at coords (x, y) in color (r, g, b)
-{
-  int len, i;
-  glColor3f(r, g, b);
-  glRasterPos2f(x, y);
-  len = (int) strlen(string);
-  for (i = 0; i < len; i++)
-  {
-    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]);			//if you don't like this font, here's a list of options: http://pyopengl.sourceforge.net/documentation/manual/glutBitmapCharacter.3GLUT.html
-  }
-}
-
-void drawHUD() {		//draws a 2D overlay
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();							//push projection matrix
-	glLoadIdentity();
-	glOrtho(0.0, 3.0, 3.0, 0.0, -1, 1);		//set ortho mode
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();							//push modelview matrix
-	glLoadIdentity();
-
-	//print text on HUD here--------
-	const float hudTextY = 0.15;
-	printText(0.05, hudTextY, "Zen: %", 0.1, 0.1, 0.1);	//print Zen label
-	char zenStr[4];
-	_itoa(zen, zenStr, 10);
-	printText(0.31, hudTextY, zenStr, 0.6, 0.2, 0.2);	//print amount of Zen
-	printText(0.94, hudTextY, "SphereQuest(TM)", 0.8, 0.3, 0.3);	//print Title
-	printText(1.95, hudTextY, "Plane of Consciousness:", 0.3, 0.3, 0.3);		//print level label
-	char planeStr[3];
-	_itoa(level, planeStr, 10);
-	printText(2.91, hudTextY, planeStr, 0.6, 0.2, 0.2);		//print level/plane #
-	//end text
-        
-	glBegin(GL_QUADS);						//draw HUD bar
-	//glColor4f(0.95, 0.95, 0.95, 1.0);
-    glColor3f(0.8, 0.8, 1);
-	glVertex2f(0.0, 0.0);
-	glColor3f(0.8, 0.8, 1);
-    glVertex2f(6.0, 0.0);
-	glColor3f(1, 1, 1);
-    glVertex2f(6.0, 0.2);
-	glColor3f(1, 1, 1);
-    glVertex2f(0.0, 0.2);
-	glEnd();
-
-
-	glMatrixMode( GL_PROJECTION );
-	glPopMatrix();									//pop projection matrix
-	glMatrixMode( GL_MODELVIEW );
-	glPopMatrix();									//pop modelview matrix
-
-}
-
 void drawMaze(void) {		//draw walls, obstacles, other level features
 	for(int i = -3; i < 3; i++) {
 			for(int j=-3; j < 3; j++) {
@@ -487,7 +436,7 @@ void renderScene(void) {
 	drawSphere();
 
 	drawMaze();
-	drawHUD();		//HUD must be drawn last
+	hud->drawHUD();		//HUD must be drawn last
 
 	//drawMtFuji();	
 
@@ -519,7 +468,7 @@ void renderScene(void) {
 			glPopMatrix();
 		}*/
 
-	drawHUD();		//HUD must be last
+	hud->drawHUD();		//HUD must be last
 	glutSwapBuffers();
 }
 
