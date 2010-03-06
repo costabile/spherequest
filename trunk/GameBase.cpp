@@ -12,12 +12,15 @@
 #include <stdio.h>
 
 #include "hud.h"
+#include "collision.h"
+#include "maze.h"
 
 #define CAM_DIST 20.0		//distance camera keeps from sphere
 #define PI 3.14159265358979323846
 #define TURN_ANGLE PI/32.0f		//angle to turn camera on keypress
 #define MOVE_SIZE 5				//distance to move sphere with each keypress
 #define SPHERE_RAD 2.0f			//sphere radius
+
 //window dimensions:
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 360
@@ -36,20 +39,16 @@ GLfloat spherePosZ = -15.0;
 int sphereRotX = 0.0;
 int sphereRotY = 0.0;
 int sphereRotZ = 0.0;
-int maze[6][6]= {
-	{3, 2, 0, 3, 2, 3},
-	{1, 0, 0, 1, 5, 1},
-	{1, 0, 2, 3, 0, 1},
-	{1, 0, 0, 0, 0, 3},
-	{1, 5, 4, 1, 0, 1},
-	{3, 2, 2, 3, 4, 3}
-	};
 float sphereRotAng = 0.0;
+
+bool dev_mode = false;
 
 GLuint grassTexture;
 GLuint skyboxTexture;
 
 static HUD *hud = new HUD();  // Create a HUD object
+static maze *mazeObj = new maze();		//create maze!
+static collision *collisions = new collision(mazeObj);		//create a new collision-checker!
 
 //load texture. Based on tutorial found at http://www.swiftless.com/tutorials/opengl/texture_under_windows.html
 GLuint LoadTexture(const char * filename, int width, int height)
@@ -124,52 +123,6 @@ void changeSize(int w, int h)
 	//will implement a more elegant way to disable resize if I find one.
 }
 
-void generateMaze()
-{
-	//Empty Maze Matrix
-	for (int i = 0; i < 6; i++)
-	{
-		for (int j = 0; j < 6; j++)
-		{
-			maze[i][j] = 0;
-		}
-	} 
-	//Define the following maze (1 = wall, 2 = Wise Man!)
-	// 1 1 0 1 1 1
-	// 1 0 0 1 0 1
-	// 1 0 1 0 0 1
-	// 1 0 0 0 1 1
-	// 1 0 1 0 0 1
-	// 1 1 1 1 2 1
-
-	//The following is an EXTREMELY brute force way of defining a map.
-	//The maps will later be read from a file!
-	for (int i = 0; i < 6; i++)
-	{
-		maze[i][0] = 1;
-		maze[i][5] = 1;
-	}
-
-	for (int j = 0; j < 6; j++)
-	{
-		maze[0][j] = 1;
-		maze[5][j] = 1;
-	}
-
-	maze[0][2] = 0;
-	maze[5][4] = 2;
-	maze[1][3] = 1;
-	maze[2][2] = 1;
-	maze[3][4] = 1;
-	maze[4][2] = 1;
-}
-
-//A quick call to see what the value of maze is
-int checkMaze(int row, int column)
-{
-	return maze[row][column];
-
-}
 
 void drawSphere() 
 {
@@ -381,7 +334,7 @@ void drawSkybox(){
 }
 
 //Couldn't resist. May put this in skybox texture later
-void drawMtFuji(){
+void drawMtFuji() {
 	glPushMatrix();
 	glColor3f(0.2, 0.2, 0.2);
 	glRotatef(-90, 1, 0, 0);
@@ -390,12 +343,17 @@ void drawMtFuji(){
 	glPopMatrix();
 }
 
+void drawGrid() {		//show gridlines.  Used for debugging
+	//CARRY ON MY FARBOD SON
+	//THERE'LL BE PEACE WHEN YOU ARE DONE
+}
+
 void drawMaze(void) {		//draw walls, obstacles, other level features
-	for(int i = -3; i < 3; i++) {
-			for(int j=-3; j < 3; j++) {
+	for(int i = -(MAP_SIDE/2); i < (MAP_SIDE/2); i++) {
+			for(int j=-(MAP_SIDE/2); j < (MAP_SIDE/2); j++) {
 				glPushMatrix();
-				glTranslatef(i * 40.0, 0, j * 40.0);
-				switch (checkMaze((i + 3), (j + 3))) {
+				glTranslatef(i * CELL_SIDE, 0, j * CELL_SIDE);
+				switch (mazeObj->checkMaze((i + MAP_SIDE/2), (j + MAP_SIDE/2))) {
 					case 1:
 						drawXWall();
 						break;
@@ -434,50 +392,14 @@ void renderScene(void) {
 	glDisable( GL_TEXTURE_2D );
 	
 	drawSphere();
+	if (dev_mode) drawGrid();
 
 	drawMaze();
-	hud->drawHUD();		//HUD must be drawn last
 
 	//drawMtFuji();	
 
-	//the drawing now occurs in drawMaze:
-	/*for(int i = -3; i < 3; i++)
-		for(int j=-3; j < 3; j++) {
-			glPushMatrix();
-			glTranslatef(i*40.0,0,j * 40.0);
-			if (checkMaze((i + 3), (j + 3)) == 1)
-			{
-				drawXWall();
-			}
-			if (checkMaze((i + 3), (j + 3)) == 2)
-			{
-				drawZWall();
-			}
-			if (checkMaze((i + 3), (j + 3)) == 3)
-			{
-				drawTemples();
-			}
-			if (checkMaze((i + 3), (j + 3)) == 4)
-			{
-				drawWiseMen();
-			}
-			if (checkMaze((i + 3), (j + 3)) == 5)
-			{
-				drawTree();
-			}
-			glPopMatrix();
-		}*/
-
-	hud->drawHUD();		//HUD must be last
+	hud->drawHUD();		//HUD must be drawn last
 	glutSwapBuffers();
-}
-
-bool checkCollision(int movX, int movY, int movZ) {		//checks whether moving to movX, movY, movZ would be a collision
-	bool isCollision = false;
-
-	//todo
-
-	return isCollision;	
 }
 
 void orientMe(float ang) {		//turning
@@ -489,21 +411,30 @@ void orientMe(float ang) {		//turning
 	moveCamera(x, y, z);
 }
 
-void moveMeFlat(int i) {		//moving forward/back
-	//new camera coords:
-	z = z + i * sin(angle);
-	x = x + i * cos(angle);
+void moveMeFlat(int i) {		//moving forward/back by i units
+	float oldX = spherePosX;
+	float oldZ = spherePosZ;
 	//new sphere coords:
 	spherePosX = spherePosX + i * cos(angle);	//sphere moves in a straight line in the direction of the camera angle
 	spherePosZ = spherePosZ + i * sin(angle);
+	if (collisions->checkCollision(spherePosX, spherePosY, spherePosZ, SPHERE_RAD)) {	//check if there are obstacles in the intended location
+		spherePosX = oldX;	//reset sphere coords
+		spherePosZ = oldZ;
+	} else {		
+		//new camera coords:
+		z = z + i * sin(angle);
+		x = x + i * cos(angle);
 
-	moveCamera(x, y, z);
+		moveCamera(x, y, z);
+	}
 }
 
 void processNormalKeys(unsigned char key, int x, int y) {
 
 	if ((key == 27) || (key = 'q') || (key = 'Q'))
 		exit(0);
+	else if (key == 'j')	//enable debug mode
+		dev_mode = true;
 }
 
 
@@ -531,8 +462,6 @@ void inputKey(int key, int x, int y) {
 
 int main(int argc, char **argv)
 {
-
-
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
@@ -540,7 +469,7 @@ int main(int argc, char **argv)
 	glutCreateWindow("SPHEREQUEST");
 	
 	//Get the maze set for the level
-//	generateMaze();
+//	mazeObj->generateMaze();
 	initScene();
 
 	glutKeyboardFunc(processNormalKeys);
