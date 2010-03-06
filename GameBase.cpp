@@ -30,8 +30,8 @@
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;
 //static float lx=0.0f,ly=0.0f, lz=-1.0f;
-static int zen = 100;
-static int level = 1;
+//static int zen = 100;
+//static int level = 1;
 
 //sphere position:
 GLfloat spherePosX = 0.0;
