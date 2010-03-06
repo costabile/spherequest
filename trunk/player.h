@@ -6,8 +6,5 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-// These are causing problems right now.
-//extern static int zen;
-//extern static int level;
 
 #endif
