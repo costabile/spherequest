@@ -140,12 +140,12 @@ void drawTemples() {
 	//Draw Roof
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
-	glTranslatef(0,0,32);
+	glTranslatef(20,-20,32);	//orig: 0, 0, 32 (shifted to draw the temple within the grid cell)
 	glColor3f(0, 0, 0);
 	glutSolidCone(40, 30, 20, 20);
 	glPopMatrix();
 
-	glTranslatef(0, 20, 0);
+	glTranslatef(20, 20, 20);	//orig: 0,20,0
 	glColor3f(0.5, 0, 0);
 	glutSolidCube(40);
 
@@ -179,7 +179,8 @@ void drawXWall() {
 
 	glPushMatrix();
 	glColor3f(0.3, 0.3, 0.3);
-	glTranslatef(-10, 10, 0);
+	//glTranslatef(-10, 10, 0);
+	glTranslatef(10, 10, 20);
 	glutSolidCube(20);
 	glTranslatef(20, 0, 0);
 	glutSolidCube(20);
@@ -189,17 +190,20 @@ void drawXWall() {
 void drawZWall() {
 	glPushMatrix();
 	glColor3f(0.3, 0.3, 0.3);
-	glTranslatef(0, 10, -10);
+	//glTranslatef(0, 10, -10);
+	glTranslatef(20, 10, 10);
 	glutSolidCube(20);
 	glTranslatef(0, 0, 20);
 	glutSolidCube(20);
 	glPopMatrix();
 }
+
 void drawTree() {
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
 	glColor3f(0, 0.4, 0);
-	glTranslatef(0, 0, 0);
+	//glTranslatef(0, 0, 0);
+	glTranslatef(20, -20, 0);
 	glutSolidCone(3, 5, 10, 10);
 	glTranslatef(0, 0, 2.5);
 	glutSolidCone(3, 5, 10, 10);
@@ -214,7 +218,8 @@ void drawWiseMen() {
 	// Draw Body	
 	glPushMatrix();
 	glColor3f(1.0f, 1.0f, 0.5f);
-	glTranslatef(0.0f ,0.0f, 0.0f);
+	//glTranslatef(0.0f ,0.0f, 0.0f);
+	glTranslatef(20.0f ,0.0f, 20.0f);
 	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.6f,2.0f,20,20);
 	glPopMatrix();
@@ -222,14 +227,16 @@ void drawWiseMen() {
 	//Draw Belt
 	glPushMatrix();
 	glColor3f(0.5f, 0.25f, 0.0f);
-	glTranslatef(0.0f ,0.7f, 0.0f);
+	//glTranslatef(0.0f ,0.7f, 0.0f);
+	glTranslatef(20.0f ,0.7f, 20.0f);
 	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 	glutSolidTorus(0.19f, 0.3f,10,10);
 	glPopMatrix();
 
 	// Draw Head
 	glColor3f(1.0f, 0.75f, 0.6f);
-	glTranslatef(0.0f, 1.8f, 0.0f);
+	//glTranslatef(0.0f, 1.8f, 0.0f);
+	glTranslatef(20.0f, 1.8f, 20.0f);
 	glutSolidSphere(0.35f,20,20);
 	
 	//Draw Beard
