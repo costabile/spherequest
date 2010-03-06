@@ -6,10 +6,14 @@
 
 #include <stdlib.h>
 #include <glut.h>
+#include <cmath>
 
 #include "maze.h"
 
 class collision {
+private:
+	bool checkPointCollision(float movX, float movZ);
+
 public:
 	collision(maze *mazeObj); // Constructor
 	~collision(){}; // Destructor
