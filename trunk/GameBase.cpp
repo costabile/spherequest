@@ -149,7 +149,7 @@ void drawTemples() {
 	glColor3f(0.5, 0, 0);
 	glutSolidCube(40);
 
-		//Draw Roof
+	//Draw Roof
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(0,0,45);
@@ -161,7 +161,7 @@ void drawTemples() {
 	glColor3f(0.5, 0, 0);
 	glutSolidCube(30);
 
-			//Draw Roof
+	//Draw Roof
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(0,0,35);
@@ -343,16 +343,27 @@ void drawMtFuji() {
 	glPopMatrix();
 }
 
-void drawGrid() {		//show gridlines.  Used for debugging
-	//CARRY ON MY FARBOD SON
-	//THERE'LL BE PEACE WHEN YOU ARE DONE
+void drawGrid() {		//draw gridlines of map cell.  Used for debugging
+	const float heightAboveGround = 0.3;
+	glPushMatrix();
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_LINE_LOOP);
+		glVertex3f(0, heightAboveGround, 0);
+		glVertex3f(40.0, heightAboveGround, 0);
+		glVertex3f(40.0, heightAboveGround, 40.0);
+		glVertex3f(0, heightAboveGround, 40.0);
+	glEnd();
+	glPopMatrix();
 }
 
-void drawMaze(void) {		//draw walls, obstacles, other level features
+void drawMaze(void) {		//draw walls, obstacles, other map features
 	for(int i = -(MAP_SIDE/2); i < (MAP_SIDE/2); i++) {
 			for(int j=-(MAP_SIDE/2); j < (MAP_SIDE/2); j++) {
 				glPushMatrix();
 				glTranslatef(i * CELL_SIDE, 0, j * CELL_SIDE);
+				if (dev_mode) {
+					drawGrid();		//draw gridlines if devmode is enabled
+				}
 				switch (mazeObj->checkMaze((i + MAP_SIDE/2), (j + MAP_SIDE/2))) {
 					case 1:
 						drawXWall();
@@ -392,7 +403,7 @@ void renderScene(void) {
 	glDisable( GL_TEXTURE_2D );
 	
 	drawSphere();
-	if (dev_mode) drawGrid();
+	//if (dev_mode) drawGrid();
 
 	drawMaze();
 
@@ -431,10 +442,11 @@ void moveMeFlat(int i) {		//moving forward/back by i units
 
 void processNormalKeys(unsigned char key, int x, int y) {
 
-	if ((key == 27) || (key = 'q') || (key = 'Q'))
+	if ((key == 27) || (key == 'q') || (key == 'Q')) {
 		exit(0);
-	else if (key == 'j')	//enable debug mode
-		dev_mode = true;
+	} else if (key == 'j') {		//enable dev mode (draws gridlines on the map)
+		dev_mode = !dev_mode;
+	}
 }
 
 
