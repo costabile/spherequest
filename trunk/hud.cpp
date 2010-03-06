@@ -2,9 +2,10 @@
 // contains functions relating to the drawing of the HUD
 
 #include "hud.h"
+#include "player.h"
 
-static int zen = 100; // Not sure if this is the best place for this...
-static int level = 1;
+//static int zen = 100; // Not sure if this is the best place for this...
+//static int level = 1;
 
 HUD::HUD(){}
 
