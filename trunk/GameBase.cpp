@@ -33,10 +33,10 @@ static float x=0.0f, y=1.75f, z=5.0f;
 //static int zen = 100;
 //static int level = 1;
 
-//sphere position:
-GLfloat spherePosX = 0.0;
+//sphere position (initial = -60, 2, -9.5):
+GLfloat spherePosX = -60.0;
 GLfloat spherePosY = 0.0 + SPHERE_RAD;
-GLfloat spherePosZ = -15.0;
+GLfloat spherePosZ = -9.5;
 //sphere rotation:
 int sphereRotX = 0.0;
 int sphereRotY = 0.0;
