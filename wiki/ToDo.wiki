@@ -17,3 +17,5 @@ In no particular order:
   * Ticker tape thingy along the bottom?
   * Audio
   * Beautification.  Make scenery look more interesting?  Maybe add textures to ground/walls/sphere/whatever else.
+  * Save and load state?
+  * Read maps from files - this would make it more modular and would make it easier to have maps of varying size
