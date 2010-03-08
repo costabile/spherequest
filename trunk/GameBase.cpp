@@ -257,6 +257,10 @@ void moveMeFlat(int i) {		//moving forward/back by i units
 	if (collisions->checkCollision(spherePosX, spherePosY, spherePosZ, SPHERE_RAD)) {	//check if there are obstacles in the intended location
 		spherePosX = oldX;	//reset sphere coords
 		spherePosZ = oldZ;
+		if (i > 1)
+			moveMeFlat(i - 1);	//attempt to move forward in a shorter jump.  This way you don't get stopped at a distance from the obstacle
+		if (i < -1)
+			moveMeFlat(i + 1);	//to account for backwards movement
 	} else {		
 		//new camera coords:
 		z = z + i * sin(angle);
