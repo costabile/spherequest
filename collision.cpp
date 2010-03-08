@@ -4,7 +4,7 @@
 #include "collision.h"
 #include "hud.h"
 
-#define TOLERANCE 0.3f	//the amount of error allowed to collide with walls.  Makes collisions less restrictive to movement.
+#define TOLERANCE 0.1f	//the amount of error allowed to collide with walls.  Makes collisions less restrictive to movement.
 
 static maze *levelMaze;
 
@@ -66,8 +66,8 @@ bool collision::checkPointCollision(float movX, float movZ) {		//checks if a poi
 			}
 			break;
 		case 4:		//wiseMan
-			upper_bound = getUpperBound(0.6f, -2.5 * TOLERANCE);
-			lower_bound = getLowerBound(0.6f, -2.5 * TOLERANCE);
+			upper_bound = getUpperBound(0.6f, -7.5 * TOLERANCE);
+			lower_bound = getLowerBound(0.6f, -7.5 * TOLERANCE);
 			//cout << upper_bound << "," << lower_bound << endl;
 			//cout << (fmod(movX, (float)CELL_SIDE)) << ":" << (fmod(movZ, (float)CELL_SIDE)) << endl;
 			if ( ((fmod(movX, (float)CELL_SIDE) < upper_bound) && (fmod(movX, (float)CELL_SIDE) > lower_bound))
@@ -108,7 +108,7 @@ bool collision::checkCollision(float movX, float movY, float movZ, float objectR
 	isCollision = (isCollision || checkPointCollision(movX - objectRadius, movZ));
 	//face 4:
 	isCollision = (isCollision || checkPointCollision(movX, movZ - objectRadius));
-	//centre of object (to prevent "jumping through" small/thin obstacles):
+	//centre of object (to help prevent "jumping through" small/thin obstacles):
 	isCollision = (isCollision || checkPointCollision(movX, movZ));
 
 	return isCollision;	
