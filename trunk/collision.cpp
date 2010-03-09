@@ -4,7 +4,7 @@
 #include "collision.h"
 #include "hud.h"
 
-#define TOLERANCE 0.1f	//the amount of error allowed to collide with walls.  Makes collisions less restrictive to movement.
+#define TOLERANCE 0.01f			//the amount of error allowed to collide with certain objects
 
 static maze *levelMaze;
 
@@ -66,8 +66,8 @@ bool collision::checkPointCollision(float movX, float movZ) {		//checks if a poi
 			}
 			break;
 		case 4:		//wiseMan
-			upper_bound = getUpperBound(0.6f, -7.5 * TOLERANCE);
-			lower_bound = getLowerBound(0.6f, -7.5 * TOLERANCE);
+			upper_bound = getUpperBound(0.9f, -75.0 * TOLERANCE);	//wisemen need high negative tolerance because they're small, i.e. the sphere tends to jump through them
+			lower_bound = getLowerBound(0.9f, -75.0 * TOLERANCE);
 			//cout << upper_bound << "," << lower_bound << endl;
 			//cout << (fmod(movX, (float)CELL_SIDE)) << ":" << (fmod(movZ, (float)CELL_SIDE)) << endl;
 			if ( ((fmod(movX, (float)CELL_SIDE) < upper_bound) && (fmod(movX, (float)CELL_SIDE) > lower_bound))
@@ -76,8 +76,8 @@ bool collision::checkPointCollision(float movX, float movZ) {		//checks if a poi
 			}
 			break;
 		case 5:		//tree
-			upper_bound = getUpperBound(3.0f, -TOLERANCE);
-			lower_bound = getLowerBound(3.0f, -TOLERANCE);
+			upper_bound = getUpperBound(3.5f, -15 * TOLERANCE);
+			lower_bound = getLowerBound(3.5f, -15 * TOLERANCE);
 			if ( ((fmod(movX, (float)CELL_SIDE) < upper_bound) && (fmod(movX, (float)CELL_SIDE) > lower_bound))
 				&& ((fmod(movZ, (float)CELL_SIDE) < upper_bound) && (fmod(movZ, (float)CELL_SIDE) > lower_bound)) ) {	//if x and z of point is in the tree
 				isCollision = true;
@@ -88,7 +88,7 @@ bool collision::checkPointCollision(float movX, float movZ) {		//checks if a poi
 	}
 	if (!isCollision) {
 		if ((gridX >= MAP_SIDE) || (gridX < 0) || (gridZ >= MAP_SIDE) || (gridZ < 0)) {
-			cout << gridX << "//" << gridZ << endl;
+			//cout << gridX << "//" << gridZ << endl;
 			isCollision = true;		//don't let the player leave the bounds of the grid
 		}
 	}
