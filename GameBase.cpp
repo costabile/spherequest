@@ -20,8 +20,9 @@
 #define CAM_DIST 20.0		//distance camera keeps from sphere
 #define PI 3.14159265358979323846
 #define TURN_ANGLE PI/32.0f		//angle to turn camera on keypress
-#define MOVE_SIZE 5				//distance to move sphere with each keypress
+#define MOVE_SIZE 5.0f				//distance to move sphere with each keypress
 #define SPHERE_RAD 2.0f			//sphere radius
+#define COLLISION_SPACING 0.2f		//the max distance the sphere might be from an obstacle when it stops moving.  Smaller = more precise collisions.
 
 //window dimensions:
 #define WIN_WIDTH 640
@@ -248,7 +249,7 @@ void orientMe(float ang) {		//turning
 	moveCamera(x, y, z);
 }
 
-void moveMeFlat(int i) {		//moving forward/back by i units
+void moveMeFlat(float i) {		//moving forward/back by i units
 	float oldX = spherePosX;
 	float oldZ = spherePosZ;
 	//new sphere coords:
@@ -257,10 +258,10 @@ void moveMeFlat(int i) {		//moving forward/back by i units
 	if (collisions->checkCollision(spherePosX, spherePosY, spherePosZ, SPHERE_RAD)) {	//check if there are obstacles in the intended location
 		spherePosX = oldX;	//reset sphere coords
 		spherePosZ = oldZ;
-		if (i > 1)
-			moveMeFlat(i - 1);	//attempt to move forward in a shorter jump.  This way you don't get stopped at a distance from the obstacle
-		if (i < -1)
-			moveMeFlat(i + 1);	//to account for backwards movement
+		if (i > COLLISION_SPACING)
+			moveMeFlat(i - COLLISION_SPACING);	//attempt to move forward in a shorter jump.  This way you don't get stopped at a distance from the obstacle
+		if (i < -COLLISION_SPACING)
+			moveMeFlat(i + COLLISION_SPACING);	//to account for backwards movement
 	} else {		
 		//new camera coords:
 		z = z + i * sin(angle);
