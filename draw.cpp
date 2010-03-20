@@ -14,6 +14,10 @@ draw::draw(){}
 
 void draw::drawTemples() {
 	glPushMatrix();
+
+	GLfloat dull[3] = {0, 0, 0};
+	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
+
 	
 	//Draw Roof
 	glPushMatrix();
@@ -59,6 +63,10 @@ void draw::drawXWall() {
 	glColor3f(0.3, 0.3, 0.3);
 	//glTranslatef(-10, 10, 0);
 	glTranslatef(10, 10, 20);
+
+	GLfloat dull[3] = {0, 0, 0};
+	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
+
 	glutSolidCube(20);
 	glTranslatef(20, 0, 0);
 	glutSolidCube(20);
@@ -70,6 +78,10 @@ void draw::drawZWall() {
 	glColor3f(0.3, 0.3, 0.3);
 	//glTranslatef(0, 10, -10);
 	glTranslatef(20, 10, 10);
+
+	GLfloat dull[3] = {0, 0, 0};
+	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
+
 	glutSolidCube(20);
 	glTranslatef(0, 0, 20);
 	glutSolidCube(20);
@@ -78,6 +90,10 @@ void draw::drawZWall() {
 
 void draw::drawTree() {
 	glPushMatrix();
+
+	GLfloat dull[3] = {0, 0, 0};
+	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
+
 	glRotatef(-90, 1, 0, 0);
 	glColor3f(0, 0.4, 0);
 	//glTranslatef(0, 0, 0);
@@ -93,6 +109,10 @@ void draw::drawTree() {
 void draw::drawWiseMen() {
 	// Draw Body	
 	glPushMatrix();
+
+	GLfloat dull[3] = {0, 0, 0};
+	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
+
 	glColor3f(1.0f, 1.0f, 0.5f);
 	//glTranslatef(0.0f ,0.0f, 0.0f);
 	glTranslatef(20.0f ,0.0f, 20.0f);
