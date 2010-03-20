@@ -22,7 +22,8 @@
 #define CAM_DIST 20.0				//distance camera keeps from sphere
 #define TURN_ANGLE PI/64.0f			//angle to turn camera on keypress
 #define MOVE_SIZE 1.0f				//base sphere movement distance
-#define DECEL 0.3f					//the rate at which the sphere's movement slows when the user is not pressing forward or back
+#define ROT_ANG PI/64.0f			//angle to rotate sphere by each time it moves
+#define DECEL 0.1f					//the rate at which the sphere's movement slows when the user is not pressing forward or back
 #define ROT_DECEL TURN_ANGLE/2.5		//rate at which rotation slows when left or right are not pressed
 #define COLLISION_SPACING 0.2f		//the max distance the sphere might be from an obstacle when it stops moving.  Smaller = more precise collisions.
 
@@ -56,6 +57,7 @@ bool dev_mode = false;
 
 GLuint grassTexture;
 GLuint skyboxTexture;
+GLuint sphereTexture;
 
 static HUD *hud = new HUD();  // Create a HUD object
 static maze *mazeObj = new maze();		//create maze!
@@ -139,11 +141,34 @@ void changeSize(int w, int h)
 void drawSphere() 
 {
 	glPushMatrix();
-	glColor3f(1.0f, 0.0f, 0.0f);
+
+	//glRotatef(0, 0, sphereRotAng, 1);
+	glColor3f(0.8f, 0.3f, 0.3f);
 	glTranslatef(spherePosX,spherePosY,spherePosZ);
-	glRotatef(sphereRotAng, sphereRotX, sphereRotY, sphereRotZ);
+	
+	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+	glEnable(GL_TEXTURE_GEN_S);
+	glEnable(GL_TEXTURE_GEN_T);
+
+	GLfloat potamb[3] = {0.8,0.8,0.8},
+			potdfs[3] = {0.9,0.9,0.9},
+			potspc[3] = {1.0,1.0,1.0};
+
+    glMaterialfv (GL_FRONT, GL_AMBIENT  , potamb);
+    glMaterialfv (GL_FRONT, GL_DIFFUSE  , potdfs);
+	glMaterialfv (GL_FRONT, GL_SPECULAR , potspc);
+    glMateriali  (GL_FRONT, GL_SHININESS, 25);
+
 	glutSolidSphere(SPHERE_RAD, 20, 20);
+
+	glDisable(GL_TEXTURE_GEN_S);
+	glDisable(GL_TEXTURE_GEN_T);
+
+	//glRotatef (-90, 0, 0, 1);
+
 	glPopMatrix();
+
 }
 
 void initScene() {
@@ -156,6 +181,8 @@ void initScene() {
 	glBindTexture( GL_TEXTURE_2D, skyboxTexture);
 	grassTexture = LoadTexture( "textures/grass.raw", 1024, 1024 );
 	glBindTexture( GL_TEXTURE_2D, grassTexture);
+	sphereTexture = LoadTexture( "textures/sphere.raw", 300, 300);
+	glBindTexture( GL_TEXTURE_2D, sphereTexture);
 	
 	glDisable( GL_TEXTURE_2D );
 	//Scene Lighting:
@@ -223,19 +250,24 @@ void drawMaze(void) {		//draw walls, obstacles, other map features
 
 void moveMeFlat(float i) {		//moving forward/back by i units
 	i = -i;		//forward = +'ve, backward = -'ve
-	float oldX = spherePosX;
-	float oldZ = spherePosZ;
 	//new sphere coords:
-	spherePosX = spherePosX + i * cos(angle);	//sphere moves in a straight line in the direction of the camera angle
-	spherePosZ = spherePosZ + i * sin(angle);
-	if (collisions->checkCollision(spherePosX, spherePosY, spherePosZ, SPHERE_RAD)) {	//check if there are obstacles in the intended location
-		spherePosX = oldX;	//reset sphere coords
-		spherePosZ = oldZ;
+	float newPosX = spherePosX + i * cos(angle);	//sphere moves in a straight line in the direction of the camera angle
+	float newPosY = spherePosY;
+	float newPosZ = spherePosZ + i * sin(angle);
+	if (collisions->checkCollision(newPosX, newPosY, newPosZ, SPHERE_RAD)) {	//check if there are obstacles in the intended location
 		if (i > COLLISION_SPACING)
 			moveMeFlat(i - COLLISION_SPACING);	//attempt to move forward in a shorter jump.  This way you don't get stopped at a distance from the obstacle
 		if (i < -COLLISION_SPACING)
 			moveMeFlat(i + COLLISION_SPACING);	//to account for backwards movement
-	} else {		
+	} else {
+		//move sphere
+		spherePosX = newPosX;
+		spherePosZ = newPosZ;
+
+		//rotate sphere (make it look like it's rolling):
+		if (i > 0.0) sphereRotAng += ROT_ANG;
+		else if (i < 0.0) sphereRotAng -= ROT_ANG;
+
 		//new camera coords:
 		z = z + i * sin(angle);
 		x = x + i * cos(angle);
@@ -263,13 +295,11 @@ void renderScene(void) {
 	//FreeTexture( grassTexture );
 	
 	glBindTexture( GL_TEXTURE_2D, skyboxTexture );
-
 	drawing->drawSkybox();
 	
 	//FreeTexture( skyboxTexture );
-	glDisable( GL_TEXTURE_2D );
 	
-	//deal with sphere movement:
+	//deal with sphere movement (maybe this should be done elsewhere?):
 	moveMeFlat(sphForwardVel);	//move sphere and camera
 	orientMe(sphRotVel);		//face the appropriate direction
 	if (!dirBtnDown) {			//if the user is not pressing a directional button, slow down
@@ -290,8 +320,10 @@ void renderScene(void) {
 			sphRotVel = 0.0;
 		}
 	}
-
+	
+	glBindTexture( GL_TEXTURE_2D, sphereTexture);
 	drawSphere();
+	glDisable( GL_TEXTURE_2D );
 
 	drawMaze();
 
@@ -315,12 +347,10 @@ void inputKey(int key, int x, int y) {
 
 	switch (key) {
 		case GLUT_KEY_LEFT :
-			//orientMe(TURN_ANGLE);
 			sphRotVel = TURN_ANGLE;
 			rotBtnDown = true;
 			break;
 		case GLUT_KEY_RIGHT : 
-			//orientMe(-TURN_ANGLE);
 			sphRotVel = -TURN_ANGLE;
 			rotBtnDown = true;
 			break;
@@ -338,11 +368,9 @@ void inputKey(int key, int x, int y) {
 void keyUp (int key, int x, int y) {		//called when a key is released
 	switch (key) {
 		case GLUT_KEY_LEFT :
-			//orientMe(TURN_ANGLE);
 			rotBtnDown = false;
 			break;
 		case GLUT_KEY_RIGHT : 
-			//orientMe(-TURN_ANGLE);
 			rotBtnDown = false;
 			break;
 		case GLUT_KEY_UP :
@@ -360,7 +388,7 @@ int main(int argc, char **argv)
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
-	glutCreateWindow("SPHEREQUEST");
+	glutCreateWindow("SphereQuest");
 	
 	//Get the maze set for the level
 //	mazeObj->generateMaze();
@@ -372,15 +400,16 @@ int main(int argc, char **argv)
 
 	glutDisplayFunc(renderScene);
 	glutIdleFunc(renderScene);
-
-	//glutDisplayFunc(drawHUD);
-
 	glutReshapeFunc(changeSize);
 
 	orientMe(-PI/2.0);
 	moveCamera(x, y, z);
 
 	glutMainLoop();
+
+	FreeTexture(skyboxTexture);
+	FreeTexture(grassTexture);
+	FreeTexture(sphereTexture);
 
 	return(0);
 }
