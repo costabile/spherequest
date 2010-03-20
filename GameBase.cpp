@@ -17,11 +17,13 @@
 #include "maze.h"
 #include "draw.h"
 
-#define CAM_DIST 20.0		//distance camera keeps from sphere
 #define PI 3.14159265358979323846
-#define TURN_ANGLE PI/32.0f		//angle to turn camera on keypress
-#define MOVE_SIZE 5.0f				//distance to move sphere with each keypress
-#define SPHERE_RAD 2.0f			//sphere radius
+#define SPHERE_RAD 2.0f				//sphere radius
+#define CAM_DIST 20.0				//distance camera keeps from sphere
+#define TURN_ANGLE PI/64.0f			//angle to turn camera on keypress
+#define MOVE_SIZE 1.0f				//base sphere movement distance
+#define DECEL 0.3f					//the rate at which the sphere's movement slows when the user is not pressing forward or back
+#define ROT_DECEL TURN_ANGLE/2.5		//rate at which rotation slows when left or right are not pressed
 #define COLLISION_SPACING 0.2f		//the max distance the sphere might be from an obstacle when it stops moving.  Smaller = more precise collisions.
 
 //window dimensions:
@@ -34,10 +36,16 @@ static float x=0.0f, y=1.75f, z=5.0f;
 //static int zen = 100;
 //static int level = 1;
 
-//sphere position (initial = -60, 2, -9.5):
+//sphere position (initial = -60, 0+radius, -9.5):
 GLfloat spherePosX = -60.0;
 GLfloat spherePosY = 0.0 + SPHERE_RAD;
 GLfloat spherePosZ = -9.5;
+//current sphere velocity:
+float sphForwardVel = 0.0;
+float sphRotVel = 0.0;	//rotating speed
+//for movement control:
+bool dirBtnDown = false;
+bool rotBtnDown = false;
 //sphere rotation:
 int sphereRotX = 0.0;
 int sphereRotY = 0.0;
@@ -213,43 +221,8 @@ void drawMaze(void) {		//draw walls, obstacles, other map features
 	}
 }
 
-void renderScene(void) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glEnable( GL_TEXTURE_2D );
-
-	glBindTexture( GL_TEXTURE_2D, grassTexture);
-	drawing->drawGround();
-	//FreeTexture( grassTexture );
-	
-	glBindTexture( GL_TEXTURE_2D, skyboxTexture );
-
-	drawing->drawSkybox();
-	
-	//FreeTexture( skyboxTexture );
-	glDisable( GL_TEXTURE_2D );
-	
-	drawSphere();
-	//if (dev_mode) drawGrid();
-
-	drawMaze();
-
-	//drawMtFuji();	
-
-	hud->drawHUD();		//HUD must be drawn last
-	glutSwapBuffers();
-}
-
-void orientMe(float ang) {		//turning
-	angle -= ang;
-
-	x = spherePosX + CAM_DIST * cos(angle);
-	z = spherePosZ + CAM_DIST * sin(angle);
-
-	moveCamera(x, y, z);
-}
-
 void moveMeFlat(float i) {		//moving forward/back by i units
+	i = -i;		//forward = +'ve, backward = -'ve
 	float oldX = spherePosX;
 	float oldZ = spherePosZ;
 	//new sphere coords:
@@ -271,6 +244,63 @@ void moveMeFlat(float i) {		//moving forward/back by i units
 	}
 }
 
+void orientMe(float ang) {		//turning
+	angle -= ang;
+
+	x = spherePosX + CAM_DIST * cos(angle);
+	z = spherePosZ + CAM_DIST * sin(angle);
+
+	moveCamera(x, y, z);
+}
+
+void renderScene(void) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable( GL_TEXTURE_2D );
+
+	glBindTexture( GL_TEXTURE_2D, grassTexture);
+	drawing->drawGround();
+	//FreeTexture( grassTexture );
+	
+	glBindTexture( GL_TEXTURE_2D, skyboxTexture );
+
+	drawing->drawSkybox();
+	
+	//FreeTexture( skyboxTexture );
+	glDisable( GL_TEXTURE_2D );
+	
+	//deal with sphere movement:
+	moveMeFlat(sphForwardVel);	//move sphere and camera
+	orientMe(sphRotVel);		//face the appropriate direction
+	if (!dirBtnDown) {			//if the user is not pressing a directional button, slow down
+		if (sphForwardVel > DECEL) {
+			sphForwardVel -= DECEL;
+		} else if (sphForwardVel < -DECEL) {
+			sphForwardVel += DECEL;
+		} else {
+			sphForwardVel = 0.0;
+		}
+	}
+	if (!rotBtnDown) {			//the the user is not pressing a turn button, slow rotation
+		if (sphRotVel > ROT_DECEL) {
+			sphRotVel -= ROT_DECEL;
+		} else if (sphRotVel < -ROT_DECEL) {
+			sphRotVel += ROT_DECEL;
+		} else {
+			sphRotVel = 0.0;
+		}
+	}
+
+	drawSphere();
+
+	drawMaze();
+
+	//drawMtFuji();	
+
+	hud->drawHUD();		//HUD must be drawn last
+	glutSwapBuffers();
+}
+
 void processNormalKeys(unsigned char key, int x, int y) {
 
 	if ((key == 27) || (key == 'q') || (key == 'Q')) {
@@ -285,20 +315,41 @@ void inputKey(int key, int x, int y) {
 
 	switch (key) {
 		case GLUT_KEY_LEFT :
-			orientMe(TURN_ANGLE);
-			//sphereRotX = (sphereRotX - 5) % 360;
+			//orientMe(TURN_ANGLE);
+			sphRotVel = TURN_ANGLE;
+			rotBtnDown = true;
 			break;
 		case GLUT_KEY_RIGHT : 
-			orientMe(-TURN_ANGLE);
-			//sphereRotX = (sphereRotX + 5) % 360;
+			//orientMe(-TURN_ANGLE);
+			sphRotVel = -TURN_ANGLE;
+			rotBtnDown = true;
 			break;
 		case GLUT_KEY_UP :
-			moveMeFlat(-MOVE_SIZE);
-			//sphereRotY = (sphereRotY + 5) % 360;
+			sphForwardVel = MOVE_SIZE;		//set forward velocity
+			dirBtnDown = true;			//up or down is pressed
 			break;
 		case GLUT_KEY_DOWN : 
-			moveMeFlat(MOVE_SIZE);
-			//sphereRotY = (sphereRotY - 5) % 360;
+			sphForwardVel = -MOVE_SIZE;
+			dirBtnDown = true;
+			break;
+	}
+}
+
+void keyUp (int key, int x, int y) {		//called when a key is released
+	switch (key) {
+		case GLUT_KEY_LEFT :
+			//orientMe(TURN_ANGLE);
+			rotBtnDown = false;
+			break;
+		case GLUT_KEY_RIGHT : 
+			//orientMe(-TURN_ANGLE);
+			rotBtnDown = false;
+			break;
+		case GLUT_KEY_UP :
+			dirBtnDown = false;			//up or down is not pressed
+			break;
+		case GLUT_KEY_DOWN : 
+			dirBtnDown = false;			//up or down is not pressed
 			break;
 	}
 }
@@ -317,6 +368,7 @@ int main(int argc, char **argv)
 
 	glutKeyboardFunc(processNormalKeys);
 	glutSpecialFunc(inputKey);
+	glutSpecialUpFunc(keyUp);
 
 	glutDisplayFunc(renderScene);
 	glutIdleFunc(renderScene);
