@@ -9,13 +9,15 @@ I thought it would be useful to keep a list of incomplete tasks so that if you d
 In no particular order:
   * --Done-- (Mostly, could probably use some fine-tuning. But I'm thinking the blockiness here will sort of come out in the wash when we make the ball movement smoother) Collision detection (primarily with walls, but possibly with wise men, map boundaries, and end-of-level items)
   * --In progress/possibly done-- Organize file structure!  Make classes.  Separate some stuff into different cpp files.
-  * Make smoother sphere motion.  i.e. Tapping a key should give the sphere a bit of momentum rather than translating it a static distance forward.
+  * --Done-- Make smoother sphere motion.  i.e. Tapping a key should give the sphere a bit of momentum rather than translating it a static distance forward.
+  * Animation?
+  * Improve lighting
   * Camera collisions.  Don't let the camera go into walls.
   * Something with the Zen counter.  Zen goes down when you hit an obstacle, or fail a puzzle?  Ben suggested that the sphere should glow, and grows dimmer as Zen goes down.
   * Other levels. Duh.
-  * Make level 1 somewhat more complex/add puzzles or some kind of challenges.
+  * $Ben$ Make level 1 somewhat more complex/add puzzles or some kind of challenges.
   * Ticker tape thingy along the bottom?
   * Audio
   * Beautification.  Make scenery look more interesting?  Maybe add textures to ground/walls/sphere/whatever else.
   * Save and load state?
-  * Read maps from files - this would make it more modular and would make it easier to have maps of varying size
+  * $Kaitlin$ Read maps from files - this would make it more modular and would make it easier to have maps of varying size
