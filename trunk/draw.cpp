@@ -20,36 +20,42 @@ void draw::drawTemples() {
 
 	
 	//Draw Roof
+	glDisable(GL_CULL_FACE);		//don't cull the roof (both sides are visible)
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(20,-20,32);	//orig: 0, 0, 32 (shifted to draw the temple within the grid cell)
 	glColor3f(0, 0, 0);
 	glutSolidCone(40, 30, 20, 20);
 	glPopMatrix();
+	glEnable(GL_CULL_FACE);
 
 	glTranslatef(20, 20, 20);	//orig: 0,20,0
 	glColor3f(0.5, 0, 0);
 	glutSolidCube(40);
 
 	//Draw Roof
+	glDisable(GL_CULL_FACE);		//don't cull the roof (both sides are visible)
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(0,0,45);
 	glColor3f(0, 0, 0);
 	glutSolidCone(30, 20, 20, 20);
 	glPopMatrix();
+	glEnable(GL_CULL_FACE);
 
 	glTranslatef(0, 35, 0);
 	glColor3f(0.5, 0, 0);
 	glutSolidCube(30);
 
 	//Draw Roof
+	glDisable(GL_CULL_FACE);		//don't cull the roof (both sides are visible)
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(0,0,35);
 	glColor3f(0, 0, 0);
 	glutSolidCone(20, 10, 20, 20);
 	glPopMatrix();
+	glEnable(GL_CULL_FACE);
 
 	glTranslatef(0, 25, 0);
 	glColor3f(0.5, 0, 0);
@@ -89,6 +95,8 @@ void draw::drawZWall() {
 }
 
 void draw::drawTree() {
+	glDisable(GL_CULL_FACE);		//don't cull the tree (inside of cones are visible)
+
 	glPushMatrix();
 
 	GLfloat dull[3] = {0, 0, 0};
@@ -104,6 +112,8 @@ void draw::drawTree() {
 	glTranslatef(0, 0, 2.5);
 	glutSolidCone(3, 5, 10, 10);
 	glPopMatrix();
+
+	glEnable(GL_CULL_FACE);
 }
 
 void draw::drawWiseMen() {
@@ -164,12 +174,14 @@ void draw::drawWiseMen() {
 	glPopMatrix();
 
 	// Draw Hat
+	glDisable(GL_CULL_FACE);		//don't cull the hate (both sides are visible)
 	glPushMatrix();
 	glTranslatef(0.0f, 0.1f, 0.0f);
 	glColor3f(1.0f, 0.8f , 0.2f);
 	glRotatef(-90.0f ,1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.9f,0.35f,10,2);
 	glPopMatrix();
+	glEnable(GL_CULL_FACE);
 }
 
 void draw::drawGround(){
@@ -193,6 +205,8 @@ void draw::drawGround(){
 
 //Sky is pretty
 void draw::drawSkybox(){
+	glCullFace(GL_FRONT);		//invert culling (because we see the inside of the skybox)
+
 	glColor3f(0.8, 0.9, 1.0);
 	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
@@ -201,6 +215,8 @@ void draw::drawSkybox(){
 	glutSolidSphere(300, 10, 10);
 	glDisable(GL_TEXTURE_GEN_S);
 	glDisable(GL_TEXTURE_GEN_T);
+
+	glCullFace(GL_BACK);		//restore normal culling
 }
 
 //Couldn't resist. May put this in skybox texture later
