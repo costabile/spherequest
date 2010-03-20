@@ -11,7 +11,7 @@ In no particular order:
   * --In progress/possibly done-- Organize file structure!  Make classes.  Separate some stuff into different cpp files.
   * --Done-- Make smoother sphere motion.  i.e. Tapping a key should give the sphere a bit of momentum rather than translating it a static distance forward.
   * Animation! (for deliverable on Monday)
-  * Improve lighting (also for deliverable on Monday, but what we have now is passable)
+  * Improve lighting (also for deliverable on Monday, but what we have now is passable, if worse comes to worse)
   * --Done-- Camera collisions.  Don't let the camera go into walls. (This could also potentially be fixed with backface culling)
   * Something with the Zen counter.  Zen goes down when you hit an obstacle, or fail a puzzle?  Ben suggested that the sphere should glow, and grows dimmer as Zen goes down.
   * Other levels. Duh.
