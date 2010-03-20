@@ -154,7 +154,9 @@ void drawSphere()
 	GLfloat potamb[3] = {0.8,0.8,0.8},
 			potdfs[3] = {0.9,0.9,0.9},
 			potspc[3] = {1.0,1.0,1.0};
+	GLfloat surfEmissionColour[4] = {0.2 * (zen/100.0), 0.2 * (zen/100.0), 0.2 * (zen/100.0), 1.0};		//sphere gets a little darker as you lose zen
 
+	//glMaterialfv (GL_FRONT, GL_EMISSION, surfEmissionColour);
     glMaterialfv (GL_FRONT, GL_AMBIENT  , potamb);
     glMaterialfv (GL_FRONT, GL_DIFFUSE  , potdfs);
 	glMaterialfv (GL_FRONT, GL_SPECULAR , potspc);
@@ -168,6 +170,12 @@ void drawSphere()
 	//glRotatef (-90, 0, 0, 1);
 
 	glPopMatrix();
+	
+	//set material properties back to default values
+	GLfloat dullEmission[4] = {0, 0, 0, 1};
+	glMaterialfv (GL_FRONT, GL_EMISSION, dullEmission);
+	GLfloat dull[3] = {0, 0, 0};
+	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
 
 }
 
@@ -176,6 +184,10 @@ void initScene() {
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable( GL_TEXTURE_2D );
+
+	//enable backface culling (i.e. if the camera goes into a wall, we'll see through the wall)
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
 
 	skyboxTexture = LoadTexture( "textures/skybox.raw", 800, 600);
 	glBindTexture( GL_TEXTURE_2D, skyboxTexture);
@@ -195,12 +207,18 @@ void initScene() {
 	//glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 30.0);
 	//glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 2.5);
 	glEnable(GL_LIGHT0);
+
 	//glEnable(GL_LIGHT1);
-	glLightfv (GL_LIGHT1, GL_AMBIENT, whiteColor);
-	glLightfv (GL_LIGHT1, GL_DIFFUSE, whiteColor);
-	glLightfv (GL_LIGHT1, GL_SPECULAR, whiteColor);
+	GLfloat lightPos[] = {spherePosX, spherePosY + SPHERE_RAD/2.0, spherePosZ, 1.0f};
+	GLfloat sphGlow[] = {0.3, 0.6, 0.5, 1.0};
+	//glLightfv (GL_LIGHT1, GL_AMBIENT, whiteColor);
+	glLightfv (GL_LIGHT1, GL_DIFFUSE, sphGlow);
+	//glLightfv (GL_LIGHT1, GL_SPECULAR, sphGlow);
+	glLightfv (GL_LIGHT1, GL_POSITION, lightPos);
+
 	glEnable(GL_LIGHT_MODEL_AMBIENT);
 	GLfloat globalAmbient[] = {1.0, 1.0, 1.0, 1.0};
+	//GLfloat globalAmbient[] = {0.1, 0.1, 0.1, 1.0};
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
 }
@@ -262,7 +280,11 @@ void moveMeFlat(float i) {		//moving forward/back by i units
 	} else {
 		//move sphere
 		spherePosX = newPosX;
+		spherePosY = newPosY;
 		spherePosZ = newPosZ;
+
+		GLfloat lightPos[] = {spherePosX, spherePosY + SPHERE_RAD/2.0, spherePosZ, 1.0f};
+		glLightfv (GL_LIGHT1, GL_POSITION, lightPos);
 
 		//rotate sphere (make it look like it's rolling):
 		if (i > 0.0) sphereRotAng += ROT_ANG;
