@@ -61,6 +61,6 @@ int main(){
 }
 }}}
 
-I'm having issues with the string types.  My first error is about strtok not being able to convert const char * to char *.  If I remove the const, I then get almost the exact same error with strtok.  It still complains about a const char *.
+I'm having issues with the string types.  My first error is about strtok not being able to convert const char `*` to char `*`.  If I remove the const, I then get almost the exact same error with strtok.  It still complains about a const char `*`.
 
 So I'm wondering if anyone has any suggestions as to how to make this work, because I'm feeling that a lot of converting is going on here!
