@@ -3,6 +3,8 @@
 
 #include "maze.h"
 
+//int mazeLayout[6][6];
+
 int mazeLayout[6][6] = {		//initialized to first-level layout
 	{3, 2, 2, 3, 2, 3},
 	{1, 0, 0, 1, 5, 1},
@@ -10,7 +12,7 @@ int mazeLayout[6][6] = {		//initialized to first-level layout
 	{1, 0, 0, 0, 0, 3},
 	{1, 5, 4, 1, 0, 1},
 	{3, 2, 2, 3, 4, 3}
-	};
+};
 
 //0 = empty
 //1 = x wall
@@ -69,3 +71,22 @@ int maze::checkMaze(int row, int column)
 	return mazeLayout[row][column];
 }
 
+void maze::readMaze(){
+	using namespace std;
+
+	string readLine;
+	int tileID;
+	int mazeLayout[6][6];
+
+	ifstream openMaze("mazes/level1.txt"); // Open the specified file
+
+	if (openMaze.is_open()){ // If the file opened successfully, we can proceed.
+		for (int i = 0; i < 6; i++){
+			for (int j = 0; j < 6; j++){
+				openMaze >> tileID;
+				mazeLayout[i][j] = tileID;
+			}
+		}
+		openMaze.close(); // We're done with the file, so close it now.
+	}
+}
