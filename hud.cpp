@@ -23,6 +23,8 @@ void HUD::printText(float x, float y, char *string, float r, float g, float b)		
 
 void HUD::drawHUD() {		//draws a 2D overlay
 
+	glDisable(GL_CULL_FACE);
+
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();							//push projection matrix
 	glLoadIdentity();
@@ -62,4 +64,5 @@ void HUD::drawHUD() {		//draws a 2D overlay
 	glMatrixMode( GL_MODELVIEW );
 	glPopMatrix();									//pop modelview matrix
 
+	glEnable(GL_CULL_FACE);
 }
