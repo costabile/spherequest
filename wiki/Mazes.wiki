@@ -27,3 +27,40 @@ Moving onwards. In the renderScene() command there are the for loops which read 
 That's All! Pretty simple now to write your own draw commands and add extra stuff to the maze. Also note that the renderScene() is set up so that we start in the middle of this maze, but that can easily be changed!
 
 Have fun and send me any questions/concerns!
+
+= Reading from a File (Need Help) =
+
+I set up a small file to play around with the file-reading a little more freely, and this is as far as I could get last night:
+
+{{{
+#include <stdlib.h>
+#include <string>
+#include <fstream>
+#include <iostream>
+
+int main(){
+	using namespace std;
+	
+	string readLine;
+	char * readSplit;
+
+	ifstream openMaze("mazes/level1.txt"); // Open the specified file
+
+	if (openMaze.is_open()){ // If the file opened successfully, we can proceed.
+		getline (openMaze, readLine); // Store the current line of the file in readLine
+		const char * readLineArray = readLine.c_str ();
+		cout << readLineArray << endl;
+		
+		readSplit = strtok(readLineArray, " "); // Split readLineArray into tokens, separated by a space
+		cout << readSplit << endl;
+		
+		openMaze.close(); // We're done with the file, so close it now.
+	}
+	system("pause");
+	return (0);
+}
+}}}
+
+I'm having issues with the string types.  My first error is about strtok not being able to convert const char * to char *.  If I remove the const, I then get almost the exact same error with strtok.  It still complains about a const char *.
+
+So I'm wondering if anyone has any suggestions as to how to make this work, because I'm feeling that a lot of converting is going on here!
