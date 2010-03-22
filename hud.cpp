@@ -21,6 +21,30 @@ void HUD::printText(float x, float y, char *string, float r, float g, float b)		
 	}
 }
 
+void HUD::drawIntroText() {
+	glDisable(GL_CULL_FACE);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();							//push projection matrix
+	glLoadIdentity();
+	glOrtho(0.0, 3.0, 3.0, 0.0, -1, 1);		//set ortho mode
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();							//push modelview matrix
+	glLoadIdentity();
+
+	printText(0.9, 1.3, "Use the arrow keys to move.", 0.2, 0.5, 0.7);
+	printText(0.1, 1.8, "Find the wise men and solve their challenges to ascend to higher planes!", 0.2, 0.6, 0.8);
+
+	printText(0.3, 2.2, "(Challenges not implemented yet, but please explore the level)", 0.2, 0.6, 0.8);	//just so they know. Remove this later.
+
+	glMatrixMode( GL_PROJECTION );
+	glPopMatrix();									//pop projection matrix
+	glMatrixMode( GL_MODELVIEW );
+	glPopMatrix();									//pop modelview matrix
+
+	glEnable(GL_CULL_FACE);
+}
+
 void HUD::drawHUD() {		//draws a 2D overlay
 
 	glDisable(GL_CULL_FACE);
