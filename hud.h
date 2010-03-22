@@ -18,6 +18,7 @@ public:
 	~HUD(){}; // Destructor
 	void printText(float x, float y, char *string, float r, float g, float b);
 	void drawIntroText();
+	void printSaveLoadFeedback(bool isSave, bool isSuccessful);
 	void drawHUD();
 };
 
