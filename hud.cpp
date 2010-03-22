@@ -32,7 +32,7 @@ void HUD::drawIntroText() {
 	glPushMatrix();							//push modelview matrix
 	glLoadIdentity();
 
-	printText(0.9, 1.3, "Use the arrow keys to move.", 0.2, 0.5, 0.7);
+	printText(0.35, 1.3, "Use the arrow keys to move. Right-click for save/load menu.", 0.2, 0.5, 0.7);
 	printText(0.1, 1.8, "Find the wise men and solve their challenges to ascend to higher planes!", 0.2, 0.6, 0.8);
 
 	printText(0.3, 2.2, "(Challenges not implemented yet, but please explore the level)", 0.2, 0.6, 0.8);	//just so they know. Remove this later.

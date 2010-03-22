@@ -427,6 +427,18 @@ void inputKey(int key, int x, int y) {
 	}
 }
 
+void menu(GLint selection) {		//create right-click menu
+	switch (selection) {
+		case 0:
+			//do somethin'
+			break;
+		case 1:
+			//do somethin' else
+			break;
+	}
+	glutPostRedisplay();
+}
+
 void keyUp (int key, int x, int y) {		//called when a key is released
 	switch (key) {
 		case GLUT_KEY_LEFT :
@@ -464,6 +476,11 @@ int main(int argc, char **argv)
 	glutIdleFunc(renderScene);
 	glutReshapeFunc(changeSize);
 
+	glutCreateMenu(menu);		//create right-click menu
+		glutAddMenuEntry("Save Game", 0);
+		glutAddMenuEntry("Load Game", 1);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
 	orientMe(-PI/2.0);
 	moveCamera(x, y, z);
 
@@ -472,6 +489,10 @@ int main(int argc, char **argv)
 	FreeTexture(skyboxTexture);
 	FreeTexture(grassTexture);
 	FreeTexture(sphereTexture);
+	FreeTexture(brickTexture);
+	FreeTexture(roofTexture);
+	FreeTexture(redTexture);
+	FreeTexture(treeTexture);
 
 	return(0);
 }
