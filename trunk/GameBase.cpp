@@ -11,7 +11,7 @@
 #include <windows.h>
 #include <stdio.h>
 
-#include "challenge.h"
+#include "challengelist.h"
 #include "hud.h"
 #include "player.h"
 #include "collision.h"
