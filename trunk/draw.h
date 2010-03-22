@@ -12,7 +12,7 @@ public:
 	draw(); // Constructor
 	~draw(){}; // Destructor
 	//void drawSphere();
-	void drawTemples();
+	void drawTemples(GLuint roofTexture, GLuint redTexture);
 	void drawXWall();
 	void drawZWall();
 	void drawTree();
