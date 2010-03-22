@@ -189,6 +189,8 @@ void draw::drawTree() {
 
 void draw::drawWiseMen() {
 	
+	glDisable(GL_CULL_FACE);
+
 	float transx;
 	float max = 2 * PI;
 	// Draw Body		
@@ -211,6 +213,8 @@ void draw::drawWiseMen() {
 	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.6f,2.0f,20,20);
 	glPopMatrix();
+
+	glEnable(GL_CULL_FACE);
 
 	//Draw Belt
 	glPushMatrix();
