@@ -45,6 +45,43 @@ void HUD::drawIntroText() {
 	glEnable(GL_CULL_FACE);
 }
 
+void HUD::printSaveLoadFeedback(bool isSave, bool isSuccessful) {		//print success/failure message for a save/load operation
+	//isSave = true if it's for a save operation, false if it's a load
+	glDisable(GL_CULL_FACE);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();							//push projection matrix
+	glLoadIdentity();
+	glOrtho(0.0, 3.0, 3.0, 0.0, -1, 1);		//set ortho mode
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();							//push modelview matrix
+	glLoadIdentity();
+
+	const float msgX = 0.06;
+	const float msgY = 2.8;
+	const float msgRGB[3] = {0.8, 0.1, 0.1};
+	if (isSave) {
+		if (isSuccessful) {
+			printText(msgX, msgY, "Game saved", msgRGB[0], msgRGB[1], msgRGB[2]);
+		} else {
+			printText(msgX, msgY, "Game save failed (not yet implemented)", msgRGB[0], msgRGB[1], msgRGB[2]);	//remove the () part
+		}
+	} else {
+		if (isSuccessful) {
+			printText(msgX, msgY, "Game loaded", msgRGB[0], msgRGB[1], msgRGB[2]);
+		} else {
+			printText(msgX, msgY, "Game load failed (not yet implemented)", msgRGB[0], msgRGB[1], msgRGB[2]);	//remove the () part
+		}
+	}
+
+	glMatrixMode( GL_PROJECTION );
+	glPopMatrix();									//pop projection matrix
+	glMatrixMode( GL_MODELVIEW );
+	glPopMatrix();									//pop modelview matrix
+
+	glEnable(GL_CULL_FACE);
+}
+
 void HUD::drawHUD() {		//draws a 2D overlay
 
 	glDisable(GL_CULL_FACE);

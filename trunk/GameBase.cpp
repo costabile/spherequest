@@ -63,6 +63,8 @@ float sphereRotAng = 0.0;
 
 bool dev_mode = false;		//false = off.  Displays the layout of the grid.  'j' to toggle
 int moveCount = 0;			//counts the number of sphere movements
+int showSaveLoadMsg = 0;	//0 = don't show a save/load msg, 1=save success, 2=save fail, 3=load success, 4=load fail
+int moveCountMsgMark = 0;	//used to determine when to stop displaying save/load messages
 
 GLuint grassTexture;
 GLuint skyboxTexture;
@@ -372,7 +374,7 @@ void renderScene(void) {
 			sphForwardVel = 0.0;
 		}
 	}
-	if (!rotBtnDown) {			//the the user is not pressing a turn button, slow rotation
+	if (!rotBtnDown) {			//if the user is not pressing a turn button, slow rotation
 		if (sphRotVel > ROT_DECEL) {
 			sphRotVel -= ROT_DECEL;
 		} else if (sphRotVel < -ROT_DECEL) {
@@ -391,6 +393,31 @@ void renderScene(void) {
 	//drawMtFuji();	
 
 	if (moveCount < 30) hud->drawIntroText();		//display the intro/instructions until the user moves a little
+	if (moveCount - moveCountMsgMark < 80) {		//display save/load status messages for a set amount of moves
+		switch (showSaveLoadMsg) {
+			case 1:
+				//save success
+				hud->printSaveLoadFeedback(true, true);
+				break;
+			case 2:
+				//save fail
+				hud->printSaveLoadFeedback(true, false);
+				break;
+			case 3:
+				//load success
+				hud->printSaveLoadFeedback(false, true);
+				break;
+			case 4:
+				//load fail
+				hud->printSaveLoadFeedback(false, false);
+				break;
+			default:
+				break;
+		}
+	} else {
+		showSaveLoadMsg = 0;
+	}
+
 
 	hud->drawHUD();		//HUD must be drawn last
 	glutSwapBuffers();
@@ -428,15 +455,46 @@ void inputKey(int key, int x, int y) {
 	}
 }
 
-void menu(GLint selection) {		//create right-click menu
+bool saveGame(int slot) {		//saves game in the specified slot. Returns true if successful, false if failed.
+	//write relevant variables to a file
+	//TODO
+	return false;
+}
+
+bool loadGame(int slot) {		//loads game from the specified slot. Returns true if successful, false if failed.
+	//read variables from file
+	//TODO
+	return false;
+}
+
+void menu(GLint selection) {		//define right click menu
 	switch (selection) {
-		case 0:
-			//do somethin'
-			break;
 		case 1:
-			//do somethin' else
+		case 2:
+		case 3:
+			//save game to slot <selection>
+			if (saveGame(selection)) {
+				//show success msg
+				showSaveLoadMsg = 1;
+			} else {
+				//show fail msg
+				showSaveLoadMsg = 2;
+			}
+			break;
+		case 4:
+		case 5:
+		case 6:
+			//load game from slot <selection-3>
+			if (loadGame(selection-3)) {
+				//show success message
+				showSaveLoadMsg = 3;
+			} else {
+				//show failure message
+				showSaveLoadMsg = 4;
+			}
 			break;
 	}
+	moveCountMsgMark = moveCount;
 	glutPostRedisplay();
 }
 
@@ -478,8 +536,12 @@ int main(int argc, char **argv)
 	glutReshapeFunc(changeSize);
 
 	glutCreateMenu(menu);		//create right-click menu
-		glutAddMenuEntry("Save Game", 0);
-		glutAddMenuEntry("Load Game", 1);
+		glutAddMenuEntry("Save Slot 1", 1);
+		glutAddMenuEntry("Save Slot 2", 2);
+		glutAddMenuEntry("Save Slot 3", 3);
+		glutAddMenuEntry("Load Slot 1", 4);
+		glutAddMenuEntry("Load Slot 2", 5);
+		glutAddMenuEntry("Load Slot 3", 6);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	orientMe(-PI/2.0);
