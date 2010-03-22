@@ -202,7 +202,7 @@ void drawSphere()
 }
 
 void initScene() {
-
+	mazeObj->readMaze();
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable( GL_TEXTURE_2D );
@@ -266,8 +266,7 @@ void drawGrid() {		//draw gridlines of map cell.  Used for debugging
 	glPopMatrix();
 }
 
-void drawMaze(void) { //draw walls, obstacles, other map features
-	
+void drawMaze(void) { //draw walls, obstacles, other map features	
 	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR); 
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR); 
 
