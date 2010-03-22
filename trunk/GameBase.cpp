@@ -164,7 +164,7 @@ void drawSphere()
 		colx = sin(anix);
 	}
 	glPushMatrix();
-	glTranslatef(0, 0.1 * colx + 0.1 , 0);
+	glTranslatef(0, 0.2 * colx + 0.2 , 0);
 	//glRotatef(0, 0, sphereRotAng, 1);
 	glColor3f(1 * colx, 0.3, 0.3);
 	glTranslatef(spherePosX,spherePosY,spherePosZ);
