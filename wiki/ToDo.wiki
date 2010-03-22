@@ -10,7 +10,7 @@ In no particular order:
   * --Done-- Collision detection (primarily with walls, but possibly with wise men, map boundaries, and end-of-level items)
   * --In progress/possibly done-- Organize file structure!  Make classes.  Separate some stuff into different cpp files.
   * --Done-- Make smoother sphere motion.  i.e. Tapping a key should give the sphere a bit of momentum rather than translating it a static distance forward.
-  * Animation! (for deliverable on Monday)
+  * --Done-- Animation!
   * Improve lighting (also for deliverable on Monday, but what we have now is passable, if worse comes to worse)
   * --Done-- Camera collisions.  Don't let the camera go into walls. (This could also potentially be fixed with backface culling)
   * Something with the Zen counter.  Zen goes down when you hit an obstacle, or fail a puzzle?  Ben suggested that the sphere should glow, and grows dimmer as Zen goes down.
@@ -18,7 +18,7 @@ In no particular order:
   * $Ben$ Make level 1 somewhat more complex/add puzzles or some kind of challenges.
   * Ticker tape thingy along the bottom?
   * Audio
-  * Beautification.  Make scenery look more interesting?  Add textures to walls, maybe temples.  Also get the texture on the skybox to stay still.
+  * --Done-- Beautification.  Make scenery look more interesting?  Add textures to walls, maybe temples.  Also get the texture on the skybox to stay still.
   * Save and load state?
   * $Kaitlin$ Read maps from files - this would make it more modular and would make it easier to have maps of varying size
   * Some kind of menu
