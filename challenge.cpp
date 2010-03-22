@@ -11,6 +11,11 @@ string ans1;
 string ans2;
 string ans3;
 
+challenge::challenge()
+{
+
+}
+
 challenge::challenge(string question, string a, string b, string c, int correctans)
 {
 	answer = correctans;

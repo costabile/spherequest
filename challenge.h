@@ -9,6 +9,7 @@
 
 class challenge{
 public:
+	challenge();
 	challenge(std::string question, std::string a, std::string b, std:: string c, int correctans); //constructor
 	
 	// Definition question = question to be asked
