@@ -58,6 +58,10 @@ bool dev_mode = false;
 GLuint grassTexture;
 GLuint skyboxTexture;
 GLuint sphereTexture;
+GLuint brickTexture;
+GLuint roofTexture;
+GLuint redTexture;
+GLuint treeTexture;
 
 static HUD *hud = new HUD();  // Create a HUD object
 static maze *mazeObj = new maze();		//create maze!
@@ -193,6 +197,14 @@ void initScene() {
 	glBindTexture( GL_TEXTURE_2D, skyboxTexture);
 	grassTexture = LoadTexture( "textures/grass.raw", 1024, 1024 );
 	glBindTexture( GL_TEXTURE_2D, grassTexture);
+	redTexture = LoadTexture( "textures/building.raw", 1024, 1024 );
+	glBindTexture( GL_TEXTURE_2D, redTexture);
+	brickTexture = LoadTexture( "textures/brick.raw", 1024, 1024 );
+	glBindTexture( GL_TEXTURE_2D, brickTexture);
+	roofTexture = LoadTexture( "textures/roof.raw", 1024, 1024 );
+	glBindTexture( GL_TEXTURE_2D, roofTexture);
+	treeTexture = LoadTexture( "textures/trees.raw", 1024, 1024 );
+	glBindTexture( GL_TEXTURE_2D, treeTexture);
 	sphereTexture = LoadTexture( "textures/sphere.raw", 300, 300);
 	glBindTexture( GL_TEXTURE_2D, sphereTexture);
 	
@@ -236,7 +248,11 @@ void drawGrid() {		//draw gridlines of map cell.  Used for debugging
 	glPopMatrix();
 }
 
-void drawMaze(void) {		//draw walls, obstacles, other map features
+void drawMaze(void) { //draw walls, obstacles, other map features
+	
+	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR); 
+	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_EYE_LINEAR); 
+
 	for(int i = -(MAP_SIDE/2); i < (MAP_SIDE/2); i++) {
 			for(int j=-(MAP_SIDE/2); j < (MAP_SIDE/2); j++) {
 				glPushMatrix();
@@ -246,18 +262,21 @@ void drawMaze(void) {		//draw walls, obstacles, other map features
 				}
 				switch (mazeObj->checkMaze((i + MAP_SIDE/2), (j + MAP_SIDE/2))) {
 					case 1:
+						glBindTexture( GL_TEXTURE_2D, brickTexture);
 						drawing->drawXWall();
 						break;
 					case 2:
+						glBindTexture( GL_TEXTURE_2D, brickTexture);
 						drawing->drawZWall();
 						break;
 					case 3:
-						drawing->drawTemples();
+						drawing->drawTemples(roofTexture, redTexture);
 						break;
 					case 4:
 						drawing->drawWiseMen();
 						break;
 					case 5:
+						glBindTexture( GL_TEXTURE_2D, treeTexture);
 						drawing->drawTree();
 						break;
 				}

@@ -1,6 +1,6 @@
 #include "draw.h"
 #include "player.h"
-
+#include <math.h>
 draw::draw(){}
 
 //void draw::drawSphere() {
@@ -11,8 +11,17 @@ draw::draw(){}
 //	glutSolidSphere(SPHERE_RAD, 20, 20);
 //	glPopMatrix();
 //}
+float PI = 3.1415926535897932384626433832795;
+float x = 0;
 
-void draw::drawTemples() {
+void draw::drawTemples(GLuint roofTexture, GLuint redTexture) {
+
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_GEN_S);
+	glEnable(GL_TEXTURE_GEN_T);
+	glEnable(GL_TEXTURE_GEN_R);
+	
+	glColor3f(0.7, 0.3, 0.3);
 	glPushMatrix();
 
 	GLfloat dull[3] = {0, 0, 0};
@@ -20,53 +29,63 @@ void draw::drawTemples() {
 
 	
 	//Draw Roof
+	glBindTexture( GL_TEXTURE_2D, roofTexture);
 	glDisable(GL_CULL_FACE);		//don't cull the roof (both sides are visible)
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(20,-20,32);	//orig: 0, 0, 32 (shifted to draw the temple within the grid cell)
-	glColor3f(0, 0, 0);
 	glutSolidCone(40, 30, 20, 20);
 	glPopMatrix();
 	glEnable(GL_CULL_FACE);
 
+	glBindTexture( GL_TEXTURE_2D, redTexture);
 	glTranslatef(20, 20, 20);	//orig: 0,20,0
-	glColor3f(0.5, 0, 0);
 	glutSolidCube(40);
 
 	//Draw Roof
+	glBindTexture( GL_TEXTURE_2D, roofTexture);
 	glDisable(GL_CULL_FACE);		//don't cull the roof (both sides are visible)
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(0,0,45);
-	glColor3f(0, 0, 0);
 	glutSolidCone(30, 20, 20, 20);
 	glPopMatrix();
 	glEnable(GL_CULL_FACE);
 
+	glBindTexture( GL_TEXTURE_2D, redTexture);
 	glTranslatef(0, 35, 0);
-	glColor3f(0.5, 0, 0);
 	glutSolidCube(30);
 
 	//Draw Roof
+	glBindTexture( GL_TEXTURE_2D, roofTexture);
 	glDisable(GL_CULL_FACE);		//don't cull the roof (both sides are visible)
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
 	glTranslatef(0,0,35);
-	glColor3f(0, 0, 0);
 	glutSolidCone(20, 10, 20, 20);
 	glPopMatrix();
 	glEnable(GL_CULL_FACE);
-
+	
+	glBindTexture( GL_TEXTURE_2D, redTexture);
 	glTranslatef(0, 25, 0);
-	glColor3f(0.5, 0, 0);
 	glutSolidCube(20);
 	glPopMatrix();
+
+	glDisable(GL_TEXTURE_GEN_S);
+	glDisable(GL_TEXTURE_GEN_T);
+	glDisable(GL_TEXTURE_GEN_R);
+	glDisable(GL_TEXTURE_2D);
+
 }
 
 void draw::drawXWall() {
 
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_GEN_S);
+	glEnable(GL_TEXTURE_GEN_T);
+	glEnable(GL_TEXTURE_GEN_R);
+	glColor3f(0.5, 0.5, 0.5);
 	glPushMatrix();
-	glColor3f(0.3, 0.3, 0.3);
 	//glTranslatef(-10, 10, 0);
 	glTranslatef(10, 10, 20);
 
@@ -77,11 +96,22 @@ void draw::drawXWall() {
 	glTranslatef(20, 0, 0);
 	glutSolidCube(20);
 	glPopMatrix();
+
+	glDisable(GL_TEXTURE_GEN_S);
+	glDisable(GL_TEXTURE_GEN_T);
+	glDisable(GL_TEXTURE_GEN_R);
+	glDisable(GL_TEXTURE_2D);
 }
 
 void draw::drawZWall() {
+
+	glColor3f(0.5, 0.5, 0.5);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_GEN_S);
+	glEnable(GL_TEXTURE_GEN_T);
+	glEnable(GL_TEXTURE_GEN_R);
+
 	glPushMatrix();
-	glColor3f(0.3, 0.3, 0.3);
 	//glTranslatef(0, 10, -10);
 	glTranslatef(20, 10, 10);
 
@@ -92,18 +122,27 @@ void draw::drawZWall() {
 	glTranslatef(0, 0, 20);
 	glutSolidCube(20);
 	glPopMatrix();
+
+	glDisable(GL_TEXTURE_GEN_S);
+	glDisable(GL_TEXTURE_GEN_T);
+	glDisable(GL_TEXTURE_GEN_R);
+	glDisable(GL_TEXTURE_2D);
 }
 
 void draw::drawTree() {
 	glDisable(GL_CULL_FACE);		//don't cull the tree (inside of cones are visible)
-
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_GEN_S);
+	glEnable(GL_TEXTURE_GEN_T);
+	glEnable(GL_TEXTURE_GEN_R);
+	
+	glColor3f(0.5, 0.5, 0.5);
 	glPushMatrix();
 
 	GLfloat dull[3] = {0, 0, 0};
 	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
 
 	glRotatef(-90, 1, 0, 0);
-	glColor3f(0, 0.4, 0);
 	//glTranslatef(0, 0, 0);
 	glTranslatef(20, -20, 0);
 	glutSolidCone(3, 5, 10, 10);
@@ -113,14 +152,30 @@ void draw::drawTree() {
 	glutSolidCone(3, 5, 10, 10);
 	glPopMatrix();
 
+	glDisable(GL_TEXTURE_GEN_S);
+	glDisable(GL_TEXTURE_GEN_T);
+	glDisable(GL_TEXTURE_GEN_R);
+	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_CULL_FACE);
 }
 
 void draw::drawWiseMen() {
-	// Draw Body	
-	glPushMatrix();
+	
+	float transx;
+	float max = 2 * PI;
+	// Draw Body		
+	if (x <= max){
+		x += 0.01;
+		transx = sin(x);
+	}
+	else{
+		x = 0;
+		transx = sin(x);
+	}
+	glTranslatef(0, 1*transx + 2.5, 0);
 
-	GLfloat dull[3] = {0, 0, 0};
+	glPushMatrix();
+	GLfloat dull[3] = {1, 1, 1};
 	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
 
 	glColor3f(1.0f, 1.0f, 0.5f);
@@ -187,17 +242,12 @@ void draw::drawWiseMen() {
 void draw::drawGround(){
 	// Draw ground
 	glBegin(GL_QUADS);
-	//glColor3f(0.2f, 0.7f, 0.2f);
-	//glColor3f(1, 0, 0);
 	glTexCoord2f(0, 0);
 	glVertex3f(-200.0f, 0.0f, -200.0f);
-	//glColor3f(0, 1, 0);
 	glTexCoord2f(50, 0);
 	glVertex3f(-200.0f, 0.0f,  200.0f);
-	//glColor3f(0, 0, 1);
 	glTexCoord2f(50, 50);
 	glVertex3f( 200.0f, 0.0f,  200.0f);
-	//glColor3f(1, 1, 1);
 	glTexCoord2f(0, 50);
 	glVertex3f( 200.0f, 0.0f, -200.0f);
 	glEnd();
