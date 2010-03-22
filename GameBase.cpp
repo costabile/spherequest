@@ -204,7 +204,7 @@ void drawSphere()
 }
 
 void initScene() {
-	mazeObj->readMaze();
+	mazeObj->readMaze("mazes/level1.txt");
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable( GL_TEXTURE_2D );

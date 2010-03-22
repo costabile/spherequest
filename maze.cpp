@@ -5,6 +5,8 @@
 
 int mazeLayout[6][6];
 
+using namespace std;
+
 //int mazeLayout[6][6] = {		//initialized to first-level layout
 //	{3, 2, 2, 3, 2, 3},
 //	{1, 0, 0, 1, 5, 1},
@@ -71,12 +73,11 @@ int maze::checkMaze(int row, int column)
 	return mazeLayout[row][column];
 }
 
-void maze::readMaze(){
-	using namespace std;
+void maze::readMaze(char* fileName){
 
 	int tileID;
 
-	ifstream openMaze("mazes/level1.txt"); // Open the specified file
+	ifstream openMaze(fileName); // Open the specified file
 
 	if (openMaze.is_open()){ // If the file opened successfully, we can proceed.
 		for (int i = 0; i < 6; i++){
@@ -86,5 +87,7 @@ void maze::readMaze(){
 			}
 		}
 		openMaze.close(); // We're done with the file, so close it now.
+	} else {
+		cout << "An error occured when trying to open the maze file.  Please try again." << endl;
 	}
 }
