@@ -6,7 +6,6 @@
 
 #include <stdlib.h>
 #include <glut.h>
-#include <string>
 #include <fstream>
 
 #define CELL_SIDE 40.0			//length of one side of a cell on the map grid
