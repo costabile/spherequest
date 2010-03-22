@@ -131,6 +131,19 @@ void draw::drawZWall() {
 
 void draw::drawTree() {
 	glDisable(GL_CULL_FACE);		//don't cull the tree (inside of cones are visible)
+	
+	float transx;
+	float max = 2 * PI;
+	// Draw Body		
+	if (x <= max){
+		x += 0.01;
+		transx = sin(x);
+	}
+	else{
+		x = 0;
+		transx = sin(x);
+	}
+
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_TEXTURE_GEN_S);
 	glEnable(GL_TEXTURE_GEN_T);
@@ -145,11 +158,26 @@ void draw::drawTree() {
 	glRotatef(-90, 1, 0, 0);
 	//glTranslatef(0, 0, 0);
 	glTranslatef(20, -20, 0);
+	
+	glPushMatrix();
+	glRotatef(-2 * transx, 1, 0, 0);
 	glutSolidCone(3, 5, 10, 10);
+	glPopMatrix();
+	
 	glTranslatef(0, 0, 2.5);
+	
+	glPushMatrix();
+	glRotatef(-3 * transx, 1, 0, 0);
 	glutSolidCone(3, 5, 10, 10);
+	glPopMatrix();
+
 	glTranslatef(0, 0, 2.5);
+	
+	glPushMatrix();
+	glRotatef(-4 * transx, 1, 0, 0);
 	glutSolidCone(3, 5, 10, 10);
+	glPopMatrix();
+	
 	glPopMatrix();
 
 	glDisable(GL_TEXTURE_GEN_S);
@@ -173,7 +201,6 @@ void draw::drawWiseMen() {
 		transx = sin(x);
 	}
 	glTranslatef(0, 1*transx + 2.5, 0);
-
 	glPushMatrix();
 	GLfloat dull[3] = {1, 1, 1};
 	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
@@ -204,7 +231,7 @@ void draw::drawWiseMen() {
 	glPushMatrix();
 	glColor3f(0.5f,0.5f,0.5f);
 	glTranslatef(0.0f, -0.25f, 0.05f);
-	glRotatef(50.0f, 1.0f, 0.0f, 0.0f);
+	glRotatef(50.0f + (5 * transx), 1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.2f,0.8f,20,20);
 	glPopMatrix();
 
@@ -231,7 +258,7 @@ void draw::drawWiseMen() {
 	// Draw Hat
 	glDisable(GL_CULL_FACE);		//don't cull the hate (both sides are visible)
 	glPushMatrix();
-	glTranslatef(0.0f, 0.1f, 0.0f);
+	glTranslatef(0.0f, 0.2f + (0.1*transx), 0.0f);
 	glColor3f(1.0f, 0.8f , 0.2f);
 	glRotatef(-90.0f ,1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.9f,0.35f,10,2);

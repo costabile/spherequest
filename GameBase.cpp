@@ -21,7 +21,7 @@
 #define SPHERE_RAD 2.0f				//sphere radius
 #define CAM_DIST 20.0				//distance camera keeps from sphere
 #define TURN_ANGLE PI/64.0f			//angle to turn camera on keypress
-#define MOVE_SIZE 1.0f				//base sphere movement distance
+#define MOVE_SIZE 0.5f				//base sphere movement distance
 #define ROT_ANG PI/64.0f			//angle to rotate sphere by each time it moves
 #define DECEL 0.1f					//the rate at which the sphere's movement slows when the user is not pressing forward or back
 #define ROT_DECEL TURN_ANGLE/2.5		//rate at which rotation slows when left or right are not pressed
@@ -45,6 +45,13 @@ GLfloat spherePosZ = -9.5;
 float sphForwardVel = 0.0;
 float sphRotVel = 0.0;	//rotating speed
 //for movement control:
+
+/*
+ For Animation Purposes!
+*/
+float anix = 0;
+float aniPI = 3.1415926535897932384626433832795;
+
 bool dirBtnDown = false;
 bool rotBtnDown = false;
 //sphere rotation:
@@ -144,10 +151,21 @@ void changeSize(int w, int h)
 
 void drawSphere() 
 {
+	float colx;
+	float max = 2 * aniPI;
+	// Draw Body		
+	if (anix <= max){
+		anix += 0.01;
+		colx = sin(anix);
+	}
+	else{
+		anix = 0;
+		colx = sin(anix);
+	}
 	glPushMatrix();
-
+	glTranslatef(0, 0.1 * colx + 0.1 , 0);
 	//glRotatef(0, 0, sphereRotAng, 1);
-	glColor3f(0.8f, 0.3f, 0.3f);
+	glColor3f(1 * colx, 0.3, 0.3);
 	glTranslatef(spherePosX,spherePosY,spherePosZ);
 	
 	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
