@@ -32,7 +32,7 @@
 #define WIN_HEIGHT 360
 
 static float angle=0.0, ratio;
-static float x=0.0f, y=1.75f, z=5.0f;
+static float x=0.0f, y=1.75f, z=5.0f;		//camera coords
 //static float lx=0.0f,ly=0.0f, lz=-1.0f;
 //static int zen = 100;
 //static int level = 1;
@@ -42,9 +42,8 @@ GLfloat spherePosX = -60.0;
 GLfloat spherePosY = 0.0 + SPHERE_RAD;
 GLfloat spherePosZ = -9.5;
 //current sphere velocity:
-float sphForwardVel = 0.0;
-float sphRotVel = 0.0;	//rotating speed
-//for movement control:
+float sphForwardVel = 0.0f;
+float sphRotVel = 0.0f;	//rotating speed
 
 /*
  For Animation Purposes!
@@ -52,6 +51,7 @@ float sphRotVel = 0.0;	//rotating speed
 float anix = 0;
 float aniPI = 3.1415926535897932384626433832795;
 
+//for movement control:
 bool dirBtnDown = false;
 bool rotBtnDown = false;
 //sphere rotation:
@@ -60,7 +60,8 @@ int sphereRotY = 0.0;
 int sphereRotZ = 0.0;
 float sphereRotAng = 0.0;
 
-bool dev_mode = false;
+bool dev_mode = false;		//false = off.  Displays the layout of the grid.  'j' to toggle
+int moveCount = 0;			//counts the number of sphere movements
 
 GLuint grassTexture;
 GLuint skyboxTexture;
@@ -331,6 +332,7 @@ void moveMeFlat(float i) {		//moving forward/back by i units
 		x = x + i * cos(angle);
 
 		moveCamera(x, y, z);
+		if (i != 0.0) moveCount++;
 	}
 }
 
@@ -358,8 +360,8 @@ void renderScene(void) {
 	//FreeTexture( skyboxTexture );
 	
 	//deal with sphere movement (maybe this should be done elsewhere?):
-	moveMeFlat(sphForwardVel);	//move sphere and camera
-	orientMe(sphRotVel);		//face the appropriate direction
+	if (sphForwardVel != 0.0f) moveMeFlat(sphForwardVel);	//move sphere and camera
+	if (sphRotVel != 0.0f) orientMe(sphRotVel);		//face the appropriate direction
 	if (!dirBtnDown) {			//if the user is not pressing a directional button, slow down
 		if (sphForwardVel > DECEL) {
 			sphForwardVel -= DECEL;
@@ -386,6 +388,8 @@ void renderScene(void) {
 	drawMaze();
 
 	//drawMtFuji();	
+
+	if (moveCount < 30) hud->drawIntroText();		//display the intro/instructions until the user moves a little
 
 	hud->drawHUD();		//HUD must be drawn last
 	glutSwapBuffers();
