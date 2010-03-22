@@ -21,6 +21,6 @@ In no particular order:
   * --Done-- Beautification.  Make scenery look more interesting?  Add textures to walls, maybe temples.  Also get the texture on the skybox to stay still.
   * Save and load state?
   * --Done-- $Kaitlin$ Read maps from files - this would make it more modular and would make it easier to have maps of varying size
-  # Read any map of any size, rather than just the first level...
+  * $Kaitlin$ Read any map of any size, rather than just the first level...
   * Some kind of menu
   * One of the project requirements is that when you finish, you're asked if you'd like to play again...may as well add this.
