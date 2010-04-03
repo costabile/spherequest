@@ -22,40 +22,35 @@ void HUD::printText(float x, float y, char *string, float r, float g, float b)		
 }
 
 void HUD::drawIntroText() {
-	glDisable(GL_CULL_FACE);
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();							//push projection matrix
-	glLoadIdentity();
-	glOrtho(0.0, 3.0, 3.0, 0.0, -1, 1);		//set ortho mode
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();							//push modelview matrix
-	glLoadIdentity();
+	beginHudDrawing();
 
 	printText(0.35, 1.3, "Use the arrow keys to move. Right-click for save/load menu.", 0.2, 0.5, 0.7);
 	printText(0.1, 1.8, "Find the wise men and solve their challenges to ascend to higher planes!", 0.2, 0.6, 0.8);
 
 	printText(0.3, 2.2, "(Challenges not implemented yet, but please explore the level)", 0.2, 0.6, 0.8);	//just so they know. Remove this later.
 
-	glMatrixMode( GL_PROJECTION );
-	glPopMatrix();									//pop projection matrix
-	glMatrixMode( GL_MODELVIEW );
-	glPopMatrix();									//pop modelview matrix
+	endHudDrawing();
+}
 
-	glEnable(GL_CULL_FACE);
+void HUD::printPlayAgainMsg(bool isWin) {
+	beginHudDrawing();
+
+	const float msgX = 1.0;
+	const float msgY = 1.3;
+	if (isWin) {
+		printText(msgX, msgY, "Congratulations! You win!", 0.2, 0.5, 0.7);
+		printText(msgX-0.2, msgY + .5, "Would you like to play again? (Y/N)", 0.2, 0.6, 0.8);
+	} else {
+		printText(msgX, msgY, "Oh no! You lost.", 0.8, 0.1, 0.1);
+		printText(msgX, msgY + .5, "Would you like to play again? (Y/N)", 0.8, 0.3, 0.3);
+	}
+
+	endHudDrawing();
 }
 
 void HUD::printSaveLoadFeedback(bool isSave, bool isSuccessful) {		//print success/failure message for a save/load operation
 	//isSave = true if it's for a save operation, false if it's a load
-	glDisable(GL_CULL_FACE);
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();							//push projection matrix
-	glLoadIdentity();
-	glOrtho(0.0, 3.0, 3.0, 0.0, -1, 1);		//set ortho mode
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();							//push modelview matrix
-	glLoadIdentity();
+	beginHudDrawing();
 
 	const float msgX = 0.06;
 	const float msgY = 2.8;
@@ -74,26 +69,12 @@ void HUD::printSaveLoadFeedback(bool isSave, bool isSuccessful) {		//print succe
 		}
 	}
 
-	glMatrixMode( GL_PROJECTION );
-	glPopMatrix();									//pop projection matrix
-	glMatrixMode( GL_MODELVIEW );
-	glPopMatrix();									//pop modelview matrix
-
-	glEnable(GL_CULL_FACE);
+	endHudDrawing();
 }
 
 void HUD::drawHUD() {		//draws a 2D overlay
-
-	glDisable(GL_CULL_FACE);
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();							//push projection matrix
-	glLoadIdentity();
-	glOrtho(0.0, 3.0, 3.0, 0.0, -1, 1);		//set ortho mode
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();							//push modelview matrix
-	glLoadIdentity();
-
+	beginHudDrawing();
+	
 	//print text on HUD here--------
 	const float hudTextY = 0.15;
 	printText(0.05, hudTextY, "Zen: %", 0.1, 0.1, 0.1);	//print Zen label
@@ -119,7 +100,22 @@ void HUD::drawHUD() {		//draws a 2D overlay
 	glVertex2f(0.0, 0.2);
 	glEnd();
 
+	endHudDrawing();
+}
 
+void HUD::beginHudDrawing() {	//sets up OpenGL for drawing 2d overlay stuff. Always call this before drawing HUD stuff.
+	glDisable(GL_CULL_FACE);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();							//push projection matrix
+	glLoadIdentity();
+	glOrtho(0.0, 3.0, 3.0, 0.0, -1, 1);		//set ortho mode
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();							//push modelview matrix
+	glLoadIdentity();
+}
+
+void HUD::endHudDrawing() {		//Always call this when finished drawing HUD stuff.
 	glMatrixMode( GL_PROJECTION );
 	glPopMatrix();									//pop projection matrix
 	glMatrixMode( GL_MODELVIEW );

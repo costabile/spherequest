@@ -18,8 +18,12 @@ public:
 	~HUD(){}; // Destructor
 	void printText(float x, float y, char *string, float r, float g, float b);
 	void drawIntroText();
+	void printPlayAgainMsg(bool isWin);
 	void printSaveLoadFeedback(bool isSave, bool isSuccessful);
 	void drawHUD();
+private:
+	void beginHudDrawing();
+	void endHudDrawing();
 };
 
 #endif
