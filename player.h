@@ -5,8 +5,10 @@
 
 #ifndef PLAYER_H_
 #define PLAYER_H_
+#define SPHERE_RAD 2.0f				//sphere radius
 
 extern int zen;
 extern int level;
+
 
 #endif
