@@ -10,6 +10,7 @@
 #include <string.h>
 #include <windows.h>
 #include <stdio.h>
+#include <sstream>
 
 #include "challengelist.h"
 #include "hud.h"
@@ -428,7 +429,7 @@ void renderScene(void) {
 
 void playAgain() {		//restart game from beginning
 	//basically just set all the variables back to initial values.
-	angle=0.0, ratio;
+	angle=0.0;
 	x=0.0f, y=1.75f, z=5.0f;
 	spherePosX = -60.0;
 	spherePosY = 0.0 + SPHERE_RAD;
@@ -450,9 +451,7 @@ void playAgain() {		//restart game from beginning
 	moveCountMsgMark = 0;
 	zen = 100;
 	level = 1;
-	orientMe(-PI/2.0);
-	moveCamera(x, y, z);
-	glutPostRedisplay();
+	orientMe(-PI/2);
 }
 
 void win() {	//player has won game
@@ -507,15 +506,87 @@ void inputKey(int key, int x, int y) {
 }
 
 bool saveGame(int slot) {		//saves game in the specified slot. Returns true if successful, false if failed.
-	//write relevant variables to a file
-	//TODO
-	return false;
+	stringstream out;
+	out << slot;
+	string fileName = "spheresave" + out.str() + ".sph";
+	cout<<fileName<<endl;
+	ofstream saveSlot(fileName.c_str()); // Open the specified file for writing
+
+	if (saveSlot.is_open()){ // If the file opened successfully, we can proceed.
+		//basically just write all relevant variables to the save file.
+		saveSlot << angle << " ";
+		saveSlot << ratio << " ";
+		saveSlot << x << " ";
+		saveSlot << y << " ";
+		saveSlot << z << " ";
+		saveSlot << spherePosX << " ";
+		saveSlot << spherePosY << " ";
+		saveSlot << spherePosZ << " ";
+		saveSlot << sphForwardVel << " ";
+		saveSlot << sphRotVel << " ";
+		saveSlot << anix << " ";
+		saveSlot << aniPI << " ";
+		saveSlot << dirBtnDown << " ";
+		saveSlot << rotBtnDown << " ";
+		saveSlot << sphereRotX << " ";
+		saveSlot << sphereRotY << " ";
+		saveSlot << sphereRotZ << " ";
+		saveSlot << sphereRotAng << " ";
+		saveSlot << dev_mode << " ";
+		saveSlot << playAgainMode << " ";
+		saveSlot << moveCount << " ";
+		saveSlot << showSaveLoadMsg << " ";
+		saveSlot << moveCountMsgMark << " ";
+		saveSlot << zen << " ";
+		saveSlot << level;
+
+		saveSlot.close(); // We're done with the file, so close it now.
+		return true;
+	} else {
+		return false;	//save not successful
+	}
 }
 
 bool loadGame(int slot) {		//loads game from the specified slot. Returns true if successful, false if failed.
-	//read variables from file
-	//TODO
-	return false;
+	stringstream out;
+	out << slot;
+	string fileName = "spheresave" + out.str() + ".sph";
+	ifstream loadSlot(fileName.c_str()); // Open the specified file
+
+	if (loadSlot.is_open()){ // If the file opened successfully, we can proceed.
+		//basically just read all relevant variables from the save file.
+		loadSlot >> angle;
+		loadSlot >> ratio;
+		loadSlot >> x;
+		loadSlot >> y;
+		loadSlot >> z;
+		loadSlot >> spherePosX;
+		loadSlot >> spherePosY;
+		loadSlot >> spherePosZ;
+		loadSlot >> sphForwardVel;
+		loadSlot >> sphRotVel;
+		loadSlot >> anix;
+		loadSlot >> aniPI;
+		loadSlot >> dirBtnDown;
+		loadSlot >> rotBtnDown;
+		loadSlot >> sphereRotX;
+		loadSlot >> sphereRotY;
+		loadSlot >> sphereRotZ;
+		loadSlot >> sphereRotAng;
+		loadSlot >> dev_mode;
+		loadSlot >> playAgainMode;
+		loadSlot >> moveCount;
+		loadSlot >> showSaveLoadMsg;
+		loadSlot >> moveCountMsgMark;
+		loadSlot >> zen;
+		loadSlot >> level;
+
+		loadSlot.close(); // We're done with the file, so close it now.
+		orientMe(sphRotVel);
+		return true;
+	} else {
+		return false;		//couldn't open file
+	}
 }
 
 void menu(GLint selection) {		//define right click menu
