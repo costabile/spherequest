@@ -21,11 +21,11 @@
 #define PI 3.14159265358979323846
 #define SPHERE_RAD 2.0f				//sphere radius
 #define CAM_DIST 20.0				//distance camera keeps from sphere
-#define TURN_ANGLE PI/64.0f			//angle to turn camera on keypress
-#define MOVE_SIZE 0.5f				//base sphere movement distance
+#define TURN_ANGLE PI/128.0f		//angle to turn camera on keypress
+#define MOVE_SIZE 0.4f				//base sphere movement distance
 #define ROT_ANG PI/64.0f			//angle to rotate sphere by each time it moves
-#define DECEL 0.1f					//the rate at which the sphere's movement slows when the user is not pressing forward or back
-#define ROT_DECEL TURN_ANGLE/2.5		//rate at which rotation slows when left or right are not pressed
+#define DECEL 0.01f					//the rate at which the sphere's movement slows when the user is not pressing forward or back
+#define ROT_DECEL TURN_ANGLE/5.5	//rate at which rotation slows when left or right are not pressed
 #define COLLISION_SPACING 0.2f		//the max distance the sphere might be from an obstacle when it stops moving.  Smaller = more precise collisions.
 
 //window dimensions:
@@ -62,6 +62,7 @@ int sphereRotZ = 0.0;
 float sphereRotAng = 0.0;
 
 bool dev_mode = false;		//false = off.  Displays the layout of the grid.  'j' to toggle
+int playAgainMode = 0;		//0=off, 1=show win message, 2=show loss message. When on, it displays the "Play again" message and allows the user to press Y to play again or N to quit
 int moveCount = 0;			//counts the number of sphere movements
 int showSaveLoadMsg = 0;	//0 = don't show a save/load msg, 1=save success, 2=save fail, 3=load success, 4=load fail
 int moveCountMsgMark = 0;	//used to determine when to stop displaying save/load messages
@@ -327,8 +328,8 @@ void moveMeFlat(float i) {		//moving forward/back by i units
 		glLightfv (GL_LIGHT1, GL_POSITION, lightPos);
 
 		//rotate sphere (make it look like it's rolling):
-		if (i > 0.0) sphereRotAng += ROT_ANG;
-		else if (i < 0.0) sphereRotAng -= ROT_ANG;
+		/*if (i > 0.0) sphereRotAng += ROT_ANG;
+		else if (i < 0.0) sphereRotAng -= ROT_ANG;*/
 
 		//new camera coords:
 		z = z + i * sin(angle);
@@ -418,40 +419,90 @@ void renderScene(void) {
 		showSaveLoadMsg = 0;
 	}
 
-
 	hud->drawHUD();		//HUD must be drawn last
+	if (playAgainMode==1) hud->printPlayAgainMsg(true);
+	else if (playAgainMode==2) hud->printPlayAgainMsg(false);
+
 	glutSwapBuffers();
 }
 
-void processNormalKeys(unsigned char key, int x, int y) {
+void playAgain() {		//restart game from beginning
+	//basically just set all the variables back to initial values.
+	angle=0.0, ratio;
+	x=0.0f, y=1.75f, z=5.0f;
+	spherePosX = -60.0;
+	spherePosY = 0.0 + SPHERE_RAD;
+	spherePosZ = -9.5;
+	sphForwardVel = 0.0f;
+	sphRotVel = 0.0f;
+	anix = 0;
+	aniPI = 3.1415926535897932384626433832795;
+	dirBtnDown = false;
+	rotBtnDown = false;
+	sphereRotX = 0.0;
+	sphereRotY = 0.0;
+	sphereRotZ = 0.0;
+	sphereRotAng = 0.0;
+	dev_mode = false;
+	playAgainMode = 0;
+	moveCount = 0;
+	showSaveLoadMsg = 0;
+	moveCountMsgMark = 0;
+	zen = 100;
+	level = 1;
+	orientMe(-PI/2.0);
+	moveCamera(x, y, z);
+	glutPostRedisplay();
+}
 
+void win() {	//player has won game
+	playAgainMode = 1;	//display "You win, play again?" message
+	//do something else? Maybe animation or something.
+}
+
+void lose() {	//player has lost
+	playAgainMode = 2;	//display "You lose, play again?" message
+	//do something else? Maybe animation or something.
+}
+
+void processNormalKeys(unsigned char key, int x, int y) {
+	if (playAgainMode != 0) {	//if the user is being asked to play again, handle Y/N choice
+		if ((key == 'Y') || (key == 'y')) {
+			playAgain();		//play again
+		} else if ((key == 'N') || (key == 'n')) {
+			key = 27;			//set key to Esc -> quit game
+		}
+	}
 	if ((key == 27) || (key == 'q') || (key == 'Q')) {
 		exit(0);
-	} else if (key == 'j') {		//enable dev mode (draws gridlines on the map)
+	} else if ((key == 'j') || (key == 'J')) {		//enable dev mode (draws gridlines on the map)
 		dev_mode = !dev_mode;
+	} else if ((key == 'r') || (key == 'R')) {		//restart game
+		playAgain();
 	}
 }
 
 
 void inputKey(int key, int x, int y) {
-
-	switch (key) {
-		case GLUT_KEY_LEFT :
-			sphRotVel = TURN_ANGLE;
-			rotBtnDown = true;
-			break;
-		case GLUT_KEY_RIGHT : 
-			sphRotVel = -TURN_ANGLE;
-			rotBtnDown = true;
-			break;
-		case GLUT_KEY_UP :
-			sphForwardVel = MOVE_SIZE;		//set forward velocity
-			dirBtnDown = true;			//up or down is pressed
-			break;
-		case GLUT_KEY_DOWN : 
-			sphForwardVel = -MOVE_SIZE;
-			dirBtnDown = true;
-			break;
+	if (playAgainMode == 0) {	//don't let the player move if they are in a win or loss state
+		switch (key) {
+			case GLUT_KEY_LEFT :
+				sphRotVel = TURN_ANGLE;
+				rotBtnDown = true;
+				break;
+			case GLUT_KEY_RIGHT : 
+				sphRotVel = -TURN_ANGLE;
+				rotBtnDown = true;
+				break;
+			case GLUT_KEY_UP :
+				sphForwardVel = MOVE_SIZE;		//set forward velocity
+				dirBtnDown = true;			//up or down is pressed
+				break;
+			case GLUT_KEY_DOWN : 
+				sphForwardVel = -MOVE_SIZE;
+				dirBtnDown = true;
+				break;
+		}
 	}
 }
 
@@ -499,20 +550,20 @@ void menu(GLint selection) {		//define right click menu
 }
 
 void keyUp (int key, int x, int y) {		//called when a key is released
-	switch (key) {
-		case GLUT_KEY_LEFT :
-			rotBtnDown = false;
-			break;
-		case GLUT_KEY_RIGHT : 
-			rotBtnDown = false;
-			break;
-		case GLUT_KEY_UP :
-			dirBtnDown = false;			//up or down is not pressed
-			break;
-		case GLUT_KEY_DOWN : 
-			dirBtnDown = false;			//up or down is not pressed
-			break;
-	}
+		switch (key) {
+			case GLUT_KEY_LEFT :
+				rotBtnDown = false;
+				break;
+			case GLUT_KEY_RIGHT : 
+				rotBtnDown = false;
+				break;
+			case GLUT_KEY_UP :
+				dirBtnDown = false;			//up or down is not pressed
+				break;
+			case GLUT_KEY_DOWN : 
+				dirBtnDown = false;			//up or down is not pressed
+				break;
+		}
 }
 
 int main(int argc, char **argv)
