@@ -59,13 +59,13 @@ void HUD::printSaveLoadFeedback(bool isSave, bool isSuccessful) {		//print succe
 		if (isSuccessful) {
 			printText(msgX, msgY, "Game saved", msgRGB[0], msgRGB[1], msgRGB[2]);
 		} else {
-			printText(msgX, msgY, "Game save failed (not yet implemented)", msgRGB[0], msgRGB[1], msgRGB[2]);	//remove the () part
+			printText(msgX, msgY, "Game save failed", msgRGB[0], msgRGB[1], msgRGB[2]);	//remove the () part
 		}
 	} else {
 		if (isSuccessful) {
 			printText(msgX, msgY, "Game loaded", msgRGB[0], msgRGB[1], msgRGB[2]);
 		} else {
-			printText(msgX, msgY, "Game load failed (not yet implemented)", msgRGB[0], msgRGB[1], msgRGB[2]);	//remove the () part
+			printText(msgX, msgY, "Game load failed", msgRGB[0], msgRGB[1], msgRGB[2]);	//remove the () part
 		}
 	}
 
