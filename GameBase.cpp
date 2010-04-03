@@ -11,6 +11,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <sstream>
+#include <direct.h>
 
 #include "challengelist.h"
 #include "hud.h"
@@ -506,9 +507,10 @@ void inputKey(int key, int x, int y) {
 }
 
 bool saveGame(int slot) {		//saves game in the specified slot. Returns true if successful, false if failed.
+	mkdir("saves");		//create a 'saves' directory, if it's not already there
 	stringstream out;
 	out << slot;
-	string fileName = "spheresave" + out.str() + ".sph";
+	string fileName = "saves\\spheresave" + out.str() + ".sph";
 	cout<<fileName<<endl;
 	ofstream saveSlot(fileName.c_str()); // Open the specified file for writing
 
@@ -550,7 +552,7 @@ bool saveGame(int slot) {		//saves game in the specified slot. Returns true if s
 bool loadGame(int slot) {		//loads game from the specified slot. Returns true if successful, false if failed.
 	stringstream out;
 	out << slot;
-	string fileName = "spheresave" + out.str() + ".sph";
+	string fileName = "saves\\spheresave" + out.str() + ".sph";
 	ifstream loadSlot(fileName.c_str()); // Open the specified file
 
 	if (loadSlot.is_open()){ // If the file opened successfully, we can proceed.
