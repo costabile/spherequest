@@ -34,16 +34,18 @@
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 360
 
+
+//sphere position (initial = -60, 0+radius, -9.5):
+GLfloat spherePosX = -60.0;
+GLfloat spherePosY = 0.0 + SPHERE_RAD;
+GLfloat spherePosZ = -9.5;
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;		//camera coords
 //static float lx=0.0f,ly=0.0f, lz=-1.0f;
 //static int zen = 100;
 //static int level = 1;
 
-//sphere position (initial = -60, 0+radius, -9.5):
-GLfloat spherePosX = -60.0;
-GLfloat spherePosY = 0.0 + SPHERE_RAD;
-GLfloat spherePosZ = -9.5;
+
 //current sphere velocity:
 float sphForwardVel = 0.0f;
 float sphRotVel = 0.0f;	//rotating speed
@@ -209,7 +211,8 @@ void drawSphere()
 }
 
 void initScene() {
-	mazeObj->readMaze("mazes/level1.txt");
+	//mazeObj->readMaze("mazes/level1.txt");	//changelevel method takes care of this now
+	mazeObj->changeLevel(1);	//load first level
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable( GL_TEXTURE_2D );

@@ -15,7 +15,15 @@ int maze::checkMaze(int row, int column){
 	return mazeLayout[row][column];
 }
 
-void maze::readMaze(char* fileName){
+void maze::changeLevel(int levelNum) {		//change map to the specified level	(calling function must manually set new sphere position, though)
+	stringstream out;
+	out << levelNum;
+	string fileName = "mazes\\level" + out.str() + ".txt";
+	readMaze(fileName.c_str());		//read in the level maze
+	level = levelNum;
+}
+
+void maze::readMaze(const char* fileName){
 	int tileID;
 
 	ifstream openMaze(fileName); // Open the specified file
