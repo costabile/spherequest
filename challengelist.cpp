@@ -21,17 +21,18 @@ challengelist::challengelist(){
 	challenges[7] = challenge("We have been together since the day you were born and you don't have a place without me. What am I?", "Your life", "Your spirit", "Your name", 2);
 	challenges[8] = challenge("I accept you during the day but I don't tolerate you at night. What is it?", "Insomnia", "Hunger", "Fear", 0);
 	challenges[9] = challenge("My hands are small but contain the unsurpassable eternity. What am I?", "A child", "A clock", "A flower", 1);
+
 }
 
 challenge challengelist::getChallenge(int number){
 
-	return challenges[number];
+	return *challenges[number];
 
 }
 
 challenge challengelist::getNextChallenge(){
 	
-	return challenges[challengenum];
+	return *challenges[challengenum];
 
 }
 
@@ -49,31 +50,31 @@ void challengelist::decrementChallengeNum(){
 
 char * challengelist::getCurrentChallenge(){
 
-	return challenges[challengenum].getQuestion();
+	return challenges[challengenum]->getQuestion();
 
 }
 
 char * challengelist::getFirstChoice(){
 
-	return challenges[challengenum].getA();
+	return challenges[challengenum]->getA();
 
 }
 
 char * challengelist::getSecondChoice(){
 
-	return challenges[challengenum].getB();
+	return challenges[challengenum]->getB();
 
 }
 
 char * challengelist::getThirdChoice(){
 
-	return challenges[challengenum].getC();
+	return challenges[challengenum]->getC();
 
 }
 
 bool challengelist::answerChallenge(int choice){
 	
-	bool correct = challenges[challengenum].checkAnswer(choice);
+	bool correct = challenges[challengenum]->checkAnswer(choice);
 	challengenum++;
 	return correct;
 
