@@ -537,6 +537,7 @@ void answerquestion (int answer){
 	if (result){
 		level++;
 		if (level >= WIN_LEVEL) win();	//game is won when plane of conciousness gets to a certain level
+		levelchange(level);				//ascend to the next plane! (next level)
 	}
 	else {
 		if (zen - ZEN_PENALTY > 0) zen -= ZEN_PENALTY;
@@ -546,9 +547,7 @@ void answerquestion (int answer){
 		}
 	}
 	currentlevel++;
-
-	levelchange(currentlevel);
-
+	//levelchange(currentlevel);
 }
 
 void inputKey(int key, int x, int y) {
