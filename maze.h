@@ -13,7 +13,7 @@
 #include "player.h"
 
 #define CELL_SIDE 40.0			//length of one side of a cell on the map grid
-#define MAP_SIDE 6				//map is MAP_SIDE x MAP SIDE cells
+#define MAP_SIDE 12				//map is MAP_SIDE x MAP SIDE cells
 
 class maze {
 public:
