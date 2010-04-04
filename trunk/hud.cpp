@@ -88,7 +88,7 @@ void HUD::drawHUD() {		//draws a 2D overlay
 	printText(2.91, hudTextY, planeStr, 0.6, 0.2, 0.2);		//print level/plane #
 	//end text
 
-	glBegin(GL_QUADS);						//draw HUD bar
+/*	glBegin(GL_QUADS);						//draw HUD bar
 	//glColor4f(0.95, 0.95, 0.95, 1.0);
 	glColor3f(0.8, 0.8, 1);
 	glVertex2f(0.0, 0.0);
@@ -99,10 +99,14 @@ void HUD::drawHUD() {		//draws a 2D overlay
 	glColor3f(1, 1, 1);
 	glVertex2f(0.0, 0.2);
 	glEnd();
+<<<<<<< .mine
+*/
+=======
 
 	endHudDrawing();
 }
 
+>>>>>>> .r102
 void HUD::beginHudDrawing() {	//sets up OpenGL for drawing 2d overlay stuff. Always call this before drawing HUD stuff.
 	glDisable(GL_CULL_FACE);
 
