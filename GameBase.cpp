@@ -312,6 +312,11 @@ void drawMaze(void) { //draw walls, obstacles, other map features
 	}
 }
 
+void askQuestion() {
+	// All the stuff for presenting a riddle to the user will go here.
+	cout << "Question goes here.";
+}
+
 void moveMeFlat(float i) {		//moving forward/back by i units
 	i = -i;		//forward = +'ve, backward = -'ve
 	//new sphere coords:
@@ -319,8 +324,14 @@ void moveMeFlat(float i) {		//moving forward/back by i units
 	float newPosY = spherePosY;
 	float newPosZ = spherePosZ + i * sin(angle);
 	if (collisions->checkCollision(newPosX, newPosY, newPosZ, SPHERE_RAD)) {	//check if there are obstacles in the intended location
-		if (i > COLLISION_SPACING)
+		if (i > COLLISION_SPACING){
 			moveMeFlat(i - COLLISION_SPACING);	//attempt to move forward in a shorter jump.  This way you don't get stopped at a distance from the obstacle
+			if (mazeObj->checkMaze(collisions->getGridPositionX(spherePosX), collisions->getGridPositionZ(spherePosZ)) == 4) {
+				// This checks if you've collided with a Wise Man.  If you have, he should ask his question.
+				// This currently doesn't work.  Advice appreciated!
+				askQuestion();
+			}
+		}
 		if (i < -COLLISION_SPACING)
 			moveMeFlat(i + COLLISION_SPACING);	//to account for backwards movement
 	} else {
