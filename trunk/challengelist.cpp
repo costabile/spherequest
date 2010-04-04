@@ -10,6 +10,7 @@ int challengenum;
 challengelist::challengelist(){
 	// Riddles are from this website: http://inspirationalriddles.blogspot.com/
 	challengenum = 0;
+
 	challenges[0] = challenge("What has both light and darkness?", "The mind", "The heart", "A room", 0);
 	challenges[1] = challenge("What is the one thing that man will always surrender to?", "Bears", "His appetite", "Fear", 1);
 	challenges[2] = challenge("What is the fastest way to show happiness and sadness?", "A smile and a tear", "A giggle and a frown", "A grin and a cry", 0);
@@ -42,7 +43,7 @@ void challengelist::incrementChallengeNum(){
 
 void challengelist::decrementChallengeNum(){
 
-	challengenum++;
+	challengenum--;
 
 }
 
