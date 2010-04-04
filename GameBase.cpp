@@ -450,16 +450,26 @@ void playAgain() {		//restart game from beginning
 	zen = 100;
 	level = 1;
 	orientMe(-PI/2);
+	question_mode = false;
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
+	GLfloat globalAmbient[] = {1.0, 1.0, 1.0, 1.0};
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 }
 
 void win() {	//player has won game
+	question_mode = false;
 	playAgainMode = 1;	//display "You win, play again?" message
 	//do something else? Maybe animation or something.
 }
 
 void lose() {	//player has lost
+	question_mode = false;
 	playAgainMode = 2;	//display "You lose, play again?" message
-	//do something else? Maybe animation or something.
+	glDisable(GL_LIGHT0);
+	glDisable(GL_LIGHT1);
+	GLfloat globalAmbient[] = {0.8, 0.5, 0.5, 1.0};
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 }
 
 void processNormalKeys(unsigned char key, int x, int y) {
@@ -490,7 +500,11 @@ void answerquestion (int answer){
 		level++;
 	}
 	else {
-		zen = zen - 10;
+		if (zen - 20 > 0) zen -= 20;
+		else {
+			zen = 0;
+			lose();
+		}
 	}
 }
 

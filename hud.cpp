@@ -53,14 +53,14 @@ void HUD::drawQuestion(char * question, char * a, char * b, char * c) {
 void HUD::printPlayAgainMsg(bool isWin) {
 	beginHudDrawing();
 
-	const float msgX = 1.0;
+	const float msgX = 1.15;
 	const float msgY = 1.3;
 	if (isWin) {
 		printText(msgX, msgY, "Congratulations! You win!", 0.2, 0.5, 0.7);
-		printText(msgX-0.2, msgY + .5, "Would you like to play again? (Y/N)", 0.2, 0.6, 0.8);
+		printText(msgX-0.35, msgY + .5, "Would you like to play again? (Y/N)", 0.2, 0.6, 0.8);
 	} else {
 		printText(msgX, msgY, "Oh no! You lost.", 0.8, 0.1, 0.1);
-		printText(msgX, msgY + .5, "Would you like to play again? (Y/N)", 0.8, 0.3, 0.3);
+		printText(msgX-0.35, msgY + .5, "Would you like to play again? (Y/N)", 0.8, 0.3, 0.3);
 	}
 
 	endHudDrawing();
