@@ -310,36 +310,38 @@ void moveMeFlat(float i) {		//moving forward/back by i units
 	float newPosX = spherePosX + i * cos(angle);	//sphere moves in a straight line in the direction of the camera angle
 	float newPosY = spherePosY;
 	float newPosZ = spherePosZ + i * sin(angle);
-	if (collisions->checkCollision(newPosX, newPosY, newPosZ, SPHERE_RAD)) {	//check if there are obstacles in the intended location
-		if (i > COLLISION_SPACING){
-			moveMeFlat(i - COLLISION_SPACING);	//attempt to move forward in a shorter jump.  This way you don't get stopped at a distance from the obstacle
-			if (mazeObj->checkMaze(collisions->getGridPositionX(spherePosX), collisions->getGridPositionZ(spherePosZ)) == 4) {
-				// This checks if you've collided with a Wise Man.  If you have, he should ask his question.
-				question_mode = true;
+	if (playAgainMode == 0) {
+		if (collisions->checkCollision(newPosX, newPosY, newPosZ, SPHERE_RAD)) {	//check if there are obstacles in the intended location
+			if (i > COLLISION_SPACING){
+				moveMeFlat(i - COLLISION_SPACING);	//attempt to move forward in a shorter jump.  This way you don't get stopped at a distance from the obstacle
+				if (mazeObj->checkMaze(collisions->getGridPositionX(spherePosX), collisions->getGridPositionZ(spherePosZ)) == 4) {
+					// This checks if you've collided with a Wise Man.  If you have, he should ask his question.
+					question_mode = true;
+				}
 			}
-		}
-		if (i < -COLLISION_SPACING){
-			moveMeFlat(i + COLLISION_SPACING);	//to account for backwards movement
-			if (mazeObj->checkMaze(collisions->getGridPositionX(spherePosX), collisions->getGridPositionZ(spherePosZ)) == 4) {
-				// This checks if you've collided with a Wise Man.  If you have, he should ask his question.
-				question_mode = true;
+			if (i < -COLLISION_SPACING){
+				moveMeFlat(i + COLLISION_SPACING);	//to account for backwards movement
+				if (mazeObj->checkMaze(collisions->getGridPositionX(spherePosX), collisions->getGridPositionZ(spherePosZ)) == 4) {
+					// This checks if you've collided with a Wise Man.  If you have, he should ask his question.
+					question_mode = true;
+				}
 			}
+		} else {
+			//move sphere
+			spherePosX = newPosX;
+			spherePosY = newPosY;
+			spherePosZ = newPosZ;
+
+			GLfloat lightPos[] = {spherePosX, spherePosY + SPHERE_RAD/2.0, spherePosZ, 1.0f};
+			glLightfv (GL_LIGHT1, GL_POSITION, lightPos);
+
+			//new camera coords:
+			z = z + i * sin(angle);
+			x = x + i * cos(angle);
+
+			moveCamera(x, y, z);
+			if (i != 0.0) moveCount++;
 		}
-	} else {
-		//move sphere
-		spherePosX = newPosX;
-		spherePosY = newPosY;
-		spherePosZ = newPosZ;
-
-		GLfloat lightPos[] = {spherePosX, spherePosY + SPHERE_RAD/2.0, spherePosZ, 1.0f};
-		glLightfv (GL_LIGHT1, GL_POSITION, lightPos);
-
-		//new camera coords:
-		z = z + i * sin(angle);
-		x = x + i * cos(angle);
-
-		moveCamera(x, y, z);
-		if (i != 0.0) moveCount++;
 	}
 }
 
