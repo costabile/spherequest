@@ -453,7 +453,7 @@ void playAgain() {		//restart game from beginning
 	moveCount = 0;
 	showSaveLoadMsg = 0;
 	moveCountMsgMark = 0;
-	zen = 100;
+	//zen = 100;
 	level = 1;
 	orientMe(-PI/2);
 }
