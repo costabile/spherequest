@@ -35,12 +35,5 @@
       <FileName>challengelist.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="challenge">
-    <Position X="5.75" Y="3.75" Width="2.25" />
-    <TypeIdentifier>
-      <HashCode>AQAAQAAAAAAAAAAAAAAAAABAAkAAAAAAQAAABAAAAKA=</HashCode>
-      <FileName>challenge.h</FileName>
-    </TypeIdentifier>
-  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
