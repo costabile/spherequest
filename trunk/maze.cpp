@@ -3,7 +3,8 @@
 
 #include "maze.h"
 
-int mazeLayout[6][6];
+#define MAZE_SIZE 12
+int mazeLayout[MAZE_SIZE][MAZE_SIZE];
 
 using namespace std;
 
@@ -29,8 +30,8 @@ void maze::readMaze(const char* fileName){
 	ifstream openMaze(fileName); // Open the specified file
 
 	if (openMaze.is_open()){ // If the file opened successfully, we can proceed.
-		for (int i = 0; i < 6; i++){
-			for (int j = 0; j < 6; j++){
+		for (int i = 0; i < MAZE_SIZE; i++){
+			for (int j = 0; j < MAZE_SIZE; j++){
 				openMaze >> tileID;
 				mazeLayout[i][j] = tileID;
 			}

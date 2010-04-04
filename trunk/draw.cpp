@@ -13,6 +13,7 @@ draw::draw(){}
 //}
 float PI = 3.1415926535897932384626433832795;
 float x = 0;
+float transx;
 
 void draw::drawTemples(GLuint roofTexture, GLuint redTexture) {
 
@@ -129,79 +130,20 @@ void draw::drawZWall() {
 	glDisable(GL_TEXTURE_2D);
 }
 
-void draw::drawTree() {
-	glDisable(GL_CULL_FACE);		//don't cull the tree (inside of cones are visible)
-	
-	float transx;
+void draw::drawWiseMen() {
+
 	float max = 2 * PI;
 	// Draw Body		
 	if (x <= max){
-		x += 0.01;
+		x += 0.03;
 		transx = sin(x);
 	}
 	else{
 		x = 0;
 		transx = sin(x);
 	}
-
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_TEXTURE_GEN_S);
-	glEnable(GL_TEXTURE_GEN_T);
-	glEnable(GL_TEXTURE_GEN_R);
-	
-	glColor3f(0.5, 0.5, 0.5);
-	glPushMatrix();
-
-	GLfloat dull[3] = {0, 0, 0};
-	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
-
-	glRotatef(-90, 1, 0, 0);
-	//glTranslatef(0, 0, 0);
-	glTranslatef(20, -20, 0);
-	
-	glPushMatrix();
-	glRotatef(-2 * transx, 1, 0, 0);
-	glutSolidCone(3, 5, 10, 10);
-	glPopMatrix();
-	
-	glTranslatef(0, 0, 2.5);
-	
-	glPushMatrix();
-	glRotatef(-3 * transx, 1, 0, 0);
-	glutSolidCone(3, 5, 10, 10);
-	glPopMatrix();
-
-	glTranslatef(0, 0, 2.5);
-	
-	glPushMatrix();
-	glRotatef(-4 * transx, 1, 0, 0);
-	glutSolidCone(3, 5, 10, 10);
-	glPopMatrix();
-	
-	glPopMatrix();
-
-	glDisable(GL_TEXTURE_GEN_S);
-	glDisable(GL_TEXTURE_GEN_T);
-	glDisable(GL_TEXTURE_GEN_R);
-	glDisable(GL_TEXTURE_2D);
-	glEnable(GL_CULL_FACE);
-}
-
-void draw::drawWiseMen() {
 	
 	glDisable(GL_CULL_FACE);
-
-	float transx;
-	float max = 2 * PI;
-	// Draw Body		
-	if (x <= max){
-		x += 0.01;
-		transx = sin(x);
-	}
-	else{
-		x = 0;
-		transx = sin(x);
-	}
 	glTranslatef(0, 1*transx + 2.5, 0);
 	glPushMatrix();
 	GLfloat dull[3] = {1, 1, 1};
@@ -270,17 +212,63 @@ void draw::drawWiseMen() {
 	glEnable(GL_CULL_FACE);
 }
 
+void draw::drawTree() {
+
+	glDisable(GL_CULL_FACE);		//don't cull the tree (inside of cones are visible)
+
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_GEN_S);
+	glEnable(GL_TEXTURE_GEN_T);
+	glEnable(GL_TEXTURE_GEN_R);
+	
+	glColor3f(0.5, 0.5, 0.5);
+	glPushMatrix();
+
+	GLfloat dull[3] = {0, 0, 0};
+	glMaterialfv (GL_FRONT, GL_SPECULAR , dull);
+
+	glRotatef(-90, 1, 0, 0);
+	//glTranslatef(0, 0, 0);
+	glTranslatef(20, -20, 0);
+	
+	glPushMatrix();
+	glRotatef(-2 * transx, 1, 0, 0);
+	glutSolidCone(3, 5, 10, 10);
+	glPopMatrix();
+	
+	glTranslatef(0, 0, 2.5);
+	
+	glPushMatrix();
+	glRotatef(-3 * transx, 1, 0, 0);
+	glutSolidCone(3, 5, 10, 10);
+	glPopMatrix();
+
+	glTranslatef(0, 0, 2.5);
+	
+	glPushMatrix();
+	glRotatef(-4 * transx, 1, 0, 0);
+	glutSolidCone(3, 5, 10, 10);
+	glPopMatrix();
+	
+	glPopMatrix();
+
+	glDisable(GL_TEXTURE_GEN_S);
+	glDisable(GL_TEXTURE_GEN_T);
+	glDisable(GL_TEXTURE_GEN_R);
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_CULL_FACE);
+}
 void draw::drawGround(){
 	// Draw ground
 	glBegin(GL_QUADS);
 	glTexCoord2f(0, 0);
-	glVertex3f(-200.0f, 0.0f, -200.0f);
+	glVertex3f(-400.0f, 0.0f, -400.0f);
 	glTexCoord2f(50, 0);
-	glVertex3f(-200.0f, 0.0f,  200.0f);
+	glVertex3f(-400.0f, 0.0f,  400.0f);
 	glTexCoord2f(50, 50);
-	glVertex3f( 200.0f, 0.0f,  200.0f);
+	glVertex3f( 400.0f, 0.0f,  400.0f);
 	glTexCoord2f(0, 50);
-	glVertex3f( 200.0f, 0.0f, -200.0f);
+	glVertex3f( 400.0f, 0.0f, -400.0f);
 	glEnd();
 }
 
@@ -293,7 +281,7 @@ void draw::drawSkybox(){
 	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 	glEnable(GL_TEXTURE_GEN_S);
 	glEnable(GL_TEXTURE_GEN_T);
-	glutSolidSphere(300, 10, 10);
+	glutSolidSphere(500, 10, 10);
 	glDisable(GL_TEXTURE_GEN_S);
 	glDisable(GL_TEXTURE_GEN_T);
 
