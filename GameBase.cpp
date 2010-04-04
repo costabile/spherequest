@@ -29,6 +29,8 @@
 #define DECEL 0.01f					//the rate at which the sphere's movement slows when the user is not pressing forward or back
 #define ROT_DECEL TURN_ANGLE/5.5	//rate at which rotation slows when left or right are not pressed
 #define COLLISION_SPACING 0.2f		//the max distance the sphere might be from an obstacle when it stops moving.  Smaller = more precise collisions.
+#define ZEN_PENALTY 20				//the amount of zen you lose for a wrong answer
+#define WIN_LEVEL 20				//the level you must reach to win
 
 //window dimensions:
 #define WIN_WIDTH 640
@@ -460,7 +462,8 @@ void playAgain() {		//restart game from beginning
 void win() {	//player has won game
 	question_mode = false;
 	playAgainMode = 1;	//display "You win, play again?" message
-	//do something else? Maybe animation or something.
+	GLfloat globalAmbient[] = {0.7, 1.0, 0.7, 1.0};
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 }
 
 void lose() {	//player has lost
@@ -498,9 +501,10 @@ void answerquestion (int answer){
 	
 	if (result){
 		level++;
+		if (level >= WIN_LEVEL) win();	//game is won when plane of conciousness gets to a certain level
 	}
 	else {
-		if (zen - 20 > 0) zen -= 20;
+		if (zen - ZEN_PENALTY > 0) zen -= ZEN_PENALTY;
 		else {
 			zen = 0;
 			lose();
