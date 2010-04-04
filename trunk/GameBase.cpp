@@ -45,6 +45,8 @@ static float x=0.0f, y=1.75f, z=5.0f;		//camera coords
 //static int zen = 100;
 //static int level = 1;
 
+//Set up the list of challenges
+challengelist challenges = challengelist();
 
 //current sphere velocity:
 float sphForwardVel = 0.0f;
@@ -66,6 +68,7 @@ int sphereRotZ = 0.0;
 float sphereRotAng = 0.0;
 
 bool dev_mode = false;		//false = off.  Displays the layout of the grid.  'j' to toggle
+bool question_mode = false;
 int playAgainMode = 0;		//0=off, 1=show win message, 2=show loss message. When on, it displays the "Play again" message and allows the user to press Y to play again or N to quit
 int moveCount = 0;			//counts the number of sphere movements
 int showSaveLoadMsg = 0;	//0 = don't show a save/load msg, 1=save success, 2=save fail, 3=load success, 4=load fail
@@ -329,11 +332,19 @@ void moveMeFlat(float i) {		//moving forward/back by i units
 			if (mazeObj->checkMaze(collisions->getGridPositionX(spherePosX), collisions->getGridPositionZ(spherePosZ)) == 4) {
 				// This checks if you've collided with a Wise Man.  If you have, he should ask his question.
 				// This currently doesn't work.  Advice appreciated!
+				question_mode = true;
 				askQuestion();
 			}
 		}
-		if (i < -COLLISION_SPACING)
+		if (i < -COLLISION_SPACING){
 			moveMeFlat(i + COLLISION_SPACING);	//to account for backwards movement
+			if (mazeObj->checkMaze(collisions->getGridPositionX(spherePosX), collisions->getGridPositionZ(spherePosZ)) == 4) {
+				// This checks if you've collided with a Wise Man.  If you have, he should ask his question.
+				// This currently doesn't work.  Advice appreciated!
+				question_mode = true;
+				askQuestion();
+			}
+		}
 	} else {
 		//move sphere
 		spherePosX = newPosX;
@@ -436,6 +447,9 @@ void renderScene(void) {
 	}
 
 	hud->drawHUD();		//HUD must be drawn last
+	
+	if (question_mode) hud->drawQuestion(challenges.getCurrentChallenge(), challenges.getFirstChoice(), challenges.getSecondChoice(), challenges.getThirdChoice());
+
 	if (playAgainMode==1) hud->printPlayAgainMsg(true);
 	else if (playAgainMode==2) hud->printPlayAgainMsg(false);
 
@@ -496,26 +510,54 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	}
 }
 
+void answerquestion (int answer){
+	
+	bool result;
+	
+	question_mode = false;
+	result = challenges.answerChallenge(answer);
+	
+	if (result){
+		level++;
+	}
+	else {
+		zen = zen - 10;
+	}
+}
 
 void inputKey(int key, int x, int y) {
 	if (playAgainMode == 0) {	//don't let the player move if they are in a win or loss state
 		switch (key) {
 			case GLUT_KEY_LEFT :
+				if(!question_mode){
 				sphRotVel = TURN_ANGLE;
-				rotBtnDown = true;
+				rotBtnDown = true;}
 				break;
 			case GLUT_KEY_RIGHT : 
+				if(!question_mode){
 				sphRotVel = -TURN_ANGLE;
-				rotBtnDown = true;
+				rotBtnDown = true;}
 				break;
 			case GLUT_KEY_UP :
+				if(!question_mode){
 				sphForwardVel = MOVE_SIZE;		//set forward velocity
-				dirBtnDown = true;			//up or down is pressed
+				dirBtnDown = true;}			//up or down is pressed
 				break;
 			case GLUT_KEY_DOWN : 
+				if(!question_mode){
 				sphForwardVel = -MOVE_SIZE;
-				dirBtnDown = true;
+				dirBtnDown = true;}
 				break;
+			case GLUT_KEY_F1 :
+				if (question_mode) answerquestion(0);
+				break;
+			case GLUT_KEY_F2 :
+				if (question_mode) answerquestion(1);
+				break;
+			case GLUT_KEY_F3 :
+				if (question_mode) answerquestion(2);
+				break;
+
 		}
 	}
 }

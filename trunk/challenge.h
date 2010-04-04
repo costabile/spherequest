@@ -5,12 +5,10 @@
 #ifndef CHALLENGE_H
 #define CHALLENGE_H
 
-#include <string>
-
 class challenge{
 public:
 	challenge();
-	challenge(std::string question, std::string a, std::string b, std:: string c, int correctans); //constructor
+	challenge(char * question, char * a, char * b, char * c, int correctans); //constructor
 	
 	// Definition question = question to be asked
 	//				a = answer a
@@ -22,11 +20,11 @@ public:
 	//						 2 = c
 	~challenge(){}; //destructor
 	bool checkAnswer(int choice);
-	std::string correctAnswer();
-	std::string getQuestion();
-	std::string getA();
-	std::string getB();
-	std::string getC();
+	char * correctAnswer();
+	char * getQuestion();
+	char * getA();
+	char * getB();
+	char * getC();
 
 };
 #endif
