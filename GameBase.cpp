@@ -585,8 +585,9 @@ bool loadGame(int slot) {		//loads game from the specified slot. Returns true if
 		loadSlot >> moveCountMsgMark;
 		loadSlot >> zen;
 		loadSlot >> level;
-
+		
 		loadSlot.close(); // We're done with the file, so close it now.
+		mazeObj->changeLevel(level);
 		orientMe(sphRotVel);
 		return true;
 	} else {

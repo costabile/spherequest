@@ -10,6 +10,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include "player.h"
 
 #define CELL_SIDE 40.0			//length of one side of a cell on the map grid
 #define MAP_SIDE 6				//map is MAP_SIDE x MAP SIDE cells
