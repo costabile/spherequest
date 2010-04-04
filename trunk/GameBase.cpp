@@ -30,7 +30,7 @@
 #define ROT_DECEL TURN_ANGLE/5.5	//rate at which rotation slows when left or right are not pressed
 #define COLLISION_SPACING 0.2f		//the max distance the sphere might be from an obstacle when it stops moving.  Smaller = more precise collisions.
 #define ZEN_PENALTY 20				//the amount of zen you lose for a wrong answer
-#define WIN_LEVEL 5				//the level you must reach to win
+#define WIN_LEVEL 6				//the level you must reach to win
 
 //window dimensions:
 #define WIN_WIDTH 640
@@ -460,6 +460,7 @@ void playAgain() {		//restart game from beginning
 	level = 1;
 	orientMe(-PI/2);
 	question_mode = false;
+	mazeObj->changeLevel(level);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
 	GLfloat globalAmbient[] = {1.0, 1.0, 1.0, 1.0};
@@ -467,12 +468,14 @@ void playAgain() {		//restart game from beginning
 }
 
 void win() {	//player has won game
+	question_mode = false;
 	playAgainMode = 1;	//display "You win, play again?" message
 	GLfloat globalAmbient[] = {0.7, 1.0, 0.7, 1.0};
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 }
 
 void lose() {	//player has lost
+	question_mode = false;
 	playAgainMode = 2;	//display "You lose, play again?" message
 	glDisable(GL_LIGHT0);
 	glDisable(GL_LIGHT1);
@@ -533,6 +536,7 @@ void levelchange(int level)
 	if (level > 5){
 		mazeObj->changeLevel(6);
 	}
+	orientMe(-PI/2);
 }
 
 void answerquestion (int answer){
@@ -582,6 +586,7 @@ void inputKey(int key, int x, int y) {
 				sphForwardVel = -MOVE_SIZE;
 				dirBtnDown = true;}
 				break;
+			//answering questions:
 			case GLUT_KEY_F1 :
 				if (question_mode) answerquestion(0);
 				break;
@@ -591,13 +596,21 @@ void inputKey(int key, int x, int y) {
 			case GLUT_KEY_F3 :
 				if (question_mode) answerquestion(2);
 				break;
-
+			//cheats:
+			//skip levels
 			case GLUT_KEY_F4 :
 				currentlevel++;
 				level++;
 				levelchange(currentlevel);
 				break;
-
+			//auto-win
+			case GLUT_KEY_F5:
+				win();
+				break;
+			//auto-lose
+			case GLUT_KEY_F6:
+				lose();
+				break;
 		}
 	}
 }
