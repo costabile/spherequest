@@ -56,7 +56,7 @@ void HUD::printPlayAgainMsg(bool isWin) {
 	const float msgX = 1.15;
 	const float msgY = 1.3;
 	if (isWin) {
-		printText(msgX, msgY, "Congratulations! You win!", 0.2, 0.5, 0.7);
+		printText(msgX-0.15, msgY, "Congratulations! You win!", 0.2, 0.5, 0.7);
 		printText(msgX-0.35, msgY + .5, "Would you like to play again? (Y/N)", 0.2, 0.6, 0.8);
 	} else {
 		printText(msgX, msgY, "Oh no! You lost.", 0.8, 0.1, 0.1);
