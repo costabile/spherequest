@@ -594,7 +594,7 @@ void inputKey(int key, int x, int y) {
 
 			case GLUT_KEY_F4 :
 				currentlevel++;
-				level++
+				level++;
 				levelchange(currentlevel);
 				break;
 
