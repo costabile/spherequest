@@ -636,7 +636,8 @@ bool saveGame(int slot) {		//saves game in the specified slot. Returns true if s
 		saveSlot << moveCountMsgMark << " ";
 		saveSlot << zen << " ";
 		saveSlot << level << " ";
-		saveSlot << currentlevel;
+		saveSlot << currentlevel << " ";
+		saveSlot << challenges.getChallengeNum();
 
 		saveSlot.close(); // We're done with the file, so close it now.
 		return true;
@@ -679,6 +680,9 @@ bool loadGame(int slot) {		//loads game from the specified slot. Returns true if
 		loadSlot >> zen;
 		loadSlot >> level;
 		loadSlot >> currentlevel;
+		int chalNum;
+		loadSlot >> chalNum;
+		challenges.setChallengeNum(chalNum);
 		
 		loadSlot.close(); // We're done with the file, so close it now.
 		mazeObj->changeLevel(level);
