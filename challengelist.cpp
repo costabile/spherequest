@@ -3,9 +3,8 @@
 
 #include "challengelist.h"
 
-using namespace std;
+challenge challenges[10];
 
-challenge challenges[6];
 int challengenum;
 
 challengelist::challengelist(){
@@ -47,25 +46,25 @@ void challengelist::decrementChallengeNum(){
 
 }
 
-string challengelist::getCurrentChallenge(){
+char * challengelist::getCurrentChallenge(){
 
 	return challenges[challengenum].getQuestion();
 
 }
 
-string challengelist::getFirstChoice(){
+char * challengelist::getFirstChoice(){
 
 	return challenges[challengenum].getA();
 
 }
 
-string challengelist::getSecondChoice(){
+char * challengelist::getSecondChoice(){
 
 	return challenges[challengenum].getB();
 
 }
 
-string challengelist::getThirdChoice(){
+char * challengelist::getThirdChoice(){
 
 	return challenges[challengenum].getC();
 

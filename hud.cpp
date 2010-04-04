@@ -1,13 +1,17 @@
 // hud.cpp
 // contains functions relating to the drawing of the HUD
-
+#include <string>
 #include "hud.h"
 #include "player.h"
+#include "challengelist.h"
 
 //static int zen = 100; // Not sure if this is the best place for this...
 //static int level = 1;
+using namespace std;
 
 HUD::HUD(){}
+
+challengelist list = challengelist();
 
 void HUD::printText(float x, float y, char *string, float r, float g, float b)		//renders string on the screen at coords (x, y) in color (r, g, b)
 {
@@ -32,6 +36,20 @@ void HUD::drawIntroText() {
 	endHudDrawing();
 }
 
+void HUD::drawQuestion(char * question, char * a, char * b, char * c) {
+
+	beginHudDrawing();
+	printText(0.10, 0.5, "Fiddle-di-Diddle, come solve my Riddle:", 0.1, 0.4, 0.6);
+	printText(0.10, 1.0, question, 0.2, 0.5, 0.7);
+	printText(0.23, 1.8, "F1:", 0.3, 0.6, 0.8);
+	printText(0.23, 2.2, "F2:", 0.4, 0.7, 0.9);
+	printText(0.23, 2.6, "F3:", 0.5, 0.8, 1.0);
+	printText(0.35, 1.8, a, 0.3, 0.6, 0.8);
+	printText(0.35, 2.2, b, 0.4, 0.7, 0.9);
+	printText(0.35, 2.6, c, 0.5, 0.8, 1.0);
+	
+	endHudDrawing();
+}
 void HUD::printPlayAgainMsg(bool isWin) {
 	beginHudDrawing();
 

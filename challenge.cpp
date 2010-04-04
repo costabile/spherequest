@@ -2,21 +2,19 @@
 
 #include "challenge.h"
 
-using namespace std;
-
 int answer;
 
-string riddle;
-string ans1;
-string ans2;
-string ans3;
+char * riddle;
+char * ans1;
+char * ans2;
+char * ans3;
 
 challenge::challenge()
 {
 
 }
 
-challenge::challenge(string question, string a, string b, string c, int correctans)
+challenge::challenge(char * question, char * a, char * b, char * c, int correctans)
 {
 	answer = correctans;
 	riddle = question;
@@ -37,7 +35,7 @@ bool challenge::checkAnswer(int choice)
 	}
 }
 
-string challenge::correctAnswer()
+char * challenge::correctAnswer()
 {
 	if (answer == 0){
 		return ans1;
@@ -51,22 +49,22 @@ string challenge::correctAnswer()
 
 }
 
-string challenge::getQuestion()
+char * challenge::getQuestion()
 {
 	return riddle;
 }
 
-string challenge::getA()
+char * challenge::getA()
 {
 	return ans1;
 }
 
-string challenge::getB()
+char * challenge::getB()
 {
 	return ans2;
-}
+} 
 
-string challenge::getC()
+char * challenge::getC()
 {
 	return ans3;
 }

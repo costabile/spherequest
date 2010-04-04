@@ -7,7 +7,6 @@
 #define CHALLENGELIST_H
 
 #include "challenge.h"
-#include <string>
 
 class challengelist{
 
@@ -29,10 +28,10 @@ public:
 	These operators should be used since they are abstract and require no
 	manual changes to be made to the challenge list
 	*/
-	std::string getCurrentChallenge(); // Get a string of the current challenge
-	std::string getFirstChoice(); // Get the first choice (a)
-	std::string getSecondChoice(); // Get the second choice (b)
-	std::string getThirdChoice(); // Get the third choice (c)
+	char * getCurrentChallenge(); // Get a string of the current challenge
+	char * getFirstChoice(); // Get the first choice (a)
+	char * getSecondChoice(); // Get the second choice (b)
+	char * getThirdChoice(); // Get the third choice (c)
 	bool answerChallenge(int choice); //Input an answer (0 = a, 1 = b, 2 = c) and the function returns true if correct
 									  //and false if incorrect. Afterwards, the challenge list moves to the next challenge
 };
