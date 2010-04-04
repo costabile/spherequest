@@ -26,13 +26,13 @@ challengelist::challengelist(){
 
 challenge challengelist::getChallenge(int number){
 
-	return *challenges[number];
+	return challenges[number];
 
 }
 
 challenge challengelist::getNextChallenge(){
 	
-	return *challenges[challengenum];
+	return challenges[challengenum];
 
 }
 
@@ -50,31 +50,31 @@ void challengelist::decrementChallengeNum(){
 
 char * challengelist::getCurrentChallenge(){
 
-	return challenges[challengenum]->getQuestion();
+	return challenges[challengenum].getQuestion();
 
 }
 
 char * challengelist::getFirstChoice(){
 
-	return challenges[challengenum]->getA();
+	return challenges[challengenum].getA();
 
 }
 
 char * challengelist::getSecondChoice(){
 
-	return challenges[challengenum]->getB();
+	return challenges[challengenum].getB();
 
 }
 
 char * challengelist::getThirdChoice(){
 
-	return challenges[challengenum]->getC();
+	return challenges[challengenum].getC();
 
 }
 
 bool challengelist::answerChallenge(int choice){
 	
-	bool correct = challenges[challengenum]->checkAnswer(choice);
+	bool correct = challenges[challengenum].checkAnswer(choice);
 	challengenum++;
 	return correct;
 
