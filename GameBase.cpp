@@ -30,16 +30,19 @@
 #define ROT_DECEL TURN_ANGLE/5.5	//rate at which rotation slows when left or right are not pressed
 #define COLLISION_SPACING 0.2f		//the max distance the sphere might be from an obstacle when it stops moving.  Smaller = more precise collisions.
 #define ZEN_PENALTY 20				//the amount of zen you lose for a wrong answer
-#define WIN_LEVEL 20				//the level you must reach to win
+#define WIN_LEVEL 5				//the level you must reach to win
 
 //window dimensions:
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 360
 
 //sphere position (initial = -60, 0+radius, -9.5):
-GLfloat spherePosX = -60.0;
+GLfloat spherePosX = -120;
 GLfloat spherePosY = 0.0 + SPHERE_RAD;
-GLfloat spherePosZ = -9.5;
+GLfloat spherePosZ = 0;
+
+int currentlevel = 1;
+
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;		//camera coords
 
@@ -173,7 +176,7 @@ void drawSphere()
 		colx = sin(anix);
 	}
 	glPushMatrix();
-	glTranslatef(0, 0.2 * colx + 0.2 , 0);
+	glTranslatef(0, 0.3 * colx + 0.3 , 0);
 	glColor3f(1 * colx, 0.3, 0.3);
 	glTranslatef(spherePosX,spherePosY,spherePosZ);
 	
@@ -209,7 +212,7 @@ void drawSphere()
 }
 
 void initScene() {
-	mazeObj->changeLevel(1);	//load first level
+	mazeObj->changeLevel(currentlevel);	//load first level
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable( GL_TEXTURE_2D );
@@ -310,6 +313,7 @@ void moveMeFlat(float i) {		//moving forward/back by i units
 	float newPosX = spherePosX + i * cos(angle);	//sphere moves in a straight line in the direction of the camera angle
 	float newPosY = spherePosY;
 	float newPosZ = spherePosZ + i * sin(angle);
+
 	if (playAgainMode == 0) {
 		if (collisions->checkCollision(newPosX, newPosY, newPosZ, SPHERE_RAD)) {	//check if there are obstacles in the intended location
 			if (i > COLLISION_SPACING){
@@ -319,13 +323,14 @@ void moveMeFlat(float i) {		//moving forward/back by i units
 					question_mode = true;
 				}
 			}
-			if (i < -COLLISION_SPACING){
-				moveMeFlat(i + COLLISION_SPACING);	//to account for backwards movement
-				if (mazeObj->checkMaze(collisions->getGridPositionX(spherePosX), collisions->getGridPositionZ(spherePosZ)) == 4) {
-					// This checks if you've collided with a Wise Man.  If you have, he should ask his question.
-					question_mode = true;
+		if (i < -COLLISION_SPACING){
+			moveMeFlat(i + COLLISION_SPACING);	//to account for backwards movement
+			if (mazeObj->checkMaze(collisions->getGridPositionX(spherePosX), collisions->getGridPositionZ(spherePosZ)) == 4) {
+				// This checks if you've collided with a Wise Man.  If you have, he should ask his question.
+				// This currently doesn't work.  Advice appreciated!
+				question_mode = true;
 				}
-			}
+		}
 		} else {
 			//move sphere
 			spherePosX = newPosX;
@@ -433,9 +438,9 @@ void playAgain() {		//restart game from beginning
 	//basically just set all the variables back to initial values.
 	angle=0.0;
 	x=0.0f, y=1.75f, z=5.0f;
-	spherePosX = -60.0;
+	spherePosX = -120.0;
 	spherePosY = 0.0 + SPHERE_RAD;
-	spherePosZ = -9.5;
+	spherePosZ = 0;
 	sphForwardVel = 0.0f;
 	sphRotVel = 0.0f;
 	anix = 0;
@@ -462,14 +467,12 @@ void playAgain() {		//restart game from beginning
 }
 
 void win() {	//player has won game
-	question_mode = false;
 	playAgainMode = 1;	//display "You win, play again?" message
 	GLfloat globalAmbient[] = {0.7, 1.0, 0.7, 1.0};
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 }
 
 void lose() {	//player has lost
-	question_mode = false;
 	playAgainMode = 2;	//display "You lose, play again?" message
 	glDisable(GL_LIGHT0);
 	glDisable(GL_LIGHT1);
@@ -492,6 +495,44 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	} else if ((key == 'r') || (key == 'R')) {		//restart game
 		playAgain();
 	}
+
+}
+
+void levelchange(int level)
+{
+	angle=0.0;
+	x=0.0f, y=1.75f, z=5.0f;
+	sphForwardVel = 0.0f;
+	sphRotVel = 0.0f;
+	anix = 0;
+	aniPI = 3.1415926535897932384626433832795;
+	dirBtnDown = false;
+	rotBtnDown = false;
+	sphereRotX = 0.0;
+	sphereRotY = 0.0;
+	sphereRotZ = 0.0;
+	sphereRotAng = 0.0;
+	orientMe(-PI/2);
+
+	spherePosX = -180;
+	spherePosY = 0.0 + SPHERE_RAD;
+	spherePosZ = -180;
+
+	if (level == 2){
+		mazeObj->changeLevel(2);
+	}
+	if (level == 3){
+		mazeObj->changeLevel(3);
+	}
+	if (level == 4){
+		mazeObj->changeLevel(4);
+	}
+	if (level == 5){
+		mazeObj->changeLevel(5);
+	}
+	if (level > 5){
+		mazeObj->changeLevel(6);
+	}
 }
 
 void answerquestion (int answer){
@@ -512,6 +553,10 @@ void answerquestion (int answer){
 			lose();
 		}
 	}
+	currentlevel++;
+
+	levelchange(currentlevel);
+
 }
 
 void inputKey(int key, int x, int y) {
@@ -545,6 +590,12 @@ void inputKey(int key, int x, int y) {
 				break;
 			case GLUT_KEY_F3 :
 				if (question_mode) answerquestion(2);
+				break;
+
+			case GLUT_KEY_F4 :
+				currentlevel++;
+				level++
+				levelchange(currentlevel);
 				break;
 
 		}
