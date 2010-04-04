@@ -458,9 +458,10 @@ void playAgain() {		//restart game from beginning
 	moveCountMsgMark = 0;
 	zen = 100;
 	level = 1;
+	currentlevel = 1;
 	orientMe(-PI/2);
 	question_mode = false;
-	mazeObj->changeLevel(level);
+	mazeObj->changeLevel(currentlevel);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
 	GLfloat globalAmbient[] = {1.0, 1.0, 1.0, 1.0};
@@ -501,7 +502,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
 
 }
 
-void levelchange(int level)
+void levelchange(int newLevel)
 {
 	angle=0.0;
 	x=0.0f, y=1.75f, z=5.0f;
@@ -521,21 +522,8 @@ void levelchange(int level)
 	spherePosY = 0.0 + SPHERE_RAD;
 	spherePosZ = -180;
 
-	if (level == 2){
-		mazeObj->changeLevel(2);
-	}
-	if (level == 3){
-		mazeObj->changeLevel(3);
-	}
-	if (level == 4){
-		mazeObj->changeLevel(4);
-	}
-	if (level == 5){
-		mazeObj->changeLevel(5);
-	}
-	if (level > 5){
-		mazeObj->changeLevel(6);
-	}
+	if (newLevel <= 5) mazeObj->changeLevel(newLevel);
+	else mazeObj->changeLevel(6);
 	orientMe(-PI/2);
 }
 
@@ -620,7 +608,6 @@ bool saveGame(int slot) {		//saves game in the specified slot. Returns true if s
 	stringstream out;
 	out << slot;
 	string fileName = "saves\\spheresave" + out.str() + ".sph";
-	cout<<fileName<<endl;
 	ofstream saveSlot(fileName.c_str()); // Open the specified file for writing
 
 	if (saveSlot.is_open()){ // If the file opened successfully, we can proceed.
@@ -649,7 +636,8 @@ bool saveGame(int slot) {		//saves game in the specified slot. Returns true if s
 		saveSlot << showSaveLoadMsg << " ";
 		saveSlot << moveCountMsgMark << " ";
 		saveSlot << zen << " ";
-		saveSlot << level;
+		saveSlot << level << " ";
+		saveSlot << currentlevel;
 
 		saveSlot.close(); // We're done with the file, so close it now.
 		return true;
@@ -691,6 +679,7 @@ bool loadGame(int slot) {		//loads game from the specified slot. Returns true if
 		loadSlot >> moveCountMsgMark;
 		loadSlot >> zen;
 		loadSlot >> level;
+		loadSlot >> currentlevel;
 		
 		loadSlot.close(); // We're done with the file, so close it now.
 		mazeObj->changeLevel(level);
