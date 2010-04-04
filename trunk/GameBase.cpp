@@ -34,16 +34,12 @@
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 360
 
-
 //sphere position (initial = -60, 0+radius, -9.5):
 GLfloat spherePosX = -60.0;
 GLfloat spherePosY = 0.0 + SPHERE_RAD;
 GLfloat spherePosZ = -9.5;
 static float angle=0.0, ratio;
 static float x=0.0f, y=1.75f, z=5.0f;		//camera coords
-//static float lx=0.0f,ly=0.0f, lz=-1.0f;
-//static int zen = 100;
-//static int level = 1;
 
 //Set up the list of challenges
 challengelist challenges = challengelist();
@@ -176,7 +172,6 @@ void drawSphere()
 	}
 	glPushMatrix();
 	glTranslatef(0, 0.2 * colx + 0.2 , 0);
-	//glRotatef(0, 0, sphereRotAng, 1);
 	glColor3f(1 * colx, 0.3, 0.3);
 	glTranslatef(spherePosX,spherePosY,spherePosZ);
 	
@@ -201,8 +196,6 @@ void drawSphere()
 	glDisable(GL_TEXTURE_GEN_S);
 	glDisable(GL_TEXTURE_GEN_T);
 
-	//glRotatef (-90, 0, 0, 1);
-
 	glPopMatrix();
 	
 	//set material properties back to default values
@@ -214,7 +207,6 @@ void drawSphere()
 }
 
 void initScene() {
-	//mazeObj->readMaze("mazes/level1.txt");	//changelevel method takes care of this now
 	mazeObj->changeLevel(1);	//load first level
 	glEnable(GL_DEPTH_TEST);
 
@@ -247,21 +239,16 @@ void initScene() {
 	GLfloat light1PosType [] = {2.0, 0.0, 3.0, 1.0};
 	GLfloat whiteColor[] = {1.0, 1.0, 1.0, 1.0};
 	GLfloat blackColor[] = {0.0, 0.0, 0.0, 0.0};
-	//glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 30.0);
-	//glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 2.5);
 	glEnable(GL_LIGHT0);
 
 	//glEnable(GL_LIGHT1);
 	GLfloat lightPos[] = {spherePosX, spherePosY + SPHERE_RAD/2.0, spherePosZ, 1.0f};
 	GLfloat sphGlow[] = {0.3, 0.6, 0.5, 1.0};
-	//glLightfv (GL_LIGHT1, GL_AMBIENT, whiteColor);
 	glLightfv (GL_LIGHT1, GL_DIFFUSE, sphGlow);
-	//glLightfv (GL_LIGHT1, GL_SPECULAR, sphGlow);
 	glLightfv (GL_LIGHT1, GL_POSITION, lightPos);
 
 	glEnable(GL_LIGHT_MODEL_AMBIENT);
 	GLfloat globalAmbient[] = {1.0, 1.0, 1.0, 1.0};
-	//GLfloat globalAmbient[] = {0.1, 0.1, 0.1, 1.0};
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
 }
@@ -345,10 +332,6 @@ void moveMeFlat(float i) {		//moving forward/back by i units
 		GLfloat lightPos[] = {spherePosX, spherePosY + SPHERE_RAD/2.0, spherePosZ, 1.0f};
 		glLightfv (GL_LIGHT1, GL_POSITION, lightPos);
 
-		//rotate sphere (make it look like it's rolling):
-		/*if (i > 0.0) sphereRotAng += ROT_ANG;
-		else if (i < 0.0) sphereRotAng -= ROT_ANG;*/
-
 		//new camera coords:
 		z = z + i * sin(angle);
 		x = x + i * cos(angle);
@@ -374,12 +357,9 @@ void renderScene(void) {
 
 	glBindTexture( GL_TEXTURE_2D, grassTexture);
 	drawing->drawGround();
-	//FreeTexture( grassTexture );
 	
 	glBindTexture( GL_TEXTURE_2D, skyboxTexture );
 	drawing->drawSkybox();
-	
-	//FreeTexture( skyboxTexture );
 	
 	//deal with sphere movement (maybe this should be done elsewhere?):
 	if (sphForwardVel != 0.0f) moveMeFlat(sphForwardVel);	//move sphere and camera
@@ -408,8 +388,6 @@ void renderScene(void) {
 	glDisable( GL_TEXTURE_2D );
 
 	drawMaze();
-
-	//drawMtFuji();	
 
 	if (moveCount < 30) hud->drawIntroText();		//display the intro/instructions until the user moves a little
 	if (moveCount - moveCountMsgMark < 80) {		//display save/load status messages for a set amount of moves
@@ -695,8 +673,6 @@ int main(int argc, char **argv)
 	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
 	glutCreateWindow("SphereQuest");
 	
-	//Get the maze set for the level
-//	mazeObj->generateMaze();
 	initScene();
 
 	glutKeyboardFunc(processNormalKeys);
