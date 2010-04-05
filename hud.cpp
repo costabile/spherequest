@@ -15,7 +15,7 @@ HUD::HUD(){}
 
 challengelist list = challengelist();
 
-void HUD::printText(float x, float y, char *string, float r, float g, float b)		//renders string on the screen at coords (x, y) in color (r, g, b)
+void HUD::printText(float x, float y, char *string, float r, float g, float b) //renders string on the screen at coords (x, y) in color (r, g, b)
 {
 	int len, i;
 	glColor3f(r, g, b);
@@ -23,7 +23,7 @@ void HUD::printText(float x, float y, char *string, float r, float g, float b)		
 	len = (int) strlen(string);
 	for (i = 0; i < len; i++)
 	{
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]);			//if you don't like this font, here's a list of options: http://pyopengl.sourceforge.net/documentation/manual/glutBitmapCharacter.3GLUT.html
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]); //if you don't like this font, here's a list of options: http://pyopengl.sourceforge.net/documentation/manual/glutBitmapCharacter.3GLUT.html
 	}
 }
 
@@ -66,7 +66,7 @@ void HUD::printPlayAgainMsg(bool isWin) {
 	endHudDrawing();
 }
 
-void HUD::printSaveLoadFeedback(bool isSave, bool isSuccessful) {		//print success/failure message for a save/load operation
+void HUD::printSaveLoadFeedback(bool isSave, bool isSuccessful) { //print success/failure message for a save/load operation
 	//isSave = true if it's for a save operation, false if it's a load
 	beginHudDrawing();
 
@@ -90,14 +90,14 @@ void HUD::printSaveLoadFeedback(bool isSave, bool isSuccessful) {		//print succe
 	endHudDrawing();
 }
 
-void HUD::drawHUD() {		//draws a 2D overlay
+void HUD::drawHUD() { //draws a 2D overlay
 	beginHudDrawing();
 	
 	//print text on HUD here--------
 	const float hudTextY = 0.15;
 	printText(0.05, hudTextY, "Zen: %", 0.1, 0.1, 0.1);	//print Zen label
 	char zenStr[4];
-	_itoa(zen, zenStr, 10);
+	_itoa(zen, zenStr, 10); // itoa converts an integer to a string
 	printText(0.31, hudTextY, zenStr, 0.6, 0.2, 0.2);	//print amount of Zen
 	printText(0.94, hudTextY, "SphereQuest(TM)", 0.8, 0.3, 0.3);	//print Title
 	printText(1.95, hudTextY, "Plane of Consciousness:", 0.3, 0.3, 0.3);		//print level label
