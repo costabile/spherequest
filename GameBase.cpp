@@ -240,7 +240,7 @@ void initScene() {
 	glBindTexture( GL_TEXTURE_2D, treeTexture);
 	sphereTexture = LoadTexture( "textures/sphere.raw", 300, 300);
 	glBindTexture( GL_TEXTURE_2D, sphereTexture);
-	introScreen = LoadTexture( "textures/titlescreen.raw", 640, 360);
+	introScreen = LoadTexture( "textures/titlescreen2.raw", 640, 360);
 	glBindTexture( GL_TEXTURE_2D, introScreen );
 	
 	glDisable( GL_TEXTURE_2D );

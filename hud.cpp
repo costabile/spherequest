@@ -140,9 +140,9 @@ void HUD::drawIntroScreen() {		//draws a quad to display the intro screen on. Te
 	glBegin(GL_QUADS);
 	
 		glTexCoord2d(0.0, 0.0); glVertex2f(0.0, 0.0);
-		glTexCoord2d(1.0, 0.0); glVertex2f(3.15, 0.0);
-		glTexCoord2d(1.0, 1.0); glVertex2f(3.15, 2.95);
-		glTexCoord2d(0.0, 1.0); glVertex2f(0.0, 2.95);
+		glTexCoord2d(1.0, 0.0); glVertex2f(3.0, 0.0);
+		glTexCoord2d(1.0, 1.0); glVertex2f(3.0, 3.0);
+		glTexCoord2d(0.0, 1.0); glVertex2f(0.0, 3.0);
 
 	glEnd();
 
