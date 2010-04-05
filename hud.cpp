@@ -1,5 +1,7 @@
 // hud.cpp
 // contains functions relating to the drawing of the HUD
+// Written by Jason Costabile, Ben Kybartas, Kaitlin Smith
+
 #include <string>
 #include "hud.h"
 #include "player.h"
