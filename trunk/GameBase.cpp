@@ -498,6 +498,9 @@ void playAgain() {		//restart game from beginning
 
 void win() {	//player has won game
 	question_mode = false;
+	moveCountMsgMark = 0;
+	moveCountQstnMark = 0;
+	moveCount = 31;
 	playAgainMode = 1;	//display "You win, play again?" message
 	GLfloat globalAmbient[] = {0.7, 1.0, 0.7, 1.0};
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
@@ -505,6 +508,9 @@ void win() {	//player has won game
 
 void lose() {	//player has lost
 	question_mode = false;
+	moveCountMsgMark = 0;
+	moveCountQstnMark = 0;
+	moveCount = 31;
 	playAgainMode = 2;	//display "You lose, play again?" message
 	glDisable(GL_LIGHT0);
 	glDisable(GL_LIGHT1);
