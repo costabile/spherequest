@@ -202,7 +202,7 @@ void draw::drawWiseMen() {
 	glPopMatrix();
 
 	// Draw Hat
-	glDisable(GL_CULL_FACE);		//don't cull the hate (both sides are visible)
+	glDisable(GL_CULL_FACE);		//don't cull the hat (both sides are visible)
 	glPushMatrix();
 	glTranslatef(0.0f, 0.2f + (0.1*transx), 0.0f);
 	glColor3f(1.0f, 0.8f , 0.2f);
