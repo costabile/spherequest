@@ -1,5 +1,6 @@
 // hud.h
 // contains function primitives related to drawing the hud
+// Written by Jason Costabile, Ben Kybartas, Kaitlin Smith
 
 #ifndef HUD_H
 #define HUD_H
