@@ -435,6 +435,7 @@ void renderScene(void) {
 			switch (showQuestionMsg) {
 				case 1:
 					hud->printQuestionFeedback(true);	//show correct answer feedback
+					hud->printLevelName(level);
 					break;
 				case 2:
 					hud->printQuestionFeedback(false);	//show wrong answer feedback
