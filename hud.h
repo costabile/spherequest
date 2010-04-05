@@ -22,6 +22,7 @@ public:
 	void drawQuestion(char * q, char * a, char * b, char * c);
 	void printPlayAgainMsg(bool isWin);
 	void printQuestionFeedback(bool isCorrect);
+	void printLevelName(int level);
 	void printSaveLoadFeedback(bool isSave, bool isSuccessful);
 	void drawIntroScreen();
 	void drawHUD();

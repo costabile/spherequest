@@ -32,7 +32,8 @@ void HUD::drawIntroText() {
 
 	printText(0.35, 1.3, "Use the arrow keys to move. Right-click for save/load menu.", 0.2, 0.5, 0.7);
 	printText(0.1, 1.8, "Find the wise men and solve their challenges to ascend to higher planes!", 0.2, 0.6, 0.8);
-
+	printText(0.50, 2.1, "You begin your journey in the Garden of the Blind", 0.2, 0.2, 0.2);
+	
 	endHudDrawing();
 }
 
@@ -103,6 +104,27 @@ void HUD::printQuestionFeedback(bool isCorrect) {
 	endHudDrawing();
 }
 
+void HUD::printLevelName(int level){
+	beginHudDrawing();
+
+	if (level == 2){
+		printText(0.57, 1.7, "You meander into the Courtyard of the Wanderer.", 0.4, 0.4, 0.4);
+	}
+	if (level == 3){
+		printText(0.60, 1.7, "You faithfully enter the Temple of the Follower.", 0.6, 0.6, 0.6);
+	}
+	if (level == 4){
+		printText(0.60, 1.7, "You fearfully begin the Trial of the Unworthy.", 0.8, 0.8, 0.8);
+	}
+	if (level == 5){
+		printText(0.65, 1.7, "You wisely traverse the Path of the Sages.", 1, 1, 1);
+	}
+	if (level == 6){
+		printText(0.70, 1.7, "You are cheating if you are reading this.", 1, 1, 1);
+	}
+	
+	endHudDrawing();
+}
 void HUD::drawHUD() { //draws a 2D overlay
 	beginHudDrawing();
 	
