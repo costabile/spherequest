@@ -74,6 +74,7 @@ int playAgainMode = 0;		//0=off, 1=show win message, 2=show loss message. When o
 int moveCount = 0;			//counts the number of sphere movements
 int showSaveLoadMsg = 0;	//0 = don't show a save/load msg, 1=save success, 2=save fail, 3=load success, 4=load fail
 int moveCountMsgMark = 0;	//used to determine when to stop displaying save/load messages
+int difficulty_mod = 1;		//modifies the amount of zen you lose for an incorrect answer (based on difficulty mode chosen)
 
 GLuint grassTexture;
 GLuint skyboxTexture;
@@ -523,7 +524,10 @@ void levelchange(int newLevel)
 	spherePosZ = -180;
 
 	if (newLevel <= 5) mazeObj->changeLevel(newLevel);
-	else mazeObj->changeLevel(6);
+	else {
+		mazeObj->changeLevel(6);
+		orientMe(-PI/4);	//gives a better view of the field
+	}
 	orientMe(-PI/2);
 }
 
@@ -540,7 +544,7 @@ void answerquestion (int answer){
 		levelchange(level);				//ascend to the next plane! (next level)
 	}
 	else {
-		if (zen - ZEN_PENALTY > 0) zen -= ZEN_PENALTY;
+		if (zen - difficulty_mod * ZEN_PENALTY > 0) zen -= difficulty_mod * ZEN_PENALTY;
 		else {
 			zen = 0;
 			lose();
