@@ -74,7 +74,9 @@ bool intro_mode = true;
 int playAgainMode = 0;		//0=off, 1=show win message, 2=show loss message. When on, it displays the "Play again" message and allows the user to press Y to play again or N to quit
 int moveCount = 0;			//counts the number of sphere movements
 int showSaveLoadMsg = 0;	//0 = don't show a save/load msg, 1=save success, 2=save fail, 3=load success, 4=load fail
+int showQuestionMsg = 0;
 int moveCountMsgMark = 0;	//used to determine when to stop displaying save/load messages
+int moveCountQstnMark = 0;	//determining how long to display Question feedback
 int difficulty_mod = 1;		//modifies the amount of zen you lose for an incorrect answer (based on difficulty mode chosen)
 
 GLuint grassTexture;
@@ -429,6 +431,20 @@ void renderScene(void) {
 		} else {
 			showSaveLoadMsg = 0;
 		}
+		if (moveCount - moveCountQstnMark < 20) {
+			switch (showQuestionMsg) {
+				case 1:
+					hud->printQuestionFeedback(true);	//show correct answer feedback
+					break;
+				case 2:
+					hud->printQuestionFeedback(false);	//show wrong answer feedback
+					break;
+				default:
+					break;
+			}
+		} else {
+			showQuestionMsg = 0;
+		}
 
 		hud->drawHUD();		//HUD must be drawn last
 		
@@ -562,10 +578,13 @@ void answerquestion (int answer){
 	
 	if (result){
 		level++;
+		showQuestionMsg = 1;				//show correct answer feedback
+		moveCountQstnMark = moveCount;
 		if (level >= WIN_LEVEL) win();	//game is won when plane of conciousness gets to a certain level
 		levelchange(level);				//ascend to the next plane! (next level)
-	}
-	else {
+	} else {
+		showQuestionMsg = 2;
+		moveCountQstnMark = moveCount;
 		if (zen - difficulty_mod * ZEN_PENALTY > 0) zen -= difficulty_mod * ZEN_PENALTY;
 		else {
 			zen = 0;

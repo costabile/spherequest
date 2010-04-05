@@ -90,6 +90,19 @@ void HUD::printSaveLoadFeedback(bool isSave, bool isSuccessful) { //print succes
 	endHudDrawing();
 }
 
+void HUD::printQuestionFeedback(bool isCorrect) {
+	beginHudDrawing();
+	const float msgX = 0.85;
+	const float msgY = 1.4;
+	const float msgRGB[3] = {0.8, 0.8, 0.8};
+	if (isCorrect) {
+		printText(msgX, msgY, "Your mind ascends closer to Zen.", msgRGB[0], msgRGB[1], msgRGB[2]);
+	} else {
+		printText(msgX-.2, msgY, "Your mind is heavy with doubt. Try again.", msgRGB[0], msgRGB[1], msgRGB[2]);
+	}
+	endHudDrawing();
+}
+
 void HUD::drawHUD() { //draws a 2D overlay
 	beginHudDrawing();
 	
@@ -121,7 +134,7 @@ void HUD::drawHUD() { //draws a 2D overlay
 	endHudDrawing();
 }
 
-void HUD::drawIntroScreen() {
+void HUD::drawIntroScreen() {		//draws a quad to display the intro screen on. Texturing is done by calling function.
 	beginHudDrawing();
 
 	glBegin(GL_QUADS);
