@@ -10,7 +10,7 @@
   <Class Name="HUD">
     <Position X="2.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>IQAAAAAAAAAIAAIAAAAAAIAIACAAIAAAEAAAAAABAAA=</HashCode>
+      <HashCode>IQQAAAAAAAAIAAIAAAAAAIAIACAAIAAAEAAAAAABAAQ=</HashCode>
       <FileName>hud.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -22,14 +22,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="collision">
-    <Position X="0.5" Y="3.75" Width="2.25" />
+    <Position X="0.5" Y="4" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAQggAAAAAAAAAAAAoAAAAAAIAQAAAAAAEAAAAAAAA=</HashCode>
       <FileName>collision.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="challengelist">
-    <Position X="3" Y="3.75" Width="2.5" />
+    <Position X="3" Y="4" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAgAAAAAGAAAEAAAAAgAECAAAAAAIAIAAAAEAg=</HashCode>
       <FileName>challengelist.h</FileName>
