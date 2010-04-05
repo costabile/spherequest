@@ -121,6 +121,21 @@ void HUD::drawHUD() { //draws a 2D overlay
 	endHudDrawing();
 }
 
+void HUD::drawIntroScreen() {
+	beginHudDrawing();
+
+	glBegin(GL_QUADS);
+	
+		glTexCoord2d(0.0, 0.0); glVertex2f(0.0, 0.0);
+		glTexCoord2d(1.0, 0.0); glVertex2f(3.15, 0.0);
+		glTexCoord2d(1.0, 1.0); glVertex2f(3.15, 2.95);
+		glTexCoord2d(0.0, 1.0); glVertex2f(0.0, 2.95);
+
+	glEnd();
+
+	endHudDrawing();
+}
+
 void HUD::beginHudDrawing() {	//sets up OpenGL for drawing 2d overlay stuff. Always call this before drawing HUD stuff.
 	glDisable(GL_CULL_FACE);
 

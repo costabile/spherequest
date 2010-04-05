@@ -70,6 +70,7 @@ float sphereRotAng = 0.0;
 
 bool dev_mode = false;		//false = off.  Displays the layout of the grid.  'j' to toggle
 bool question_mode = false;
+bool intro_mode = true;
 int playAgainMode = 0;		//0=off, 1=show win message, 2=show loss message. When on, it displays the "Play again" message and allows the user to press Y to play again or N to quit
 int moveCount = 0;			//counts the number of sphere movements
 int showSaveLoadMsg = 0;	//0 = don't show a save/load msg, 1=save success, 2=save fail, 3=load success, 4=load fail
@@ -83,6 +84,7 @@ GLuint brickTexture;
 GLuint roofTexture;
 GLuint redTexture;
 GLuint treeTexture;
+GLuint introScreen;
 
 static HUD *hud = new HUD();  // Create a HUD object
 static maze *mazeObj = new maze();		//create maze!
@@ -236,6 +238,8 @@ void initScene() {
 	glBindTexture( GL_TEXTURE_2D, treeTexture);
 	sphereTexture = LoadTexture( "textures/sphere.raw", 300, 300);
 	glBindTexture( GL_TEXTURE_2D, sphereTexture);
+	introScreen = LoadTexture( "textures/titlescreen.raw", 640, 360);
+	glBindTexture( GL_TEXTURE_2D, introScreen );
 	
 	glDisable( GL_TEXTURE_2D );
 	//Scene Lighting:
@@ -363,74 +367,81 @@ void orientMe(float ang) {		//turning
 void renderScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glEnable( GL_TEXTURE_2D );
+	if (!intro_mode) {
+		glEnable( GL_TEXTURE_2D );
 
-	glBindTexture( GL_TEXTURE_2D, grassTexture);
-	drawing->drawGround();
-	
-	glBindTexture( GL_TEXTURE_2D, skyboxTexture );
-	drawing->drawSkybox();
-	
-	//deal with sphere movement (maybe this should be done elsewhere?):
-	if (sphForwardVel != 0.0f) moveMeFlat(sphForwardVel);	//move sphere and camera
-	if (sphRotVel != 0.0f) orientMe(sphRotVel);		//face the appropriate direction
-	if (!dirBtnDown) {			//if the user is not pressing a directional button, slow down
-		if (sphForwardVel > DECEL) {
-			sphForwardVel -= DECEL;
-		} else if (sphForwardVel < -DECEL) {
-			sphForwardVel += DECEL;
+		glBindTexture( GL_TEXTURE_2D, grassTexture);
+		drawing->drawGround();
+		
+		glBindTexture( GL_TEXTURE_2D, skyboxTexture );
+		drawing->drawSkybox();
+		
+		//deal with sphere movement (maybe this should be done elsewhere?):
+		if (sphForwardVel != 0.0f) moveMeFlat(sphForwardVel);	//move sphere and camera
+		if (sphRotVel != 0.0f) orientMe(sphRotVel);		//face the appropriate direction
+		if (!dirBtnDown) {			//if the user is not pressing a directional button, slow down
+			if (sphForwardVel > DECEL) {
+				sphForwardVel -= DECEL;
+			} else if (sphForwardVel < -DECEL) {
+				sphForwardVel += DECEL;
+			} else {
+				sphForwardVel = 0.0;
+			}
+		}
+		if (!rotBtnDown) {			//if the user is not pressing a turn button, slow rotation
+			if (sphRotVel > ROT_DECEL) {
+				sphRotVel -= ROT_DECEL;
+			} else if (sphRotVel < -ROT_DECEL) {
+				sphRotVel += ROT_DECEL;
+			} else {
+				sphRotVel = 0.0;
+			}
+		}
+		
+		glBindTexture( GL_TEXTURE_2D, sphereTexture);
+		drawSphere();
+		glDisable( GL_TEXTURE_2D );
+
+		drawMaze();
+
+		if (moveCount < 30) hud->drawIntroText();		//display the intro/instructions until the user moves a little
+		if (moveCount - moveCountMsgMark < 80) {		//display save/load status messages for a set amount of moves
+			switch (showSaveLoadMsg) {
+				case 1:
+					//save success
+					hud->printSaveLoadFeedback(true, true);
+					break;
+				case 2:
+					//save fail
+					hud->printSaveLoadFeedback(true, false);
+					break;
+				case 3:
+					//load success
+					hud->printSaveLoadFeedback(false, true);
+					break;
+				case 4:
+					//load fail
+					hud->printSaveLoadFeedback(false, false);
+					break;
+				default:
+					break;
+			}
 		} else {
-			sphForwardVel = 0.0;
+			showSaveLoadMsg = 0;
 		}
-	}
-	if (!rotBtnDown) {			//if the user is not pressing a turn button, slow rotation
-		if (sphRotVel > ROT_DECEL) {
-			sphRotVel -= ROT_DECEL;
-		} else if (sphRotVel < -ROT_DECEL) {
-			sphRotVel += ROT_DECEL;
-		} else {
-			sphRotVel = 0.0;
-		}
-	}
-	
-	glBindTexture( GL_TEXTURE_2D, sphereTexture);
-	drawSphere();
-	glDisable( GL_TEXTURE_2D );
 
-	drawMaze();
+		hud->drawHUD();		//HUD must be drawn last
+		
+		if (question_mode) hud->drawQuestion(challenges.getCurrentChallenge(), challenges.getFirstChoice(), challenges.getSecondChoice(), challenges.getThirdChoice());
 
-	if (moveCount < 30) hud->drawIntroText();		//display the intro/instructions until the user moves a little
-	if (moveCount - moveCountMsgMark < 80) {		//display save/load status messages for a set amount of moves
-		switch (showSaveLoadMsg) {
-			case 1:
-				//save success
-				hud->printSaveLoadFeedback(true, true);
-				break;
-			case 2:
-				//save fail
-				hud->printSaveLoadFeedback(true, false);
-				break;
-			case 3:
-				//load success
-				hud->printSaveLoadFeedback(false, true);
-				break;
-			case 4:
-				//load fail
-				hud->printSaveLoadFeedback(false, false);
-				break;
-			default:
-				break;
-		}
+		if (playAgainMode==1) hud->printPlayAgainMsg(true);
+		else if (playAgainMode==2) hud->printPlayAgainMsg(false);
 	} else {
-		showSaveLoadMsg = 0;
+		glEnable( GL_TEXTURE_2D );
+		glBindTexture( GL_TEXTURE_2D, introScreen);
+		hud->drawIntroScreen();
+		glDisable( GL_TEXTURE_2D );
 	}
-
-	hud->drawHUD();		//HUD must be drawn last
-	
-	if (question_mode) hud->drawQuestion(challenges.getCurrentChallenge(), challenges.getFirstChoice(), challenges.getSecondChoice(), challenges.getThirdChoice());
-
-	if (playAgainMode==1) hud->printPlayAgainMsg(true);
-	else if (playAgainMode==2) hud->printPlayAgainMsg(false);
 
 	glutSwapBuffers();
 }
@@ -486,7 +497,18 @@ void lose() {	//player has lost
 }
 
 void processNormalKeys(unsigned char key, int x, int y) {
-	if (playAgainMode != 0) {	//if the user is being asked to play again, handle Y/N choice
+	if (intro_mode) {
+		if (key == '1') {
+			difficulty_mod = 1;
+			intro_mode = false;
+		} else if (key == '2') {
+			difficulty_mod = 2;
+			intro_mode = false;
+		} else if (key == '3') {
+			difficulty_mod = 5;
+			intro_mode = false;
+		}
+	} else if (playAgainMode != 0) {	//if the user is being asked to play again, handle Y/N choice
 		if ((key == 'Y') || (key == 'y')) {
 			playAgain();		//play again
 		} else if ((key == 'N') || (key == 'n')) {
@@ -641,7 +663,8 @@ bool saveGame(int slot) {		//saves game in the specified slot. Returns true if s
 		saveSlot << zen << " ";
 		saveSlot << level << " ";
 		saveSlot << currentlevel << " ";
-		saveSlot << challenges.getChallengeNum();
+		saveSlot << challenges.getChallengeNum() << " ";
+		saveSlot << difficulty_mod << " ";
 
 		saveSlot.close(); // We're done with the file, so close it now.
 		return true;
@@ -687,6 +710,7 @@ bool loadGame(int slot) {		//loads game from the specified slot. Returns true if
 		int chalNum;
 		loadSlot >> chalNum;
 		challenges.setChallengeNum(chalNum);
+		loadSlot >> difficulty_mod;
 		
 		loadSlot.close(); // We're done with the file, so close it now.
 		mazeObj->changeLevel(level);
