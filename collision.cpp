@@ -96,7 +96,7 @@ bool collision::checkPointCollision(float movX, float movZ) {		//checks if a poi
 	return isCollision;
 }
 
-bool collision::checkCollision(float movX, float movY, float movZ, float objectRadius) {		//checks whether moving to movX, movY, movZ would be a collision
+bool collision::checkCollision(float movX, float movY, float movZ, float objectRadius) { //checks whether moving to movX, movY, movZ would be a collision
 	bool isCollision = false;
 	//checks the relevant faces of a "bounding box" around the object to see whether they would collide in the new position.
 
