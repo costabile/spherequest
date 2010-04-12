@@ -256,8 +256,8 @@ void initScene() {
 	//glEnable(GL_LIGHT1);
 	GLfloat lightPos[] = {spherePosX, spherePosY + SPHERE_RAD/2.0, spherePosZ, 1.0f};
 	GLfloat sphGlow[] = {0.3, 0.6, 0.5, 1.0};
-	glLightfv (GL_LIGHT1, GL_DIFFUSE, sphGlow);
-	glLightfv (GL_LIGHT1, GL_POSITION, lightPos);
+	glLightfv (GL_LIGHT0, GL_DIFFUSE, sphGlow);
+	glLightfv (GL_LIGHT0, GL_POSITION, lightPos);
 
 	glEnable(GL_LIGHT_MODEL_AMBIENT);
 	GLfloat globalAmbient[] = {1.0, 1.0, 1.0, 1.0};
