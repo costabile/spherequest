@@ -1,0 +1,1 @@
+How are you guys making Google Code "play nice" with Visual Studio?  At the moment I just made a new project, copied the base code into it, and then will be copying my changed code into the original base code... I'm scared of Visual Studio messing something up.
